@@ -101,5 +101,5 @@ cython_debug/
 # setuptools_scm generated version file
 _version.py
 
-# Playground
-.sandbox
+#
+src/ucumvert/vendor/*.xlsx

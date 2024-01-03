@@ -1,6 +1,9 @@
-import xml.etree.ElementTree as E
+from pathlib import Path
+from xml.etree import ElementTree
 
-tree = E.parse("ucum-essence.xml")
+UCUM_ESSENCE_FILE = Path(__file__).parent.absolute() / "vendor" / "ucum-essence.xml"
+
+tree = ElementTree.parse(UCUM_ESSENCE_FILE)  # noqa: S314
 root = tree.getroot()
 
 
@@ -26,16 +29,15 @@ def get_units(case_sensitive=True):
     code = "Code" if case_sensitive else "CODE"
 
     units = []
-    for prefix in root.findall(".//{*}unit[@" + code + "]"):
-        cs = prefix.attrib[code]
+    for unit in root.findall(".//{*}unit[@" + code + "]"):
+        cs = unit.attrib[code]
         units.append(cs)
-        continue
-        print(f"{prefix.tag.split('}')[-1]}: {cs}", prefix.attrib)
-        for detail in prefix:
-            if detail.attrib:
-                print("->", detail.tag.split("}")[-1], detail.text, detail.attrib)
-            else:
-                print("->", detail.tag.split("}")[-1], detail.text)
+        # print(f"{unit.tag.split('}')[-1]}: {cs}", unit.attrib)
+        # for detail in unit:
+        #     if detail.attrib:
+        #         print("->", detail.tag.split("}")[-1], detail.text, detail.attrib)
+        #     else:
+        #         print("->", detail.tag.split("}")[-1], detail.text)
 
     return units
 
@@ -76,8 +78,8 @@ if __name__ == "__main__":
     print(base_units)
 
     non_metric_units = get_non_metric_units()
-    print(f"\nnon_metric_units ({len(non_metric_units)})")
+    print(f"\nNumber of non_metric_units: {len(non_metric_units)}")
     # print(non_metric_units)
 
     units = get_units()
-    print(f"\nunits ({len(units)})")
+    print(f"Total number of units: {len(units)}")

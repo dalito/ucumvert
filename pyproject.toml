@@ -34,7 +34,8 @@ classifiers = [
 ]
 
 dependencies = [
-  "tomli>=1.1.0; python_version < '3.11'",
+  "lark",
+  "pint",
 ]
 
 #dynamic = ["version", "readme"]
@@ -57,6 +58,7 @@ dev = [
     # Recursively including the project's own optional dependencies requires pip>=21.2
     "ucumvert[tests,lint]",
     "ruff",
+    "openpyxl"
 ]
 
 [project.scripts]
