@@ -1,0 +1,229 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+# Storing project metadata in pyproject.toml https://peps.python.org/pep-0621/
+name = "ucumvert"
+description = "Python parser & interface for UCUM (Unified Code for Units of Measure)."
+authors = [
+  # Authors sorted by number of commits
+  {name = "David Linke", email = "david.linke@catalysis.de"},
+]
+maintainers = [
+  {name = "David Linke", email = "david.linke@catalysis.de"},
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.8"
+
+keywords = ["UCUM", "units of measurement", "parser"]
+
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Programming Language :: Python",
+  "Environment :: Console",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+  "tomli>=1.1.0; python_version < '3.11'",
+]
+
+#dynamic = ["version", "readme"]
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://github.com/nfdi4cat/ucumvert/"
+Documentation = "https://github.com/nfdi4cat/ucumvert/"
+Changelog = "https://github.com/nfdi4cat/ucumvert/blob/main/CHANGELOG.md"
+
+[project.optional-dependencies]
+tests = [
+  "pytest",
+  "coverage",
+]
+lint = [
+  "black",
+]
+dev = [
+    # Recursively including the project's own optional dependencies requires pip>=21.2
+    "ucumvert[tests,lint]",
+    "ruff",
+]
+
+[project.scripts]
+ucumvert = "ucumvert.cli:run_cli_app"
+
+[tool.hatch.metadata]
+# Hatch disallows direct references for dependencies by default.
+# Enable them to allow installing dependencies from github repositories.
+# allow-direct-references = true
+
+# Build targets for hatch are defined as sections within tool.hatch.build.targets:
+[tool.hatch.build.targets.sdist]
+include = [
+  "/src",
+]
+[tool.hatch.build.targets.wheel]
+packages = ["src/ucumvert"]
+
+# integrates git-tag-based versions into hatch, https://github.com/ofek/hatch-vcs
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/ucumvert/_version.py"
+
+[tool.pytest.ini_options]
+# pytest configuration:
+# https://docs.pytest.org/en/stable/customize.html
+
+# Sets directories to be searched for tests. Useful when all project tests are
+# in a known location to speed up test collection and to avoid picking up
+# undesired tests by accident.
+testpaths = [
+  "tests",
+ ]
+
+# Directories that are not visited by pytest collector:
+norecursedirs = "dist build .tox .git .cache __pycache__ .venv"
+
+# Treat typos in function markers as an error (pytest)
+# --strict-markers
+# Raise an error instead of a warning for pytest related config issues (pytest)
+# --strict-config
+# Degree of detail of trace-backs (pytest)
+# --tb=short
+# Execute doctests in classes, functions, and test modules (pytest)
+# --doctest-modules
+addopts = "--strict-markers --strict-config --tb=short"
+
+[tool.coverage]
+[tool.coverage.run]
+# https://coverage.readthedocs.io/en/latest/config.html
+parallel = true
+branch = true
+source = ["ucumvert"]
+omit = [
+    "**/ucumvert/_version.py",
+]
+
+[tool.coverage.paths]
+# Specify where coverage schould look for source files.
+source = [
+    "src",
+    "**/site-packages", # for not using tox
+    # ".tox/**/site-packages",
+]
+
+[tool.coverage.report]
+# Show in report which lines are not covered
+show_missing = false
+# Any line of the source code that matches one of these regexes is excluded
+# from being reported as missing.
+exclude_lines = [
+    # Have to re-enable the standard pragma
+    "pragma: no cover",
+    # Don't complain if tests don't hit defensive assertion code:
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "return NotImplemented",
+    "if __name__ == .__main__.:",
+]
+
+[tool.coverage.html]
+# Directory where to write the HTML report files.
+directory = ".htmlcov"
+title = "ucumvert coverage report"
+
+[tool.ruff]
+# https://beta.ruff.rs/docs/configuration/
+
+exclude = [
+    "__pycache__",
+    "*.egg",
+    ".*",
+]
+ignore = [
+    "B905",  # zip() without an explicit strict= parameter set. (requires python >= 3.10)
+    "E501",  # line too long
+]
+# Same as Black.
+line-length = 88
+
+# Avoid trying to fix these violations
+unfixable = [
+    "B",  # flake8-bugbear
+]
+# Rule selection https://beta.ruff.rs/docs/rules/
+select = [
+    # sort order as in ruff docs
+    "F",   # Pyflakes
+    "E",   # pycodestyle (errors)
+    "W",   # pycodestyle (warnings)
+    "C90", # mccabe
+    "I",   # isort
+    "N",   # pep8-naming
+    # "D",   # pydocstyle
+    "UP",  # pyupgrade
+    "YTT", # flake8-2020
+    # flake8-annotations (ANN)
+    # flake8-async (ASYNC)
+    "S",   # flake8-bandit
+    "B",   # flake8-bugbear
+    "A",   # flake8-builtins
+    "C4",  # flake8-comprehensions
+    "DTZ", # flake8-datetimez
+    "T10", # flake8-debugger
+    # "DJ",  # flake8-django
+    "EM",  # flake8-errmsg
+    "ISC", # flake8-implicit-str-concat
+    "G",   # flake8-logging-format
+    "PIE", # flake8-pie
+    "PT",  # flake8-pytest-style
+    "Q",   # flake8-quotes
+    "RET", # flake8-return
+    "SIM", # flake8-simplify
+    # "ARG", # flake8-unused-arguments (ARG)
+    # "PTH", # flake8-use-pathlib (PTH)
+    # "ERA", # eradicate (ERA) - commented out code
+    # pandas-vet (PD)
+    "PGH", # pygrep-hooks
+    "PL",  # whole Pylint (Convention, Error, Refactor, Warning)
+    "TRY", # tryceratops (TRY)
+    # NumPy-specific rules (NPY)
+    "RUF",  # Ruff-specific rules
+]
+# Assume Python 3.8
+target-version = "py38"
+
+[tool.ruff.per-file-ignores]
+"tests/*.py" = [
+  "S101",   # assert in tests is OK
+]
+
+[tool.ruff.mccabe]
+# Flake8-mccabe uses a default level of 7, ruff of 10.
+max-complexity = 10
+
+[tool.ruff.pep8-naming]
+# Allow Pydantic's `@validator` decorator to trigger class method treatment.
+classmethod-decorators = [
+  "classmethod",
+  # for pydantic 1.x
+  "pydantic.validator", "pydantic.class_validators.root_validator"
+]
+
+[tool.codespell]
+skip = "pyproject.toml,tests/data,src/ucumvert/vendor/ucum-essence.xml"
+# Note: words have to be lowercased for the ignore-words-list
+ignore-words-list = "linke"
+quiet-level = 3
