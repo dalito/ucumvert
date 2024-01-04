@@ -3,55 +3,58 @@ import operator
 
 import pint
 
-from ucumvert.parser import lark_parser
+from ucumvert.parser import UnitsTransformer, parse_and_transform
 
 ucum_to_pint_map = {
     "Cel": "degC",
 }
 
 
-def ucum_to_pint(p, value, ucum_unit):
-    ureg = pint.UnitRegistry(autoconvert_offset_to_baseunit=True)
+def ucum_to_pint(p, value):
+    ureg = pint.UnitRegistry()
 
     # TODO the parser should return consistent results independent of the number of units terms,
     #      It should always return a list of dictionaries with one dictionary per unit term.
     if isinstance(p[0], list):  # fix inconsistent parser results
         p = p[0]
 
-    # TODO apply devision operator (division is ignored now)
-    # TODO correctly use multipliers which are ignored now
+    # TODO apply division operator (division is ignored now)
+    # TODO correctly use factors which are ignored now
+
     u_strs = []
     for unit_term in p:
         prefix = unit_term.get("prefix", "")
         exp = unit_term.get("exponent", None)
+        unit = unit_term.get("unit", "")
         # replace ucum unit atom with pint unit atom
-        if unit_term["unit"] in ucum_to_pint_map:
-            unit_term["unit"] = ucum_to_pint_map[unit_term["unit"]]
-        u_str = ureg(prefix + unit_term["unit"] + (f"**{exp}" if exp else ""))
+        unit_fixed = ucum_to_pint_map.get(unit, unit)
+        u_str = ureg(prefix + unit_fixed + (f"**{exp}" if exp else ""))
         # print("pint unit:", u_str)
         u_strs.append(u_str)
     units = functools.reduce(operator.mul, u_strs)
     print("-> pint unit:", units)
-    q = pint.Quantity(value, units)
-    return q
+    return pint.Quantity(value, units)
 
 
 def test():
     test_ucum_units = [
         "mm[Hg]{sealevel}",
         "Cel",
-        "/s",
+        "/s2",
         "/s.m.N",
         "/s.m",
+        "kcal/10",
+        "kcal/10{cookies}",  # fails although it is valid
     ]
     for unit in test_ucum_units:
-        p = lark_parser(unit)
-        ucum_to_pint(p, 10, unit)
+        print("ucum unit:", unit)
+        p = parse_and_transform(UnitsTransformer, unit)
+        ucum_to_pint(p, 10)
 
 
 def main():
     print(
-        "Enter quantity with UCUM units, or 'q' to quit. The value and unit must be sepearated by a space."
+        "Enter quantity with UCUM units, or 'q' to quit. The value and unit must be separated by a space."
     )
     while True:
         s = input("> ")
@@ -59,12 +62,12 @@ def main():
             break
         try:
             value, unit = s.split()
-            p = lark_parser(unit)
-            print(ucum_to_pint(p, value, unit))
+            p = parse_and_transform(UnitsTransformer, unit)
+            print(ucum_to_pint(p, value))
         except Exception as e:
             print(e)
 
 
 if __name__ == "__main__":
     test()
-    main()
+    # main()

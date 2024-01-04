@@ -3,8 +3,8 @@ import pytest
 
 
 @pytest.fixture(scope="session")
-def datadir():
-    """DATADIR as a LocalPath"""
-    from pathlib import Path
+def ucum_parse_fcn():
+    """Parse function as fixture for faster tests"""
+    from ucumvert.parser import ucum_parser
 
-    return Path(__file__).resolve().parent / "data"
+    return ucum_parser().parse

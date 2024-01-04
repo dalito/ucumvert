@@ -1,4 +1,4 @@
-from ucumvert.parser import lark_parser
+from ucumvert.parser import UnitsTransformer, parse_and_transform
 
 
 def main():
@@ -8,7 +8,7 @@ def main():
         if s in "qQ":
             break
         try:
-            print(lark_parser(s))
+            print(parse_and_transform(UnitsTransformer, s))
         except Exception as e:
             print(e)
 

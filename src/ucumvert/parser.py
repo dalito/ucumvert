@@ -61,7 +61,10 @@ UCUM_GRAMMAR = """
 
 class UnitsTransformer(Transformer):
     def FACTOR(self, args):
-        return args[0]
+        # print("DBGf", repr(args))
+        return {
+            "factor": int(args),
+        }
 
     def EXPONENT(self, args):
         if len(args) == 1:
@@ -152,23 +155,23 @@ class UnitsTransformer(Transformer):
         }
 
 
-def lark_parser(data):
+def ucum_parser(ucum_grammar_template=UCUM_GRAMMAR):
     prefix_rule = " | ".join(f'"{i}"' for i in get_prefixes())
     metric_rule = " | ".join(f'"{i}"' for i in (get_base_units() + get_metric_units()))
     non_metric_rule = " | ".join(f'"{i}"' for i in get_non_metric_units())
 
-    ucum_grammar = UCUM_GRAMMAR.format(
+    ucum_grammar = ucum_grammar_template.format(
         prefix_rule=prefix_rule,
         metric_rule=metric_rule,
         non_metric_rule=non_metric_rule,
     )
-    ucum_parser = Lark(ucum_grammar)
+    return Lark(ucum_grammar)
 
-    # TODO separate parser creation (above) from parsing (below)
 
+def parse_and_transform(transformer_cls, data):
     print(f'\nParsing ucum unit "{data}"')
-    parsed_data = ucum_parser.parse(data)
+    parsed_data = ucum_parser().parse(data)
     # print(parsed_data.pretty())
-    result = UnitsTransformer().transform(parsed_data)
+    result = transformer_cls().transform(parsed_data)
     print("Result:", result)
     return result

@@ -1,0 +1,849 @@
+Row # (not a code)	UCUM_CODE	Description of the Unit (using UCUM descriptions where they exist)	Comment
+1	10.L/min	10 liter per minute
+2	10.L/(min.m2)	10 liter per minute per square meter
+3	10.uN.s/(cm5.m2)	10 micronewton second per centimeter to the fifth power per square meter
+4	10*4/uL	10 thousand per microliter
+5	10*8	100 million
+6	24.h	24 hour
+7	{absorbance}	absorbance
+8	{activity}	activity
+9	[AU]	allergy unit
+10	{AHF'U}	American Hospital Formulary unit
+11	A	ampere
+12	A/m	ampere per meter
+13	[arb'U]	arbitrary unit
+14	[arb'U]/mL	arbitrary unit per milliliter
+15	{ARU}	aspirin response unit
+16	atm	atmosphere
+17	ag/{cell}	attogram per cell
+18	bar	bar
+19	Bq	Becquerel
+20	[beth'U]	Bethesda unit
+21	10*9/L	billion per liter
+22	10*9/uL	billion per microliter
+23	10*9/mL	billion per milliliter
+24	{binding_index}	binding index
+25	[bdsk'U]	Bodansky unit
+26	{breaths}/min	breaths per minute
+27	{CAG_repeats}	CAG trinucleotide repeats
+28	cal	calorie
+29	{cells}	cells
+30	{cells}/[HPF]	cells per high power field
+31	{cells}/uL	cells per microliter
+32	cg	centigram
+33	cL	centiliter
+34	cm	centimeter
+35	cm[Hg]	centimeter of mercury
+36	cm[H2O]	centimeter of water
+37	cm[H2O]/L/s	centimeter of water per liter per second
+38	cm[H2O]/s/m	centimeter of water per second per meter
+39	cm/s	centimeter per second
+40	cP	centipoise
+41	cSt	centistoke
+42	{delta_OD}	change in (delta) optical density
+43	{clock_time}	clock time e.g 12:30PM
+44	[CFU]	colony forming unit
+45	[CFU]/L	colony forming unit per liter
+46	[CFU]/mL	colony forming unit per milliliter
+47	{CAE'U}	complement activity enzyme unit
+48	{CH100'U}	complement CH100 unit
+49	{copies}	copies
+50	{copies}/ug	copies per microgram
+51	{copies}/mL	copies per milliliter
+52	{count}	count
+53	{CPM}	counts per minute
+54	{CPM}/10*3{cell}	counts per minute per thousand cells
+55	cm3	cubic centimeter
+56	[cin_i]	cubic inch (international)
+57	m3/s	cubic meter per second
+58	{Ct_value}	Cycle threshold value
+59	d	day
+60	d/(7.d)	day per 7 day
+61	d/wk	days per week
+62	dB	decibel
+63	dg	decigram
+64	dL	deciliter
+65	dm	decimeter
+66	deg	degree (plane angle)
+67	Cel	degree Celsius
+68	[degF]	degree Fahrenheit
+69	K	degree Kelvin
+70	K/W	degree Kelvin per Watt
+71	deg/s	degree per second
+72	daL/min	dekaliter per minute
+73	daL/min/m2	dekaliter per minute per square meter
+74	{dilution}	dilution
+75	[diop]	diopter
+76	[dr_av]	dram  (US and British)
+77	[drp]	drop (1/12 milliliter)
+78	dyn.s/cm	dyne second per centimeter
+79	dyn.s/(cm.m2)	dyne second per centimeter per square meter
+80	{Ehrlich'U}	Ehrlich unit
+81	{Ehrlich'U}/100.g	Ehrlich unit per 100 gram
+82	{Ehrlich'U}/(2.h)	Ehrlich unit per 2 hour
+83	{Ehrlich'U}/d	Ehrlich unit per day
+84	{Ehrlich'U}/dL	Ehrlich unit per deciliter
+85	{EIA_index}	EIA index
+86	{EIA_titer}	EIA titer
+87	{EIA'U}	EIA unit
+88	{EIA'U}/U	EIA unit per enzyme unit
+89	{EV}	EIA value
+90	eV	electron Volt
+91	{ELISA'U}	ELISA unit
+92	U	enzyme unit
+93	U/10	enzyme unit per 10
+94	U/10*10	enzyme unit per 10 billion
+95	U/10*10{cells}	enzyme unit per 10 billion cells
+96	U/(10.g){feces}	enzyme unit per 10 gram of feces
+97	U/(12.h)	enzyme unit per 12 hour
+98	U/(2.h)	enzyme unit per 2 hour
+99	U/(24.h)	enzyme unit per 24 hour
+100	U/10*9	enzyme unit per billion
+101	U/d	enzyme unit per day
+102	U/dL	enzyme unit per deciliter
+103	U/g	enzyme unit per gram
+104	U/g{creat}	enzyme unit per gram of creatinine
+105	U/g{Hb}	enzyme unit per gram of hemoglobin
+106	U/g{protein}	enzyme unit per gram of protein
+107	U/h	enzyme unit per hour
+108	U/kg{Hb}	enzyme unit per kilogram of hemoglobin
+109	U/L	enzyme unit per liter
+110	U{25Cel}/L	enzyme unit per liter at 25 deg Celsius
+111	U{37Cel}/L	enzyme unit per liter at 37 deg Celsius
+112	U/mL	enzyme unit per milliliter
+113	U/mL{RBCs}	enzyme unit per milliliter of red blood cells
+114	U/mmol{creat}	enzyme unit per millimole of creatinine
+115	U/10*6	enzyme unit per million
+116	U/min	enzyme unit per minute
+117	U/s	enzyme unit per second
+118	U/10*12	enzyme unit per trillion
+119	U/10*12{RBCs}	enzyme unit per trillion red blood cells
+120	eq	equivalent
+121	eq/L	equivalent per liter
+122	eq/umol	equivalent per micromole
+123	eq/mL	equivalent per milliliter
+124	eq/mmol	equivalent per millimole
+125	erg	erg
+126	F	Farad
+127	[ft_us]/[ft_us]	feet (US) per feet (US)
+128	fg	femtogram
+129	fL	femtoliter
+130	fm	femtometer
+131	fmol	femtomole
+132	fmol/g	femtomole per gram
+133	fmol/L	femtomole per liter
+134	fmol/mg	femtomole per milligram
+135	fmol/mg{cyt_prot}	femtomole per milligram of cytosol protein
+136	fmol/mg{prot}	femtomole per milligram of protein
+137	fmol/mL	femtomole per milliliter
+138	[foz_us]	fluid ounce (US)
+139	{FIU}	fluorescent intensity unit
+140	[ft_i]	foot (international)
+141	{fraction}	fraction
+142	[Ch]	French (catheter gauge)
+143	{GAA_repeats}	GAA trinucleotide repeats
+144	[gal_us]	gallon (US)
+145	{genomes}/mL	genomes per milliliter
+146	{Globules}/[HPF]	globules (drops)  per high power field
+147	g	gram
+148	g.m	gram meter
+149	g.m/{beat}	gram meter per heart beat
+150	g{creat}	gram of creatinine
+151	g{Hb}	gram of hemoglobin
+152	g{total_nit}	gram of total nitrogen
+153	g{total_prot}	gram of total protein
+154	g{wet_tissue}	gram of wet tissue
+155	g/kg/(8.h)	gram per  kilogram per 8 hour
+156	g/(100.g)	gram per 100 gram
+157	g/(12.h)	gram per 12 hour
+158	g/(24.h)	gram per 24 hour
+159	g/(3.d)	gram per 3 days
+160	g/(4.h)	gram per 4 hour
+161	g/(48.h)	gram per 48 hour
+162	g/(5.h)	gram per 5 hour
+163	g/(6.h)	gram per 6 hour
+164	g/(72.h)	gram per 72 hour
+165	g/(8.h){shift}	gram per 8 hour shift
+166	g/cm3	gram per cubic centimeter
+167	g/d	gram per day
+168	g/dL	gram per deciliter
+169	g/g	gram per gram
+170	g/g{creat}	gram per gram of creatinine
+171	g/g{globulin}	gram per gram of globulin
+172	g/g{tissue}	gram per gram of tissue
+173	g/h	gram per hour
+174	g/h/m2	gram per hour per square meter
+175	g/kg	gram per kilogram
+176	g/kg/(8.h){shift}	gram per kilogram per 8 hour shift
+177	g/kg/d	gram per kilogram per day
+178	g/kg/h	gram per kilogram per hour
+179	g/kg/min	gram per kilogram per minute
+180	g/L	gram per liter
+181	g/mg	gram per milligram
+182	g/mL	gram per milliliter
+183	g/mmol	gram per millimole
+184	g/min	gram per minute
+185	g/mol{creat}	gram per mole of creatinine
+186	g/{specimen}	gram per specimen
+187	g/cm2	gram per square centimeter
+188	g/m2	gram per square meter
+189	g/{total_output}	gram per total output
+190	g/{total_weight}	gram per total weight
+191	Gy	Gray
+192	{beats}/min	heart beats per minute
+193	H	Henry
+194	Hz	Hertz
+195	[HPF]	high power field
+196	h	hour
+197	h/d	hour per day
+198	h/wk	hour per week
+199	[APL'U]/mL	IgA anticardiolipin unit per milliliter**	(**anticardiolipin can also be called "biologic activity of anticardiolipin" or "antiphospholipid")
+200	[APL'U]	IgA anticardiolipin unit**	(**anticardiolipin can also be called "biologic activity of anticardiolipin" or "antiphospholipid")
+201	{APS'U}	IgA antiphosphatidylserine unit
+202	[GPL'U]/mL	IgG anticardiolipin unit per milliliter**	(**anticardiolipin can also be called "biologic activity of anticardiolipin" or "antiphospholipid")
+203	[GPL'U]	IgG anticardiolipin unit**	(**anticardiolipin can also be called "biologic activity of anticardiolipin" or "antiphospholipid")
+204	{GPS'U}	IgG antiphosphatidylserine unit
+205	[MPL'U]/mL	IgM anticardiolipin unit per milliliter**
+206	[MPL'U]	IgM anticardiolipin unit**	(**anticardiolipin can also be called "biologic activity of anticardiolipin" or "antiphospholipid")
+207	{MPS'U}	IgM antiphosphatidylserine unit
+208	{MPS'U}/mL	IgM antiphosphatidylserine unit per milliliter
+209	{ImmuneComplex'U}	immune complex unit
+210	{ISR}	immune status ratio
+211	{IFA_index}	immunofluorescence assay index
+212	{IFA_titer}	Immunofluorescence assay titer
+213	[in_i]	inch (international)
+214	[in_i'H2O]	inch (international) of water
+215	[in_us]	inches (US)
+216	{index_val}	index value
+217	{index}	index value
+218	{HA_titer}	influenza hemagglutination titer
+219	{INR}	international normalized ratio
+220	[IU]	international unit
+221	[IU]/(2.h)	international unit per 2 hour
+222	[IU]/(24.h)	international unit per 24 hour
+223	[IU]/10*9{RBCs}	international unit per billion red blood cells
+224	[IU]/d	international unit per day
+225	[IU]/dL	international unit per deciliter
+226	[IU]/g	international unit per gram
+227	[IU]/g{Hb}	international unit per gram of hemoglobin
+228	[IU]/h	international unit per hour
+229	[IU]/kg	international unit per kilogram
+230	[IU]/kg/d	international unit per kilogram per day
+231	[IU]/L	international unit per liter
+232	[IU]/L{37Cel}	international unit per liter at 37 degrees Celsius
+233	[IU]/mg{creat}	international unit per milligram of creatinine
+234	[IU]/mL	international unit per milliliter
+235	[IU]/min	international unit per minute
+236	J	joule
+237	J/L	joule per liter
+238	{JDF'U}	Juvenile Diabetes Foundation unit
+239	{JDF'U}/L	Juvenile Diabetes Foundation unit per liter
+240	{KCT'U}	kaolin clotting time
+241	kat	katal
+242	kat/kg	katal per kilogram
+243	kat/L	katal per liter
+244	kU	kilo enzyme unit
+245	kU/g	kilo enzyme unit per gram
+246	kU/L	kilo enzyme unit per liter
+247	kU/L{class}	kilo enzyme unit per liter class
+248	kU/mL	kilo enzyme unit per milliliter
+249	k[IU]/L	kilo international unit per liter
+250	k[IU]/mL	kilo international unit per milliliter
+251	kcal	kilocalorie
+252	kcal/(24.h)	kilocalorie per 24 hour
+253	kcal/d	kilocalorie per day
+254	kcal/h	kilocalorie per hour
+255	kcal/kg/(24.h)	kilocalorie per kilogram per 24 hour
+256	kcal/[oz_av]	kilocalorie per ounce (US & British)
+257	kg	kilogram
+258	kg.m/s	kilogram meter per second
+259	kg/m3	kilogram per cubic meter
+260	kg/h	kilogram per hour
+261	kg/L	kilogram per liter
+262	kg/min	kilogram per minute
+263	kg/mol	kilogram per mole
+264	kg/s	kilogram per second
+265	kg/(s.m2)	kilogram per second per square meter
+266	kg/m2	kilogram per square meter
+267	kL	kiloliter
+268	km	kilometer
+269	kPa	kilopascal
+270	ks	kilosecond
+271	[ka'U]	King Armstrong unit
+272	{KRONU'U}/mL	Kronus unit per milliliter
+273	[knk'U]	Kunkel unit
+274	L	liter
+275	L/(24.h)	liter per 24 hour
+276	L/(8.h)	liter per 8 hour
+277	L/d	liter per day
+278	L/h	liter per hour
+279	L/kg	liter per kilogram
+280	L/L	liter per liter
+281	L/min	liter per minute
+282	L/min/m2	liter per minute per sqaure meter
+283	L/(min.m2)	liter per minute per square meter
+284	L/s	liter per second
+285	L/s/s2	liter per second per square second
+286	{Log_copies}/mL	log (base 10) copies per milliliter
+287	{Log_IU}	log (base 10) international unit
+288	{Log_IU}/mL	log (base 10) international unit per milliliter
+289	{Log}	log base 10
+290	[LPF]	low power field
+291	lm	lumen
+292	lm.m2	lumen square meter
+293	{Lyme_index_value}	Lyme index value
+294	[mclg'U]	Maclagan unit
+295	Ms	megasecond
+296	[MET].min/wk	metabolic equivalent minute per week
+297	m	meter
+298	m/s	meter per second
+299	m/s2	meter per square second
+300	t	metric ton
+301	uU/g	micro enzyme unit per gram
+302	uU/L	micro enzyme unit per liter
+303	uU/mL	micro enzyme unit per milliliter
+304	u[IU]	micro international unit
+305	u[IU]/mL	micro international unit per milliliter
+306	ueq	microequivalent
+307	ueq/L	microequivalent per liter
+308	ueq/mL	microequivalent per milliliter
+309	ug	microgram
+310	ug/g{feces}	microgram  per gram of feces
+311	ug{FEU}/mL	microgram fibrinogen equivalent unit per milliliter
+312	ug/(100.g)	microgram per 100 gram
+313	ug/(24.h)	microgram per 24 hour
+314	ug/(8.h)	microgram per 8 hour
+315	ug/m3	microgram per cubic meter
+316	ug/d	microgram per day
+317	ug/dL	microgram per deciliter
+318	ug/dL{RBCs}	microgram per deciliter of red blood cells
+319	ug/g	microgram per gram
+320	ug/g{creat}	microgram per gram of creatinine
+321	ug/g{dry_tissue}	microgram per gram of dry tissue
+322	ug/g{dry_wt}	microgram per gram of dry weight
+323	ug/g{hair}	microgram per gram of hair
+324	ug/g{Hb}	microgram per gram of hemoglobin
+325	ug/g{tissue}	microgram per gram of tissue
+326	ug/h	microgram per hour
+327	ug/kg	microgram per kilogram
+328	ug/kg/(8.h)	microgram per kilogram per 8 hour
+329	ug/kg/d	microgram per kilogram per day
+330	ug/kg/h	microgram per kilogram per hour
+331	ug/kg/min	microgram per kilogram per minute
+332	ug/L	microgram per liter
+333	ug/L{RBCs}	microgram per liter of red blood cells
+334	ug/L/(24.h)	microgram per liter per 24 hour
+335	ug/mg	microgram per milligram
+336	ug/mg{creat}	microgram per milligram of creatinine
+337	ug/mL	microgram per milliliter
+338	ug/mL{class}	microgram per milliliter class
+339	ug/mL{eqv}	microgram per milliliter equivalent
+340	ug/mmol	microgram per millimole
+341	ug/mmol{creat}	microgram per millimole of creatinine
+342	ug/min	microgram per minute
+343	ug/ng	microgram per nanogram
+344	ug/{specimen}	microgram per specimen
+345	ug/[sft_i]	microgram per square foot (international)
+346	ug/m2	microgram per square meter
+347	u[IU]/L	microinternational unit per liter
+348	ukat	microkatal
+349	uL	microliter
+350	uL/(2.h)	microliter per 2 hour
+351	uL/h	microliter per hour
+352	um	micrometer
+353	umol	micromole
+354	umol{BCE}/mol	micromole bone collagen equivalent per mole
+355	umol/(2.h)	micromole per 2 hour
+356	umol/(24.h)	micromole per 24 hour
+357	umol/(8.h)	micromole per 8 hour
+358	umol/d	micromole per day
+359	umol/dL	micromole per deciliter
+360	umol/dL{GF}	micromole per deciliter of glomerular filtrate
+361	umol/g	micromole per gram
+362	umol/g{creat}	micromole per gram of creatinine
+363	umol/g{Hb}	micromole per gram of hemoglobin
+364	umol/h	micromole per hour
+365	umol/kg	micromole per kilogram
+366	umol/kg{feces}	micromole per kilogram of feces
+367	umol/L	micromole per liter
+368	umol/L{RBCs}	micromole per liter of red blood cells
+369	umol/L/h	micromole per liter per hour
+370	umol/umol	micromole per micromole
+371	umol/umol{creat}	micromole per micromole of creatinine
+372	umol/mg	micromole per milligram
+373	umol/mg{creat}	micromole per milligram of creatinine
+374	umol/mL	micromole per milliliter
+375	umol/mL/min	micromole per milliliter per minute
+376	umol/mmol	micromole per millimole
+377	umol/mmol{creat}	micromole per millimole of creatinine
+378	umol/10*6{RBC}	micromole per million red blood cell
+379	umol/min	micromole per minute
+380	umol/min/g	micromole per minute per gram
+381	umol/min/g{mucosa}	micromole per minute per gram of mucosa
+382	umol/min/g{prot}	micromole per minute per gram of protein
+383	umol/min/L	micromole per minute per liter
+384	umol/mol	micromole per mole
+385	umol/mol{creat}	micromole per mole of creatinine
+386	umol/mol{Hb}	micromole per mole of hemoglobin
+387	um/s	microns per second
+388	uOhm	microOhm
+389	us	microsecond
+390	uV	microvolt
+391	[mi_i]	mile (international)
+392	mU/g	milli  enzyme unit per gram
+393	mU/mL	milli  enzyme unit per milliliter
+394	mU/mL/min	milli  enzyme unit per milliliter per minute
+395	mU/mmol{creat}	milli  enzyme unit per millimole of creatinine
+396	mU/mmol{RBCs}	milli  enzyme unit per millimole of red blood cells
+397	m[IU]/mL	milli  international unit per milliliter
+398	mU/g{Hb}	milli enzyme unit per gram of hemoglobin
+399	mU/g{prot}	milli enzyme unit per gram of protein
+400	mU/L	milli enzyme unit per liter
+401	mU/mg	milli enzyme unit per milligram
+402	mU/mg{creat}	milli enzyme unit per milligram of creatinine
+403	m[IU]/L	milli international unit per liter
+404	mA	milliampere
+405	mbar	millibar
+406	mbar/L/s	millibar per liter per second
+407	mbar.s/L	millibar second per liter
+408	meq	milliequivalent
+409	meq/(2.h)	milliequivalent per 2 hour
+410	meq/(24.h)	milliequivalent per 24 hour
+411	meq/(8.h)	milliequivalent per 8 hour
+412	meq/d	milliequivalent per day
+413	meq/dL	milliequivalent per deciliter
+414	meq/g	milliequivalent per gram
+415	meq/g{creat}	milliequivalent per gram of creatinine
+416	meq/h	milliequivalent per hour
+417	meq/kg	milliequivalent per kilogram
+418	meq/kg/h	milliequivalent per kilogram per hour
+419	meq/L	milliequivalent per liter
+420	meq/mL	milliequivalent per milliliter
+421	meq/min	milliequivalent per minute
+422	meq/{specimen}	milliequivalent per specimen
+423	meq/m2	milliequivalent per square meter
+424	meq/{total_volume}	milliequivalent per total volume
+425	mg	milligram
+426	mg{FEU}/L	milligram fibrinogen equivalent unit per liter
+427	mg/(10.h)	milligram per 10 hour
+428	mg/(12.h)	milligram per 12 hour
+429	mg/(2.h)	milligram per 2 hour
+430	mg/(24.h)	milligram per 24 hour
+431	mg/(6.h)	milligram per 6 hour
+432	mg/(72.h)	milligram per 72 hour
+433	mg/(8.h)	milligram per 8 hour
+434	mg/{collection}	milligram per collection
+435	mg/m3	milligram per cubic meter
+436	mg/d	milligram per day
+437	mg/d/{1.73_m2}	milligram per day per 1.73 square meter
+438	mg/dL	milligram per deciliter
+439	mg/dL{RBCs}	milligram per deciliter of red blood cells
+440	mg/g	milligram per gram
+441	mg/g{creat}	milligram per gram of creatinine
+442	mg/g{dry_tissue}	milligram per gram of dry tissue
+443	mg/g{feces}	milligram per gram of feces
+444	mg/g{tissue}	milligram per gram of tissue
+445	mg/g{wet_tissue}	milligram per gram of wet tissue
+446	mg/h	milligram per hour
+447	mg/kg	milligram per kilogram
+448	mg/kg/(8.h)	milligram per kilogram per 8 hour
+449	mg/kg/d	milligram per kilogram per day
+450	mg/kg/h	milligram per kilogram per hour
+451	mg/kg/min	milligram per kilogram per minute
+452	mg/L	milligram per liter
+453	mg/L{RBCs}	milligram per liter of red blood cells
+454	mg/mg	milligram per milligram
+455	mg/mg{creat}	milligram per milligram of creatinine
+456	mg/mL	milligram per milliliter
+457	mg/mmol	milligram per millimole
+458	mg/mmol{creat}	milligram per millimole of creatinine
+459	mg/min	milligram per minute
+460	mg/{specimen}	milligram per specimen
+461	mg/m2	milligram per square meter
+462	mg/{total_output}	milligram per total output
+463	mg/{total_volume}	milligram per total volume
+464	mg/wk	milligram per week
+465	mL	milliliter
+466	mL{fetal_RBCs}	milliliter of fetal red blood cells
+467	mL/(10.h)	milliliter per 10 hour
+468	mL/(12.h)	milliliter per 12 hour
+469	mL/(2.h)	milliliter per 2 hour
+470	mL/(24.h)	milliliter per 24 hour
+471	mL/(4.h)	milliliter per 4 hour
+472	mL/(5.h)	milliliter per 5 hour
+473	mL/(6.h)	milliliter per 6 hour
+474	mL/(72.h)	milliliter per 72 hour
+475	mL/(8.h)	milliliter per 8 hour
+476	mL/(8.h)/kg	milliliter per 8 hour per kilogram
+477	mL/cm[H2O]	milliliter per centimeter of water
+478	mL/d	milliliter per day
+479	mL/dL	milliliter per deciliter
+480	mL/{beat}	milliliter per heart beat
+481	mL/{beat}/m2	milliliter per heart beat per  square meter
+482	mL/h	milliliter per hour
+483	mL/kg	milliliter per kilogram
+484	mL/kg/(8.h)	milliliter per kilogram per 8 hour
+485	mL/kg/d	milliliter per kilogram per day
+486	mL/kg/h	milliliter per kilogram per hour
+487	mL/kg/min	milliliter per kilogram per minute
+488	mL/mbar	milliliter per millibar
+489	mL/mm	milliliter per millimeter
+490	mL/min	milliliter per minute
+491	mL/min/{1.73_m2}	milliliter per minute per 1.73 square meter
+492	mL/min/m2	milliliter per minute per square meter
+493	mL/s	milliliter per second
+494	mL/[sin_i]	milliliter per square inch (international)
+495	mL/m2	milliliter per square meter
+496	mm	millimeter
+497	mm[Hg]	millimeter of mercury	Note:  1atm=760Torr=760mmHg=101kPa=101000Pa=14.7psi
+498	mm[H2O]	millimeter of water
+499	mm/h	millimeter per hour
+500	mm/min	millimeter per minute
+501	mmol	millimole
+502	mmol/(12.h)	millimole per 12 hour
+503	mmol/(2.h)	millimole per 2 hour
+504	mmol/(24.h)	millimole per 24 hour
+505	mmol/(5.h)	millimole per 5 hour
+506	mmol/(6.h)	millimole per 6 hour
+507	mmol/(8.h)	millimole per 8 hour
+508	mmol/d	millimole per day
+509	mmol/dL	millimole per deciliter
+510	mmol/{ejaculate}	millimole per ejaculate
+511	mmol/g	millimole per gram
+512	mmol/g{creat}	millimole per gram of creatinine
+513	mmol/h	millimole per hour
+514	mmol/h/mg{Hb}	millimole per hour per milligram of hemoglobin
+515	mmol/h/mg{prot}	millimole per hour per milligram of protein
+516	mmol/kg	millimole per kilogram
+517	mmol/kg/(8.h)	millimole per kilogram per 8 hour
+518	mmol/kg/d	millimole per kilogram per day
+519	mmol/kg/h	millimole per kilogram per hour
+520	mmol/kg/min	millimole per kilogram per minute
+521	mmol/L	millimole per liter
+522	mmol/L{RBCs}	millimole per liter of red blood cells
+523	mmol/mmol	millimole per millimole
+524	mmol/mmol{urea}	millimole per millimole of urea
+525	mmol/mmol{creat}	millimole per millmole of creatinine
+526	mmol/min	millimole per minute
+527	mmol/mol	millimole per mole
+528	mmol/mol{creat}	millimole per mole of creatinine
+529	mmol/s/L	millimole per second per liter
+530	mmol/{specimen}	millimole per specimen
+531	mmol/m2	millimole per square meter
+532	mmol/{total_vol}	millimole per total volume
+533	10*6	million
+534	10*6.[CFU]/L	million colony forming unit per liter
+535	10*6.[IU]	million international unit
+536	10*6/(24.h)	million per 24 hour
+537	10*6/kg	million per kilogram
+538	10*6/L	million per liter
+539	10*6/uL	million per microliter
+540	10*6/mL	million per milliliter
+541	mosm	milliosmole
+542	mosm/kg	milliosmole per kilogram
+543	mosm/L	milliosmole per liter
+544	mPa	millipascal
+545	mPa.s	millipascal second
+546	ms	millisecond
+547	mV	millivolt
+548	mV/s	millivolt per second
+549	{minidrop}/min	minidrop per minute
+550	{minidrop}/s	minidrop per second
+551	min	minute
+552	min/d	minute per day
+553	min/wk	minute per week
+554	mol	mole
+555	mol/m3	mole per cubic meter
+556	mol/kg	mole per kilogram
+557	mol/kg/s	mole per kilogram per second
+558	mol/L	mole per liter
+559	mol/mL	mole per milliliter
+560	mol/mol	mole per mole
+561	mol/s	mole per second
+562	{#}/{platelet}	molecule per platelet
+563	mo	month
+564	{mm/dd/yyyy}	month-day-year
+565	{M.o.M}	multiple of the median
+566	{mutation}	mutation
+567	nU/mL	nanoenzyme unit per milliliter
+568	nU/{RBC}	nanoenzyme unit per red blood cell
+569	ng	nanogram
+570	ng{FEU}/mL	nanogram fibrinogen equivalent unit per milliliter
+571	ng/(24.h)	nanogram per 24 hour
+572	ng/(8.h)	nanogram per 8 hour
+573	ng/d	nanogram per day
+574	ng/dL	nanogram per deciliter
+575	ng/U	nanogram per enzyme unit
+576	ng/g	nanogram per gram
+577	ng/g{creat}	nanogram per gram of creatinine
+578	ng/h	nanogram per hour
+579	ng/kg	nanogram per kilogram
+580	ng/kg/(8.h)	nanogram per kilogram per 8 hour
+581	ng/kg/h	nanogram per kilogram per hour
+582	ng/kg/min	nanogram per kilogram per minute
+583	ng/L	nanogram per liter
+584	ng/mg	nanogram per milligram
+585	ng/mg{creat}	nanogram per milligram of creatinine
+586	ng/mg{prot}	nanogram per milligram of protein
+587	ng/mg/h	nanogram per milligram per hour
+588	ng/mL{RBCs}	nanogram per milliliter of red blood cells
+589	ng/mL/h	nanogram per milliliter per hour
+590	ng/10*6	nanogram per million
+591	ng/10*6{RBCs}	nanogram per million red blood cells
+592	ng/mL	nanogram per millliiter
+593	ng/min	nanogram per minute
+594	ng/s	nanogram per second
+595	ng/m2	nanogram per square meter
+596	nkat	nanokatal
+597	nL	nanoliter
+598	nm	nanometer
+599	nm/s/L	nanometer per second per liter
+600	nmol	nanomole
+601	nmol{BCE}	nanomole bone collagen equivalent
+602	nmol{BCE}/L	nanomole bone collagen equivalent per liter
+603	nmol/mmol{creat}	nanomole bone collagen equivalent per millimole of creatinine
+604	nmol/mg{prot}	nanomole of 1/2 cystine per milligram of protein
+605	nmol{ATP}	nanomole of ATP
+606	nmol/(24.h)	nanomole per 24 hour
+607	nmol/d	nanomole per day
+608	nmol/dL	nanomole per deciliter
+609	nmol/dL{GF}	nanomole per deciliter of glomerular filtrate
+610	nmol/g	nanomole per gram
+611	nmol/g{creat}	nanomole per gram of creatinine
+612	nmol/g{dry_wt}	nanomole per gram of dry weight
+613	nmol/h/L	nanomole per hour per liter
+614	nmol/h/mg{prot}	nanomole per hour per milligram of protein
+615	nmol/h/mL	nanomole per hour per milliliter
+616	nmol/L	nanomole per liter
+617	nmol/L{RBCs}	nanomole per liter of red blood cells
+618	nmol/L/mmol{creat}	nanomole per liter per millimole of creatinine
+619	nmol/m/mg{prot}	nanomole per meter per milligram of protein
+620	nmol/umol{creat}	nanomole per micromole  of creatinine
+621	nmol/mg	nanomole per milligram
+622	nmol/mg{creat}	nanomole per milligram of creatinine
+623	nmol/mg{prot}	nanomole per milligram of protein
+624	nmol/mg{prot}/h	nanomole per milligram of protein per hour
+625	nmol/mg/h	nanomole per milligram per hour
+626	nmol/mL	nanomole per milliliter
+627	nmol/mL/h	nanomole per milliliter per hour
+628	nmol/mL/min	nanomole per milliliter per minute
+629	nmol/mmol	nanomole per millimole
+630	nmol/mmol{creat}	nanomole per millimole of creatinine
+631	nmol/min	nanomole per minute
+632	nmol/min/mg{Hb}	nanomole per minute per milligram of hemoglobin
+633	nmol/min/mg{prot}	nanomole per minute per milligram of protein
+634	nmol/min/mg{protein}	nanomole per minute per milligram protein
+635	nmol/min/mL	nanomole per minute per milliliter
+636	nmol/min/10*6{cells}	nanomole per minute per million cells
+637	nmol/mol	nanomole per mole
+638	nmol/mol{creat}	nanomole per mole creatinine
+639	nmol/nmol	nanomole per nanomole
+640	nmol/s	nanomole per second
+641	nmol/s/L	nanomole per second per liter
+642	ns	nanosecond
+643	N	Newton
+644	N.cm	Newton centimeter
+645	N.s	Newton second
+646	{#}	number
+647	{#}/a	number per annum (year)
+648	{#}/d	number per day
+649	{#}/g	number per gram
+650	{#}/[HPF]	number per high power field
+651	{#}/L	number per liter
+652	{#}/[LPF]	number per low power field
+653	{#}/uL	number per microliter
+654	{#}/mL	number per milliliter
+655	{#}/min	number per minute
+656	{#}/wk	number per week
+657	Ohm	Ohm
+658	Ohm.m	Ohm meter
+659	10*5	one hundred thousand
+660	{OD_unit}	optical density unit
+661	osm	osmole
+662	osm/kg	osmole per kilogram
+663	osm/L	osmole per liter
+664	[oz_av]	ounce (US and British)
+665	{Pan_Bio'U}	panbio unit
+666	[ppb]	part per billion
+667	[ppm]	part per million
+668	[ppm]{v/v}	part per million in volume per volume
+669	[ppth]	part per thousand
+670	[pptr]	part per trillion
+671	Pa	Pascal
+672	/10*10	per 10 billion
+673	/10*4{RBCs}	per 10 thousand red blood cells
+674	/100	per 100
+675	/100{cells}	per 100 cells
+676	/100{neutrophils}	per 100 neutrophils
+677	/100{spermatozoa}	per 100 spermatozoa
+678	/100{WBCs}	per 100 white blood cells
+679	/[arb'U]	per arbitrary unit
+680	/10*9	per billion
+681	/cm[H2O]	per centimeter of water
+682	/m3	per cubic meter
+683	/d	per day
+684	/dL	per deciliter
+685	/{entity}	per entity
+686	/U	per enzyme unit
+687	/g	per gram
+688	/g{creat}	per gram of creatinine
+689	/g{Hb}	per gram of hemoglobin
+690	/g{tot_nit}	per gram of total nitrogen
+691	/g{tot_prot}	per gram of total protein
+692	/g{wet_tis}	per gram of wet tissue
+693	/[HPF]	per high power field
+694	/h	per hour
+695	/[IU]	per international unit
+696	/kg	per kilogram
+697	/kg{body_wt}	per kilogram of body weight
+698	/L	per liter
+699	/[LPF]	per low power field
+700	/uL	per microliter
+701	/mg	per milligram
+702	/mL	per milliliter
+703	/mm	per millimeter
+704	/mmol{creat}	per millimole of creatinine
+705	/10*6	per million
+706	/min	per minute
+707	/mo	per month
+708	/{OIF}	per oil immersion field
+709	/s	per second
+710	/m2	per square meter
+711	/10*3	per thousand
+712	/10*3{RBCs}	per thousand red blood cells
+713	/10*12	per trillion
+714	/10*12{RBCs}	per trillion red blood cells
+715	/(12.h)	per twelve hour
+716	/wk	per week
+717	/a	per year
+718	%	percent
+719	%{loss_AChR}	percent  loss of acetylcholine receptor
+720	%{penetration}	percent  penetration
+721	%{abnormal}	percent abnormal
+722	%{activity}	percent activity
+723	%{aggregation}	percent aggregation
+724	%{at_60_min}	percent at 60 minute
+725	%{basal_activity}	percent basal activity
+726	%{binding}	percent binding
+727	%{blockade}	percent blockade
+728	%{blocked}	percent blocked
+729	%{bound}	percent bound
+730	%{breakdown}	percent breakdown
+731	%{vol}	percent by volume
+732	%{deficient}	percent deficient
+733	%{dose}	percent dose
+734	%{excretion}	percent excretion
+735	%{Hb}	percent hemoglobin
+736	%{hemolysis}	percent hemolysis
+737	%{index}	percent index
+738	%{inhibition}	percent inhibition
+739	%{loss}	percent loss
+740	%{lysis}	percent lysis
+741	%{normal}	percent normal
+742	%{pooled_plasma}	percent normal pooled plasma
+743	%{bacteria}	percent of bacteria
+744	%{baseline}	percent of baseline
+745	%{cells}	percent of cells
+746	%{RBCs}	percent of red blood cells
+747	%{WBCs}	percent of white blood cells
+748	%{positive}	percent positive
+749	%{reactive}	percent reactive
+750	%{recovery}	percent recovery
+751	%{reference}	percent reference
+752	%{residual}	percent residual
+753	%{response}	percent response
+754	%{saturation}	percent saturation
+755	%{total}	percent total
+756	%{uptake}	percent uptake
+757	%{viable}	percent viable
+758	{percentile}	percentile
+759	[pH]	pH
+760	{phenotype}	phenotype
+761	pA	picoampere
+762	pg	picogram
+763	pg/{cell}	picogram per cell
+764	pg/dL	picogram per deciliter
+765	pg/L	picogram per liter
+766	pg/mg	picogram per milligram
+767	pg/mg{creat}	picogram per milligram of creatinine
+768	pg/mL	picogram per milliliter
+769	pg/mL{sLT}	picogram per milliliter sulfidoleukotrienes
+770	pg/mm	picogram per millimeter
+771	pg/{RBC}	picogram per red blood cell
+772	pkat	picokatal
+773	pL	picoliter
+774	pm	picometer
+775	pmol	picomole
+776	pmol/(24.h)	picomole per 24 hour
+777	pmol/d	picomole per day
+778	pmol/dL	picomole per deciliter
+779	pmol/g	picomole per gram
+780	pmol/h/mg{prot}	picomole per hour per milligram of protein
+781	pmol/H/mg{protein}	picomole per hour per milligram protein
+782	pmol/h/mL	picomole per hour per milliliter
+783	pmol/L	picomole per liter
+784	pmol/umol	picomole per micromole
+785	pmol/umol{creat}	picomole per micromole of creatinine
+786	pmol/mg{prot}	picomole per milligram of protein
+787	pmol/mL	picomole per milliliter
+788	pmol/mmol{creat}	picomole per millimole of creatinine
+789	pmol/min	picomole per minute
+790	pmol/min/mg{prot}	picomole per minute per milligram of protein
+791	pmol/{RBC}	picomole per red blood cell
+792	ps	picosecond
+793	pT	picotesla
+794	[pt_us]	pint (US)
+795	[lb_av]	pound (US and British)
+796	[psi]	pound per square inch
+797	[qt_us]	quart (US)
+798	{ratio}	ratio
+799	{RBC}/uL	red blood cell per microliter
+800	%{relative}	relative percent
+801	{rel_saturation}	relative saturation
+802	{risk}	risk
+803	{Rubella_virus}	rubella virus
+804	{saturation}	saturation
+805	{score}	score
+806	s	second
+807	s/{control}	second per control
+808	{shift}	shift
+809	S	Siemens
+810	Sv	Sievert
+811	{s_co_ratio}	signal to cutoff ratio
+812	{spermatozoa}/mL	spermatozoa per milliliter
+813	cm2	square centimeter
+814	cm2/s	square centimeter per second
+815	dm2/s2	square decimeter per square second
+816	[sft_i]	square foot (international)
+817	[sin_i]	square inch (international)
+818	m2	square meter
+819	m2/s	square meter per second
+820	mm2	square millimeter
+821	[syd_i]	square yard (international)
+822	{STDV}	standard deviation
+823	{Tscore}	t score
+824	[tbs_us]	tablespoon (US)
+825	[tsp_us]	teaspoon (US)
+826	T	Tesla
+827	10*3	thousand
+828	10*3{copies}/mL	thousand copies per milliliter
+829	10*3/L	thousand per liter
+830	10*3/uL	thousand per microliter
+831	10*3/mL	thousand per milliliter
+832	10*3{RBCs}	thousand red blood cells
+833	{TSI_index}	thyroid-stimulating immunoglobulin index
+834	{TmStp}	time stamp
+835	{titer}	titer
+836	[todd'U]	Todd unit
+837	Torr	Torr 	Note:  1atm=760Torr=760mmHg=101kPa=101000Pa=14.7psi
+838	10*12/L	trillion per liter
+839	[oz_tr]	Troy ounce
+840	[tb'U]	tuberculin unit
+841	V	volt
+842	Wb	Weber
+843	wk	week
+844	{WBCs}	white blood cells
+845	[yd_i]	yard (international)
+846	a	year
+847	{yyyy}	year
+848	{Zscore}	z score

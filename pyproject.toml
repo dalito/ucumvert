@@ -225,7 +225,7 @@ classmethod-decorators = [
 ]
 
 [tool.codespell]
-skip = "pyproject.toml,tests/data,src/ucumvert/vendor/ucum-essence.xml"
+skip = "pyproject.toml,src/ucumvert/vendor/ucum-essence.xml,src/ucumvert/vendor/ucum_examples.tsv"
 # Note: words have to be lowercased for the ignore-words-list
 ignore-words-list = "linke"
 quiet-level = 3

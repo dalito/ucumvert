@@ -34,7 +34,7 @@ def extract_examples_as_tsv(filepath: Path) -> None:
             ]
         )
 
-    with open(filepath.parent / "ucum_example.tsv", "w") as f:
+    with open(filepath.parent / "ucum_examples.tsv", "w") as f:
         for row in tsv:
             f.write("\t".join(row) + "\n")
 
