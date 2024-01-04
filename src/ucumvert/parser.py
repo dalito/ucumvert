@@ -7,7 +7,7 @@ from ucumvert.xml_util import (
     get_prefixes,
 )
 
-# UCUM syntax in the Backus-Naur Form from https://ucum.org/ucum#section-Syntax-Rules
+# UCUM syntax in the Backus-Naur Form, copied from https://ucum.org/ucum#section-Syntax-Rules
 # <sign>  : "+" | "-"
 # <digit> : "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 # <digits>    : <digit><digits> | <digit>
@@ -29,10 +29,10 @@ from ucumvert.xml_util import (
 #             | <term>
 # <annotation>    : "{"<ANNOTATION-STRING>"}"
 
-# Note, the following lark grammar closely follows the specification above but
-#    fails for "100/{cells}" and "g/(8.h){shift}". Both are valid UCUM strings
-#    from the official examples.
-# UCUM_GRAMMAR_almost = """
+# The following commented-out lark grammar closely follows the specification
+#    above but fails for "100/{cells}" and "g/(8.h){shift}". Both are valid
+#    UCUM strings from the official examples.
+# UCUM_GRAMMAR_almost_correct = """
 #     simple_unit: METRIC
 #             | PREFIX? METRIC
 #             | NON_METRIC
@@ -97,7 +97,6 @@ UCUM_GRAMMAR = """
 
 class UnitsTransformer(Transformer):
     def FACTOR(self, args):
-        # print("DBGf", repr(args))
         return {
             "factor": int(args),
         }
@@ -129,6 +128,8 @@ class UnitsTransformer(Transformer):
             return args[0]
         if len(args) == 3:
             if isinstance(args[0], dict):
+                if "factor" in args[0] and len(args[0]) == 1:
+                    return {**args[0], **args[1], **args[2]}
                 return [args[0], {**args[1], **args[2]}]
             return args[0] + [{**args[1], **args[2]}]
         return None
@@ -156,7 +157,7 @@ class UnitsTransformer(Transformer):
 
     def ANNOTATION(self, args):
         return {
-            "annotation": str(args[0]),
+            "annotation": str(args),
         }
 
     def OPERATOR(self, args):

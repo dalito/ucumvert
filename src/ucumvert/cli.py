@@ -8,7 +8,7 @@ def main():
         if s in "qQ":
             break
         try:
-            print(parse_and_transform(UnitsTransformer, s))
+            parse_and_transform(UnitsTransformer, s)
         except Exception as e:
             print(e)
 
