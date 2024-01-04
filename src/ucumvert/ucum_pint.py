@@ -26,7 +26,7 @@ def ucum_to_pint(p, value):
         prefix = unit_term.get("prefix", "")
         exp = unit_term.get("exponent", None)
         unit = unit_term.get("unit", "")
-        # replace ucum unit atom with pint unit atom
+        # replace ucum unit code with pint unit code
         unit_fixed = ucum_to_pint_map.get(unit, unit)
         u_str = ureg(prefix + unit_fixed + (f"**{exp}" if exp else ""))
         # print("pint unit:", u_str)
@@ -44,7 +44,9 @@ def test():
         "/s.m.N",
         "/s.m",
         "kcal/10",
-        "kcal/10{cookies}",  # fails although it is valid
+        "kcal/10{cookies}",
+        "(8.h){shift}",
+        # "2mg",  # expected failure (should be "2.mg")
     ]
     for unit in test_ucum_units:
         print("ucum unit:", unit)

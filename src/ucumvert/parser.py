@@ -1,3 +1,12 @@
+from lark import Lark, Transformer
+
+from ucumvert.xml_util import (
+    get_base_units,
+    get_metric_units,
+    get_non_metric_units,
+    get_prefixes,
+)
+
 # UCUM syntax in the Backus-Naur Form from https://ucum.org/ucum#section-Syntax-Rules
 # <sign>  : "+" | "-"
 # <digit> : "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
@@ -20,42 +29,69 @@
 #             | <term>
 # <annotation>    : "{"<ANNOTATION-STRING>"}"
 
-from lark import Lark, Transformer
+# Note, the following lark grammar closely follows the specification above but
+#    fails for "100/{cells}" and "g/(8.h){shift}". Both are valid UCUM strings
+#    from the official examples.
+# UCUM_GRAMMAR_almost = """
+#     simple_unit: METRIC
+#             | PREFIX? METRIC
+#             | NON_METRIC
+#     annotatable: simple_unit EXPONENT
+#             | simple_unit
+#     component: annotatable annotation
+#             | annotatable
+#             | annotation
+#             | FACTOR
+#             | "(" term ")"
+#     term: term OPERATOR component
+#             | component
+#     start: DIVIDE term
+#             | term
+#     annotation: "{{" STRING "}}"
+#     STRING: /[^{{}}]+/
+#     OPERATOR: "." | DIVIDE
+#     DIVIDE: "/"
+#     PREFIX: {prefix_rule}
+#     METRIC: {metric_rule}
+#     NON_METRIC: {non_metric_rule}
 
-from ucumvert.xml_util import (
-    get_base_units,
-    get_metric_units,
-    get_non_metric_units,
-    get_prefixes,
-)
+#     %import common.SIGNED_INT   -> EXPONENT
+#     %import common.INT          -> FACTOR
+# """
 
-# Since we use string.format below to inject prefixes etc. into UCUM_GRAMMAR
-# the curly braces require escaping: "{{".format() -> "{"
+# Below is a fixed grammar that can parse all UCUM units in the official UCUM examples.
+#
+# Changes made:
+# - to fix "100/{cells}" issue, we moved FACTOR from component to the simple_unit rule
+# - to fix "(8.h){shift}" issue, we moved "(" term ")" from component to the annotatable rule
+# - Don't allow "0" as EXPONENT or FACTOR, see https://github.com/ucum-org/ucum/issues/121
+
 UCUM_GRAMMAR = """
-        simple_unit: METRIC
-                | PREFIX? METRIC
-                | NON_METRIC
-        annotatable: simple_unit EXPONENT
-                | simple_unit
-        component: annotatable annotation
-                | annotatable
-                | annotation
-                | FACTOR
-                | "(" term ")"
-        term: term OPERATOR component
-                | component
-        start: DIVIDE term
-                | term
-        annotation: "{{" STRING "}}"
-        STRING: /[^{{}}]+/
-        OPERATOR: "." | DIVIDE
-        DIVIDE: "/"
-        PREFIX: {prefix_rule}
-        METRIC: {metric_rule}
-        NON_METRIC: {non_metric_rule}
+    simple_unit: METRIC
+            | PREFIX? METRIC
+            | NON_METRIC
+            | FACTOR
+    annotatable: simple_unit EXPONENT
+            | simple_unit
+            | "(" term ")"
+    component: annotatable ANNOTATION
+            | annotatable
+            | ANNOTATION
+    term: term OPERATOR component
+            | component
+    start: DIVIDE term
+            | term
+    ANNOTATION: "{{" STRING "}}"
+    STRING: /[\x21-\x7E]*/        // Zero or more ASCII chars 33-126
+    OPERATOR: "." | DIVIDE
+    DIVIDE: "/"
+    PREFIX: {prefix_rule}
+    METRIC: {metric_rule}
+    NON_METRIC: {non_metric_rule}
 
-        %import common.SIGNED_INT   -> EXPONENT
-        %import common.INT          -> FACTOR
+    EXPONENT : ["+"|"-"] NON_ZERO_DIGITS
+    FACTOR: NON_ZERO_DIGITS
+    NON_ZERO_DIGITS : /[1-9][0-9]*/   // positive integers > 0
 """
 
 
@@ -118,7 +154,7 @@ class UnitsTransformer(Transformer):
             return {**args[0], **args[1]}
         return None
 
-    def annotation(self, args):
+    def ANNOTATION(self, args):
         return {
             "annotation": str(args[0]),
         }

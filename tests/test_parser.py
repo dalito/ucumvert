@@ -1,12 +1,12 @@
 from pathlib import Path
 
+import lark
 import pytest
 from lark import Token
 from lark.tree import Tree
 from ucumvert.parser import UnitsTransformer, parse_and_transform
 
 datadir = Path(__file__).resolve().parents[1] / "src" / "ucumvert" / "vendor"
-print(datadir)
 
 with open(datadir / "ucum_examples.tsv", encoding="utf8") as f:
     ucum_examples_valid = []
@@ -50,11 +50,28 @@ def test_ucum_parser_metric(ucum_parse_fcn):
 
 
 @pytest.mark.parametrize("ucum_unit", ucum_examples_valid, ids=ucum_examples_valid_ids)
-def test_ucum_parser_ucum_examples(ucum_parse_fcn, ucum_unit):
-    # Note: ucum_parse_fcn = ucum_parser().parse
-    print(f"line {line_no:>4}: {ucum_unit}")
-    tree = ucum_parse_fcn(ucum_unit)
-    print(tree)
+def test_ucum_parser_official_examples(ucum_parse_fcn, ucum_unit):
+    if ucum_unit == "Torr":
+        # Torr is missing in ucum-essence.xml but included in the official examples.
+        # TODO: create issue in https://github.com/ucum-org/ucum/
+        pytest.skip("Torr is not defined in official ucum-essence.xml")
+    ucum_parse_fcn(ucum_unit)
+
+
+@pytest.mark.parametrize(
+    "ucum_unit",
+    [
+        "bars",  # invalid unit
+        "2mg",  # missing operator
+        ".m",  # invalid operator positions
+        "m.",
+        "m/",
+        r"{red}m",  # invalid annotation position
+    ],
+)
+def test_ucum_parser_invalid_ucum_codes(ucum_parse_fcn, ucum_unit):
+    with pytest.raises(lark.exceptions.UnexpectedInput):
+        ucum_parse_fcn(ucum_unit)
 
 
 def test_parse_and_transform_metric():
