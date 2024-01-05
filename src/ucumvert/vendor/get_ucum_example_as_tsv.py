@@ -13,7 +13,7 @@ def download_file(outdir: Path, url: str = SOURCE_FILE_URL) -> Path:
     Download xlsx file from url to outdir and return filepath
     """
     filepath = outdir / Path(urlparse(url).path).name
-    with urlopen(url) as response, open(filepath, "wb") as out_file:  # noqa: S310
+    with urlopen(url) as response, filepath.open("wb") as out_file:  # noqa: S310
         shutil.copyfileobj(response, out_file)
     return filepath
 
@@ -34,7 +34,7 @@ def extract_examples_as_tsv(filepath: Path) -> None:
             ]
         )
 
-    with open(filepath.parent / "ucum_examples.tsv", "w") as f:
+    with Path(filepath.parent / "ucum_examples.tsv").open("w") as f:
         for row in tsv:
             f.write("\t".join(row) + "\n")
 

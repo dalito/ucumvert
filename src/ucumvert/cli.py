@@ -1,3 +1,5 @@
+from lark import UnexpectedInput
+
 from ucumvert.parser import UnitsTransformer, parse_and_transform
 
 
@@ -9,7 +11,7 @@ def main():
             break
         try:
             parse_and_transform(UnitsTransformer, s)
-        except Exception as e:
+        except (UnexpectedInput, ValueError) as e:
             print(e)
 
 

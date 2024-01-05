@@ -157,6 +157,7 @@ exclude = [
 ignore = [
     "B905",  # zip() without an explicit strict= parameter set. (requires python >= 3.10)
     "E501",  # line too long
+    "ISC001", # Conficts with ruff formatter
 ]
 # Same as Black.
 line-length = 88
@@ -179,30 +180,54 @@ select = [
     "YTT", # flake8-2020
     # flake8-annotations (ANN)
     # flake8-async (ASYNC)
+    # flake8-trio (TRIO)
     "S",   # flake8-bandit
+    "BLE", # flake8-blind-except
+    "FBT", # flake8-boolean-trap
     "B",   # flake8-bugbear
     "A",   # flake8-builtins
+    # flake8-commas (COM)
+    # flake8-copyright (CPY)
     "C4",  # flake8-comprehensions
     "DTZ", # flake8-datetimez
     "T10", # flake8-debugger
     # "DJ",  # flake8-django
     "EM",  # flake8-errmsg
+    # flake8-executable (EXE)
+    "FA",  # flake8-future-annotations
     "ISC", # flake8-implicit-str-concat
+    # flake8-import-conventions (ICN)
     "G",   # flake8-logging-format
+    # flake8-no-pep420 (INP)
     "PIE", # flake8-pie
+    # "T20", # flake8-print
+    # flake8-pyi (PYI)
     "PT",  # flake8-pytest-style
     "Q",   # flake8-quotes
+    "RSE", # flake8-raise
     "RET", # flake8-return
+    "SLF", # flake8-self
+    "SLOT",# flake8-slots
     "SIM", # flake8-simplify
-    # "ARG", # flake8-unused-arguments (ARG)
-    # "PTH", # flake8-use-pathlib (PTH)
-    # "ERA", # eradicate (ERA) - commented out code
-    # pandas-vet (PD)
+    # flake8-tidy-imports (TID)
+    # "TCH", # flake8-type-checking
+    "INT", # flake8-gettext
+    "ARG", # flake8-unused-arguments (ARG)
+    "PTH", # flake8-use-pathlib (PTH)
+    # "TD",  # flake8-todos
+    # "FIX", # flake8-fixme
+    # "ERA", # eradicate - commented out code
+    # "PD",  #pandas-vet
     "PGH", # pygrep-hooks
     "PL",  # whole Pylint (Convention, Error, Refactor, Warning)
     "TRY", # tryceratops (TRY)
-    # NumPy-specific rules (NPY)
-    "RUF",  # Ruff-specific rules
+    "FLY", # flynt
+    # "NPY" , # NumPy-specific rules
+    # Airflow (AIR)
+    "PERF", # Perflint
+    "FURB", # refurb
+    "LOG", # flake8-logging
+    "RUF", # Ruff-specific rules
 ]
 # Assume Python 3.8
 target-version = "py38"
@@ -223,6 +248,10 @@ classmethod-decorators = [
   # for pydantic 1.x
   "pydantic.validator", "pydantic.class_validators.root_validator"
 ]
+
+[tool.ruff.format]
+# Enable reformatting of code snippets in docstrings.
+docstring-code-format = true
 
 [tool.codespell]
 skip = "pyproject.toml,src/ucumvert/vendor/ucum-essence.xml,src/ucumvert/vendor/ucum_examples.tsv"

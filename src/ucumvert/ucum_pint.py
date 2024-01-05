@@ -2,6 +2,7 @@ import functools
 import operator
 
 import pint
+from lark import UnexpectedInput
 
 from ucumvert.parser import UnitsTransformer, parse_and_transform
 
@@ -76,7 +77,7 @@ def main():
             value, unit = s.split()
             p = parse_and_transform(UnitsTransformer, unit)
             print(ucum_to_pint(p, value))
-        except Exception as e:
+        except (UnexpectedInput, ValueError) as e:
             print(e)
 
 

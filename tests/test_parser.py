@@ -8,7 +8,7 @@ from ucumvert.parser import UnitsTransformer, parse_and_transform
 
 datadir = Path(__file__).resolve().parents[1] / "src" / "ucumvert" / "vendor"
 
-with open(datadir / "ucum_examples.tsv", encoding="utf8") as f:
+with Path(datadir / "ucum_examples.tsv").open(encoding="utf8") as f:
     ucum_examples_valid = []
     ucum_examples_valid_ids = []
     for line in f.readlines():
