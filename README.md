@@ -1,10 +1,10 @@
 # Easier access to UCUM from Python
 
 > **This is work in progress.** The lark grammar to parse UCUM codes is done.
-The transformer works but can probably be simplified. 
+The transformer works but can probably be simplified.
 Conversion to pint is very basic and only correct for simple UCUM codes.
-The converter must be completed to use the full information from the transformer. 
-The unit mappings ucum-to-pint must be extended. 
+The converter must be completed to use the full information from the transformer.
+The unit mappings ucum-to-pint must be extended.
 For  units missing in pint we may need to extend the registry with new aliases or new units.
 
 [UCUM](https://ucum.org/) (Unified Code for Units of Measure) is a code system intended to cover all units of measures.
@@ -85,8 +85,9 @@ $ python src/src/ucumvert/vendor/get_ucum_example_as_tsv.py
 ## Useful links
 
 - UCUM [online-validator](https://ucum.nlm.nih.gov/ucum-lhc/demo.html)
+- Issue in pint that motivated this work: [To what extent is pint compatible with UCUM?](https://github.com/hgrecco/pint/issues/1769)
 
 ## License
 
 The code in this repository is distributed under MIT license with the exception of the `ucum-*.*` files in the directory `src/ucumvert/vendor` which fall under the [UCUM Copyright Notice and License](https://github.com/ucum-org/ucum/blob/main/LICENSE.md) (Version 1.0).
-We consider **ucrumvert** according to §1.3 not as "Derivative Works" of UCUM because **ucrumvert** only *"interoperates with an unmodified instance of the Work"*.
+We consider **ucumvert** according to §1.3 not as "Derivative Works" of UCUM because **ucumvert** only *"interoperates with an unmodified instance of the Work"*.
