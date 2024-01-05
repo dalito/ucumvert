@@ -1,0 +1,67 @@
+name: Publish Python Package
+# Publishes to
+# - PyPI on releases created in GitHub UI
+# - TestPyPI on new tags "v1.2.3" or "v1.2.3.something" on main branch
+
+on:
+  push:
+    tags:
+      # GitHub glob matching is limited [1]. So we can't define a pattern matching
+      # pep 440 version definition [N!]N(.N)*[{a|b|rc}N][.postN][.devN]
+      - 'v[0-9]+.[0-9]+.[0-9]+.?*'
+  release:
+    types: [published]
+
+jobs:
+  build:
+    name: Build Python 🐍 distributions 📦 for publishing
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3.1.0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+
+      - name: Install hatch
+        run: pipx install hatch
+
+      - name: Build source and wheel archives
+        run: hatch build
+
+      - name: Store built distribution
+        uses: actions/upload-artifact@v3
+        with:
+          name: distribution-files
+          path: dist/
+
+  pypi-publish:
+    name: Build and publish Python 🐍 package 📦 to PyPI and TestPyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi-release
+      url: https://pypi.org/p/ucumvert
+    permissions:
+      id-token: write  # this permission is mandatory for trusted publishing
+    steps:
+      - name: Download built distribution
+        uses: actions/download-artifact@v3
+        with:
+          name: distribution-files
+          path: dist
+
+      # pinned version 1.8.10 [2]
+      - name: Publish package 📦 to Test PyPI
+        if: github.event_name == 'push'
+        uses: pypa/gh-action-pypi-publish@b7f401de30cb6434a1e19f805ff006643653240e
+        with:
+          repository-url: https://test.pypi.org/legacy/
+
+      - name: Publish package 📦 to PyPI
+        if: github.event_name == 'release'
+        uses: pypa/gh-action-pypi-publish@b7f401de30cb6434a1e19f805ff006643653240e
+
+# [1] https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
+# [2] https://github.com/pypa/gh-action-pypi-publish/
