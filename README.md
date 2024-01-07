@@ -1,11 +1,11 @@
 # Easier access to UCUM from Python
 
 > **This is work in progress.** The lark grammar to parse UCUM codes is done.
-The transformer works but can probably be simplified.
-Conversion to pint is very basic and only correct for simple UCUM codes.
-The converter must be completed to use the full information from the transformer.
+The transformer is work in progress.
+Conversion to pint is broken at the moment.
+The conversion must happen term by term during parse tree traversal.
 The unit mappings ucum-to-pint must be extended.
-For  units missing in pint we may need to extend the registry with new aliases or new units.
+For units missing in pint we may need to extend the registry with new aliases or new units.
 
 [UCUM](https://ucum.org/) (Unified Code for Units of Measure) is a code system intended to cover all units of measures.
 It provides a formalism to express units in an unambiguous way suitable for electronic communication.
@@ -49,21 +49,29 @@ This is just a demo to show that the code does something...
 ```cmd
 (.venv) $ ucumvert
 Enter UCUM units to parse, or 'q' to quit.
-> m
-Parsing ucum unit "m"
-Result: [{'type': 'metric', 'unit': 'm'}]
-> mm
-Parsing ucum unit "mm"
-Result: [{'prefix': 'm', 'type': 'metric', 'unit': 'm'}]
+> m/s2.kg
+Created visualization of parse tree (parse_tree.png).
+Tree of parsed ucum unit "m/s2.kg":
+main_term
+  term
+    term
+      simple_unit       m
+      /
+      annotatable
+        simple_unit     s
+        2
+    .
+    simple_unit
+      k
+      g
 > q
 ```
 
-So we create a dictionary from the UCUM unit code.
-From this we can for example create [pint](https://pint.readthedocs.io/) units, see `ucum_pint.py` (work in progress) or try
+So the result is a tree:
 
-```bash
-$ python src/ucumvert/ucum_pint.py
-```
+![](parse_tree.png)
+
+Conversion to [pint](https://pint.readthedocs.io/) units must happen term by term as part of the tree traversal. (WIP)
 
 ## Tests
 

@@ -1,4 +1,4 @@
-from lark import Lark, Transformer
+from lark import Lark, Transformer, tree
 
 from ucumvert.xml_util import (
     get_base_units,
@@ -66,28 +66,35 @@ from ucumvert.xml_util import (
 # - to fix "(8.h){shift}" issue, we moved "(" term ")" from component to the annotatable rule
 # - Don't allow "0" as EXPONENT or FACTOR, see https://github.com/ucum-org/ucum/issues/121
 
+# - Special case parsing of "dar" as deci-are instead of deca-r which does not exist.
+
 UCUM_GRAMMAR = """
-    simple_unit: METRIC
-            | PREFIX? METRIC
-            | NON_METRIC
-            | FACTOR
-    annotatable: simple_unit EXPONENT
-            | simple_unit
-            | "(" term ")"
-    component: annotatable ANNOTATION
-            | annotatable
-            | ANNOTATION
-    term: term OPERATOR component
-            | component
-    start: DIVIDE term
+    main_term: DIVIDE term
             | term
+    ?term: term OPERATOR component
+            | component
+    ?component: annotatable ANNOTATION
+            | annotatable
+    ?annotatable: simple_unit EXPONENT
+            | ANNOTATION
+            | simple_unit
+            | "(" main_term ")"
+            | "(" term ")"
+            | "(" component ")"
+    simple_unit: METRIC
+            | NON_METRIC
+            | PREFIX? METRIC
+            | FACTOR
+            | EXCEPTIONS -> special
+
     ANNOTATION: "{{" STRING "}}"
-    STRING: /[\x21-\x7E]*/        // Zero or more ASCII chars 33-126
+    STRING: /[\x21-\x7a|~]*/        // ASCII chars 33-126 without curly braces
     OPERATOR: "." | DIVIDE
     DIVIDE: "/"
     PREFIX: {prefix_rule}
     METRIC: {metric_rule}
     NON_METRIC: {non_metric_rule}
+    EXCEPTIONS: "dar"
 
     EXPONENT : ["+"|"-"] NON_ZERO_DIGITS
     FACTOR: NON_ZERO_DIGITS
@@ -96,6 +103,10 @@ UCUM_GRAMMAR = """
 
 
 class UnitsTransformer(Transformer):
+    pass
+
+
+class xUnitsTransformer(Transformer):
     def FACTOR(self, args):
         return {
             "factor": int(args),
@@ -202,13 +213,18 @@ def ucum_parser(ucum_grammar_template=UCUM_GRAMMAR):
         metric_rule=metric_rule,
         non_metric_rule=non_metric_rule,
     )
-    return Lark(ucum_grammar)
+    return Lark(ucum_grammar, start="main_term", strict=True)
 
 
 def parse_and_transform(transformer_cls, data):
-    print(f'\nParsing ucum unit "{data}"')
+    print(f'Tree of parsed ucum unit "{data}":')
     parsed_data = ucum_parser().parse(data)
-    # print(parsed_data.pretty())
+    print(parsed_data.pretty())
     result = transformer_cls().transform(parsed_data)
-    print("Result:", result)
+    # print("Result:", result)
     return result
+
+
+def make_parse_tree_png(data, filename="parse_tree_unit.png"):
+    parsed_data = ucum_parser().parse(data)
+    tree.pydot__tree_to_png(parsed_data, filename)

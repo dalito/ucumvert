@@ -1,6 +1,6 @@
-from lark import UnexpectedInput
+from lark.exceptions import UnexpectedInput, VisitError
 
-from ucumvert.parser import UnitsTransformer, parse_and_transform
+from ucumvert.parser import UnitsTransformer, make_parse_tree_png, parse_and_transform
 
 
 def main():
@@ -10,9 +10,16 @@ def main():
         if s in "qQ":
             break
         try:
-            parse_and_transform(UnitsTransformer, s)
-        except (UnexpectedInput, ValueError) as e:
+            make_parse_tree_png(s, filename="parse_tree.png")
+            print("Created visualization of parse tree (parse_tree.png).")
+        except UnexpectedInput as e:
             print(e)
+            continue
+        try:
+            parse_and_transform(UnitsTransformer, s)
+        except (VisitError, ValueError) as e:
+            print(e)
+            continue
 
 
 def run_cli_app():

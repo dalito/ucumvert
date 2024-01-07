@@ -4,7 +4,7 @@ import operator
 import pint
 from lark import UnexpectedInput
 
-from ucumvert.parser import UnitsTransformer, parse_and_transform
+from ucumvert.parser import UnitsTransformer, make_parse_tree_png, parse_and_transform
 
 # TODO Handle unit conversions if a mapping to pint default units is not possible
 # e.g. "mm[Hg]" in UCUM is interpreted as prefix "m" and unit "m[Hg]";
@@ -49,17 +49,34 @@ def ucum_to_pint(p, value):
 
 def test():
     test_ucum_units = [
-        "Cel",
-        "/s2",
-        "/s.m.N",
-        "/s.m",
-        "mm[Hg]{sealevel}",
-        "kcal/10",
-        "kcal/10{cookies}",
-        "g/kg/(8.h){shift}",
+        # "Cel",
+        # "/s2",
+        # "/s.m.N",
+        # "/s.m",
+        # "mm[Hg]{sealevel}",
+        # "kcal/10",
+        # "kcal/10{cookies}",
+        # "g/kg/(8.h){shift}",
         # "2mg",  # expected failure (should be "2.mg")
+        # r"(/m{innerAnn}){outerAnn}",
+        # "kg/(s.m2)",
+        # "10.L/(min.m2)",
+        # "(/s)",
+        # "/(m{su_ann})",
+        "{}/m",
+        # "(10{ann1}.m{ann2})",
+        # "(10{ann1}.m{ann2}){ann3}",
+        # "/s.(10{ann1}.m{ann2}){ann3}",
+        # "(/s2{sunit_s2}.(10{factor}.m{sunit_m}){term}){mterm}",
+        # "/s.dar{special}",
+        # "(m.s){term_ann}",  # OK
+        # "(m{m_ann}.s){term_ann}", # parse error
+        # "(m{m_ann}.s){s_ann}"  # OK
+        # "m.s{s_ann}"  # OK
     ]
     for unit in test_ucum_units:
+        print("parsing ucum code:", unit)
+        make_parse_tree_png(unit, filename="parse_tree.png")
         p = parse_and_transform(UnitsTransformer, unit)
         q = ucum_to_pint(p, 123)
         print("pint quantity:", q)
@@ -83,4 +100,4 @@ def main():
 
 if __name__ == "__main__":
     test()
-    main()
+    # main()
