@@ -1,3 +1,5 @@
+from pathlib import Path
+import textwrap
 from lark import Lark, Transformer, tree
 
 from ucumvert.xml_util import (
@@ -71,6 +73,11 @@ from ucumvert.xml_util import (
 #   instead of deca-r which does not exist.
 
 UCUM_GRAMMAR = """
+    # Based on UCUM specification (Version 2.1, 2017-11-21)
+    # Includes ucumvert-specific fixes to handle all common UCUM units
+    # and some edge cases not present in the official examples.
+    # This file is auto-created by parser.update_lark_ucum_grammar_file
+
     main_term: DIVIDE term
             | term
     ?term: term OPERATOR component
@@ -90,17 +97,16 @@ UCUM_GRAMMAR = """
             | FACTOR
 
     ANNOTATION: "{{" STRING "}}"
-    STRING: /[\x21-\x7a|~]*/        // ASCII chars 33-126 without curly braces
+    STRING: /[!-z|~]*/  # ASCII chars 33-126 without curly braces
     OPERATOR: "." | DIVIDE
     DIVIDE: "/"
     SHORT_PREFIX: {short_prefix_atoms}
     LONG_PREFIX: {long_prefix_atoms}
     METRIC: {metric_atoms}
     NON_METRIC: {non_metric_atoms}
-
     EXPONENT : ["+"|"-"] NON_ZERO_DIGITS
     FACTOR: NON_ZERO_DIGITS
-    NON_ZERO_DIGITS : /[1-9][0-9]*/   // positive integers > 0
+    NON_ZERO_DIGITS : /[1-9][0-9]*/  # positive integers > 0
 """
 
 
@@ -109,32 +115,6 @@ class UnitsTransformer(Transformer):
 
 
 class xUnitsTransformer(Transformer):
-    def FACTOR(self, args):
-        return {
-            "factor": int(args),
-        }
-
-    def EXPONENT(self, args):
-        if len(args) == 1:
-            return {
-                "exponent": int(args[0]),
-            }
-        if len(args) == 2:
-            return {
-                "exponent": int("".join(args)),
-            }
-        return None
-
-    def start(self, args):
-        # print("DBGs>", repr(args), len(args))
-        if len(args) == 1:
-            return [args[0]]
-        if len(args) == 2:
-            if isinstance(args[1], dict):
-                return [{**args[0], **args[1]}]
-            return [{**args[0], **args[1][0]}] + args[1][1:]
-        return None
-
     def term(self, args):
         # print("DBGt>", repr(args), len(args))
         if len(args) == 1:
@@ -205,21 +185,47 @@ class xUnitsTransformer(Transformer):
         }
 
 
-def ucum_parser(ucum_grammar_template=UCUM_GRAMMAR):
+def update_lark_ucum_grammar_file(ucum_grammar_template=UCUM_GRAMMAR):
+    """
+    Update the lark grammar file with UCUM units and prefixes from ucum-essence.xml
+    """
     prefixes = get_prefixes()
     short_prefixes = [i for i in prefixes if len(i) == 1]
     long_prefixes = [i for i in prefixes if len(i) > 1]
-    short_prefix_atoms = " | ".join(f'"{i}"' for i in short_prefixes)
-    long_prefix_atoms = " | ".join(f'"{i}"' for i in long_prefixes)
-    metric_atoms = " | ".join(f'"{i}"' for i in (get_base_units() + get_metric_units()))
-    non_metric_atoms = " | ".join(f'"{i}"' for i in get_non_metric_units())
+    short_prefix_atoms = " |".join(f'"{i}"' for i in short_prefixes)
+    long_prefix_atoms = " |".join(f'"{i}"' for i in long_prefixes)
+    metric_atoms = " |".join(f'"{i}"' for i in (get_base_units() + get_metric_units()))
+    non_metric_atoms = " |".join(f'"{i}"' for i in get_non_metric_units())
 
     ucum_grammar = ucum_grammar_template.format(
-        short_prefix_atoms = short_prefix_atoms,
-        long_prefix_atoms = long_prefix_atoms,
-        metric_atoms = metric_atoms,
-        non_metric_atoms = non_metric_atoms,
+        short_prefix_atoms=short_prefix_atoms,
+        long_prefix_atoms=long_prefix_atoms,
+        metric_atoms=metric_atoms,
+        non_metric_atoms=non_metric_atoms,
     )
+    # wrap too long lines in ucum_grammar to linewidth of 78
+    wrapped = []
+    for line in textwrap.dedent(ucum_grammar).strip().splitlines():
+        dline = textwrap.fill(
+            line,
+            width=78,
+            subsequent_indent=" " * 8,
+            break_long_words=False,
+            break_on_hyphens=False,
+        )
+        wrapped.append(dline)
+
+    grammar_file = Path(__file__).resolve().parent / "ucum_grammar.lark"
+    with grammar_file.open("w") as f:
+        f.write("\n".join(wrapped))
+        f.write("\n")  # newline at end of file
+
+
+def ucum_parser(grammar_file=None):
+    if grammar_file is None:
+        grammar_file = Path(__file__).resolve().parent / "ucum_grammar.lark"
+    with grammar_file.open("r", encoding="utf8") as f:
+        ucum_grammar = f.read()
     return Lark(ucum_grammar, start="main_term", strict=True)
 
 

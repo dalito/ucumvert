@@ -52,6 +52,7 @@ def test_ucum_parser_official_examples(ucum_parse_fcn, ucum_unit):
         "m(/s)",  # invalid parentheses. Note, "(/s)" is valid.
         "(m/s)2",  # invalid since UCUM v 1.9
         "m{ann1}{ann2}",  # invalid double annotation
+        "da",  # invalid prefix-unit combo (a is not metric)
     ],
 )
 def test_ucum_parser_invalid_ucum_codes(ucum_parse_fcn, ucum_unit):
