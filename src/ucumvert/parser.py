@@ -60,13 +60,15 @@ from ucumvert.xml_util import (
 # """
 
 # Below is a fixed grammar that can parse all UCUM units in the official UCUM examples.
+# and fixes some more edge cases not present in the official examples.
 #
 # Changes made:
 # - to fix "100/{cells}" issue, we moved FACTOR from component to the simple_unit rule
 # - to fix "(8.h){shift}" issue, we moved "(" term ")" from component to the annotatable rule
 # - Don't allow "0" as EXPONENT or FACTOR, see https://github.com/ucum-org/ucum/issues/121
 
-# - Special case parsing of "dar" as deci-are instead of deca-r which does not exist.
+# - Distinguish short prefixes (1 char) form long ones to handle parsing of "dar" as deci-are
+#   instead of deca-r which does not exist.
 
 UCUM_GRAMMAR = """
     main_term: DIVIDE term
@@ -82,19 +84,19 @@ UCUM_GRAMMAR = """
             | "(" term ")"
             | "(" component ")"
     simple_unit: METRIC
+            | SHORT_PREFIX METRIC
+            | LONG_PREFIX METRIC
             | NON_METRIC
-            | PREFIX? METRIC
             | FACTOR
-            | EXCEPTIONS -> special
 
     ANNOTATION: "{{" STRING "}}"
     STRING: /[\x21-\x7a|~]*/        // ASCII chars 33-126 without curly braces
     OPERATOR: "." | DIVIDE
     DIVIDE: "/"
-    PREFIX: {prefix_rule}
-    METRIC: {metric_rule}
-    NON_METRIC: {non_metric_rule}
-    EXCEPTIONS: "dar"
+    SHORT_PREFIX: {short_prefix_atoms}
+    LONG_PREFIX: {long_prefix_atoms}
+    METRIC: {metric_atoms}
+    NON_METRIC: {non_metric_atoms}
 
     EXPONENT : ["+"|"-"] NON_ZERO_DIGITS
     FACTOR: NON_ZERO_DIGITS
@@ -204,14 +206,19 @@ class xUnitsTransformer(Transformer):
 
 
 def ucum_parser(ucum_grammar_template=UCUM_GRAMMAR):
-    prefix_rule = " | ".join(f'"{i}"' for i in get_prefixes())
-    metric_rule = " | ".join(f'"{i}"' for i in (get_base_units() + get_metric_units()))
-    non_metric_rule = " | ".join(f'"{i}"' for i in get_non_metric_units())
+    prefixes = get_prefixes()
+    short_prefixes = [i for i in prefixes if len(i) == 1]
+    long_prefixes = [i for i in prefixes if len(i) > 1]
+    short_prefix_atoms = " | ".join(f'"{i}"' for i in short_prefixes)
+    long_prefix_atoms = " | ".join(f'"{i}"' for i in long_prefixes)
+    metric_atoms = " | ".join(f'"{i}"' for i in (get_base_units() + get_metric_units()))
+    non_metric_atoms = " | ".join(f'"{i}"' for i in get_non_metric_units())
 
     ucum_grammar = ucum_grammar_template.format(
-        prefix_rule=prefix_rule,
-        metric_rule=metric_rule,
-        non_metric_rule=non_metric_rule,
+        short_prefix_atoms = short_prefix_atoms,
+        long_prefix_atoms = long_prefix_atoms,
+        metric_atoms = metric_atoms,
+        non_metric_atoms = non_metric_atoms,
     )
     return Lark(ucum_grammar, start="main_term", strict=True)
 
