@@ -1,22 +1,30 @@
 from lark.exceptions import UnexpectedInput, VisitError
 
-from ucumvert.parser import UnitsTransformer, make_parse_tree_png, parse_and_transform
+from ucumvert.parser import get_ucum_parser, make_parse_tree_png
+from ucumvert.ucum_pint import UcumToPintTransformer
 
 
 def main():
-    print("Enter UCUM units to parse, or 'q' to quit.")
+    print("Enter UCUM unit code to parse, or 'q' to quit.")
+    ucum_parser = get_ucum_parser()
+
     while True:
-        s = input("> ")
-        if s in "qQ":
+        ucum_code = input("> ")
+        if ucum_code in "qQ":
             break
         try:
-            make_parse_tree_png(s, filename="parse_tree.png")
+            parsed_data = make_parse_tree_png(
+                ucum_code, filename="parse_tree.png", parser=ucum_parser
+            )
             print("Created visualization of parse tree (parse_tree.png).")
+            print(parsed_data.pretty())
         except UnexpectedInput as e:
             print(e)
             continue
         try:
-            parse_and_transform(UnitsTransformer, s)
+            # parsed_data = ucum_parser.parse(data)  # parse data without visualization
+            pint_quantity = UcumToPintTransformer().transform(parsed_data)
+            print(f"--> Pint {pint_quantity!r}")
         except (VisitError, ValueError) as e:
             print(e)
             continue

@@ -6,61 +6,36 @@ UCUM_ESSENCE_FILE = Path(__file__).parent.absolute() / "vendor" / "ucum-essence.
 tree = ElementTree.parse(UCUM_ESSENCE_FILE)  # noqa: S314
 root = tree.getroot()
 
-
-def get_prefixes(case_sensitive=True):
-    # prefixes = []
-    # for prefix in root.findall(".//{*}prefix"):
-    #     cs = prefix.attrib["Code"]  # case sensitive code
-    #     ci = prefix.attrib["CODE"]  # case insensitive code
-    #     prefixes.append(cs)
-    #     print(cs, ci)
-    #     for detail in prefix:
-    #         if detail.attrib:
-    #             print("->", detail.text, detail.attrib)
-    #         else:
-    #             print("->", detail.text)
-
-    code = "Code" if case_sensitive else "CODE"
-    prefix_path = ".//{*}prefix[@" + code + "]"
-    return [p.attrib[code] for p in root.findall(prefix_path)]
+CASED_SENSITIVE = True
+CODE_ATTRIB = "Code" if CASED_SENSITIVE else "CODE"
 
 
-def get_units(case_sensitive=True):
-    code = "Code" if case_sensitive else "CODE"
+def get_prefixes():
+    prefix_path = ".//{*}prefix[@" + CODE_ATTRIB + "]"
+    return [p.attrib[CODE_ATTRIB] for p in root.findall(prefix_path)]
 
+
+def get_units():
     units = []
-    for unit in root.findall(".//{*}unit[@" + code + "]"):
-        cs = unit.attrib[code]
+    for unit in root.findall(".//{*}unit[@" + CODE_ATTRIB + "]"):
+        cs = unit.attrib[CODE_ATTRIB]
         units.append(cs)
-        # print(f"{unit.tag.split('}')[-1]}: {cs}", unit.attrib)
-        # for detail in unit:
-        #     if detail.attrib:
-        #         print("->", detail.tag.split("}")[-1], detail.text, detail.attrib)
-        #     else:
-        #         print("->", detail.tag.split("}")[-1], detail.text)
-
     return units
 
 
-# optional attributes on some units: 'isArbitrary': 'yes' , 'isSpecial': 'yes'
+def get_metric_units():
+    xpath = ".//{*}unit[@" + CODE_ATTRIB + "][@isMetric='yes']"
+    return [p.attrib[CODE_ATTRIB] for p in root.findall(xpath)]
 
 
-def get_metric_units(case_sensitive=True):
-    code = "Code" if case_sensitive else "CODE"
-    xpath = ".//{*}unit[@" + code + "][@isMetric='yes']"
-    return [p.attrib[code] for p in root.findall(xpath)]
+def get_non_metric_units():
+    xpath = ".//{*}unit[@" + CODE_ATTRIB + "][@isMetric='no']"
+    return [p.attrib[CODE_ATTRIB] for p in root.findall(xpath)]
 
 
-def get_non_metric_units(case_sensitive=True):
-    code = "Code" if case_sensitive else "CODE"
-    xpath = ".//{*}unit[@" + code + "][@isMetric='no']"
-    return [p.attrib[code] for p in root.findall(xpath)]
-
-
-def get_base_units(case_sensitive=True):
-    code = "Code" if case_sensitive else "CODE"
-    xpath = ".//{*}base-unit[@" + code + "]"
-    return [p.attrib[code] for p in root.findall(xpath)]
+def get_base_units():
+    xpath = ".//{*}base-unit[@" + CODE_ATTRIB + "]"
+    return [p.attrib[CODE_ATTRIB] for p in root.findall(xpath)]
 
 
 if __name__ == "__main__":

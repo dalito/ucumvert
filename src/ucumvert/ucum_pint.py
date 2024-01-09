@@ -1,103 +1,106 @@
-import functools
-import operator
+from pathlib import Path
 
 import pint
-from lark import UnexpectedInput
+from lark import Transformer
 
-from ucumvert.parser import UnitsTransformer, make_parse_tree_png, parse_and_transform
+from ucumvert.parser import (
+    get_ucum_parser,
+    make_parse_tree_png,
+    update_lark_ucum_grammar_file,
+)
 
 # TODO Handle unit conversions if a mapping to pint default units is not possible
 # e.g. "mm[Hg]" in UCUM is interpreted as prefix "m" and unit "m[Hg]";
-#   but pint directly defines Hg : ?, # TODO no corresponding pint default unit exist. is not possenough, we need to define  a function to convert
-
-ucum_to_pint_map = {
-    "Cel": "degC",
-    "m[Hg]": "Hg * g_0",
-}
+#   but pint directly defines Hg : ?,
+# TODO no corresponding pint default unit exist. is not possenough, we need to define  a function to convert
 
 
-def ucum_to_pint(p, value):
-    ureg = pint.UnitRegistry()
+class UcumToPintTransformer(Transformer):
+    def __init__(self, ureg=None):
+        if ureg is None:
+            self.ureg = pint.UnitRegistry()
+            # Append the local definitions for ucum units to the default registry
+            self.ureg.load_definitions(
+                Path(__file__).resolve().parent / "pint_ucum_defs.txt"
+            )
+        else:
+            self.ureg = ureg
 
-    # TODO the parser should return consistent results independent of the number of units terms,
-    #      It should always return a list of dictionaries with one dictionary per unit term.
-    if isinstance(p[0], list):  # dirty fix
-        p = p[0]
+    def main_term(self, args):
+        # print("DBGmt>", repr(args), len(args))
+        if len(args) == 2:  # unary DIVIDE  # noqa: PLR2004
+            return 1 / args[1]
+        return args[0]
 
-    # TODO apply division operator (division is ignored now)
-    # TODO convert units with factors; there are many of these in ucum but few in pint
+    def term(self, args):
+        # print("DBGt>", repr(args), len(args))
+        if len(args) == 3:  # noqa: PLR2004
+            if (
+                getattr(args[0], "type", None) == "ANNOTATION"
+            ):  # first term is annotation
+                args[0] = 1
+            if args[1] == ".":  # multiplication
+                return args[0] * args[2]
+            # division
+            return args[0] / args[2]
+        return args[0]  # no operator, return single component
 
-    u_strs = []
-    for unit_term in p:
-        op = unit_term.get("operator", None)
-        prefix = unit_term.get("prefix", "")
-        unit = unit_term.get("unit", "")
-        exp = unit_term.get("exponent", None)
+    def component(self, args):
+        # print("DBGc>", repr(args), len(args))
+        if args[1].type == "ANNOTATION":  # ignore annotations
+            # print(f"dropping annotation: {args[1]}")
+            return args[0]
+        return args[:]
 
-        # replace ucum unit code with pint unit code
-        unit_fixed = ucum_to_pint_map.get(unit, unit)
-        u_str = prefix + unit_fixed + (f"**{exp}" if exp else "")
-        if u_str:
-            u_str = u_str if op is None else f"1{op}{u_str}"
+    def simple_unit(self, args):
+        # print("DBGsu>", repr(args), len(args))
+        if len(args) == 2:  # prefix is present  # noqa: PLR2004
+            return self.ureg(args[0] + args[1])
+        return self.ureg(args[0])
 
-        print(f"calling pint.ureg with: {u_str!r}")
-        u_strs.append(ureg(u_str))
-    units = functools.reduce(operator.mul, u_strs)
-    print("-> pint unit:", units)
-    return pint.Quantity(value, units)
+    def annotatable(self, args):
+        # print("DBGan>", repr(args), len(args))
+        if len(args) == 2:  # exponent is present  # noqa: PLR2004
+            return args[0] ** int(args[1])
+        return args[0]
 
 
 def test():
     test_ucum_units = [
-        # "Cel",
-        # "/s2",
-        # "/s.m.N",
-        # "/s.m",
-        # "mm[Hg]{sealevel}",
-        # "kcal/10",
-        # "kcal/10{cookies}",
-        # "g/kg/(8.h){shift}",
-        # "2mg",  # expected failure (should be "2.mg")
-        # r"(/m{innerAnn}){outerAnn}",
-        # "kg/(s.m2)",
-        # "10.L/(min.m2)",
-        # "(/s)",
-        # "/(m{su_ann})",
-        "{}/m",
-        # "(10{ann1}.m{ann2})",
-        # "(10{ann1}.m{ann2}){ann3}",
-        # "/s.(10{ann1}.m{ann2}){ann3}",
-        # "(/s2{sunit_s2}.(10{factor}.m{sunit_m}){term}){mterm}",
-        # "/s.dar{special}",
-        # "(m.s){term_ann}",  # OK
-        # "(m{m_ann}.s){term_ann}", # parse error
-        # "(m{m_ann}.s){s_ann}"  # OK
-        # "m.s{s_ann}"  # OK
+        "Cel",
+        "/s2",
+        "/s.m.N",
+        "/s.m",
+        r"mm[Hg]{sealevel}",
+        "kcal/10",
+        r"kcal/10{cookies}",
+        r"g/kg/(8.h){shift}",
+        r"(/m{innerAnn}){outerAnn}",
+        "kg/(s.m2)",
+        "10.L/(min.m2)",
+        "(/s)",
+        r"{}/m",
+        r"/(m{su_ann})",
+        r"(10{ann1}.m{ann2})",
+        r"(10{ann1}.m{ann2}){ann3}",
+        r"/s.(10{ann1}.m{ann2}){ann3}",
+        r"(/s2{sunit_s2}.(10{factor}.m{sunit_m}){term}){mterm}",
+        r"dar{special}",
+        r"/s.dar{special}",
+        r"(m.s){term_ann}",  # OK
+        r"(m{m_ann}.s){term_ann}",  # OK
+        r"(m{m_ann}.s){s_ann}",  # OK
+        r"m.s{s_ann}",  # OK
     ]
+    parser = get_ucum_parser()
     for unit in test_ucum_units:
         print("parsing ucum code:", unit)
         make_parse_tree_png(unit, filename="parse_tree.png")
-        p = parse_and_transform(UnitsTransformer, unit)
-        q = ucum_to_pint(p, 123)
-        print("pint quantity:", q)
-
-
-def main():
-    print(
-        "\nEnter quantity with UCUM units, or 'q' to quit. Value and unit must be separated by one space."
-    )
-    while True:
-        s = input("> ")
-        if s in "qQ":
-            break
-        try:
-            value, unit = s.split()
-            p = parse_and_transform(UnitsTransformer, unit)
-            print(ucum_to_pint(p, value))
-        except (UnexpectedInput, ValueError) as e:
-            print(e)
+        parsed_data = parser.parse(unit)
+        q = UcumToPintTransformer().transform(parsed_data)
+        print(f"Pint {q!r}")
 
 
 if __name__ == "__main__":
+    update_lark_ucum_grammar_file()
     test()
-    # main()

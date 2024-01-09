@@ -27,7 +27,7 @@ def extract_examples_as_tsv(filepath: Path) -> None:
 
     tsv = []
     for row in ws.iter_rows(min_row=2, max_col=4, max_row=ws.max_row):
-        tsv.append(
+        tsv.append(  # noqa: PERF401
             [
                 (str(cell.value).replace("\n", "") if cell.value is not None else "")
                 for cell in row

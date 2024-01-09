@@ -3,8 +3,15 @@ import pytest
 
 
 @pytest.fixture(scope="session")
-def ucum_parse_fcn():
+def ucum_parser():
     """Parse function as fixture for faster tests"""
-    from ucumvert.parser import ucum_parser
+    from ucumvert.parser import get_ucum_parser
 
-    return ucum_parser().parse
+    return get_ucum_parser()
+
+
+@pytest.fixture(scope="session")
+def transform():
+    from ucumvert import UcumToPintTransformer
+
+    return UcumToPintTransformer().transform

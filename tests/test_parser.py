@@ -4,7 +4,6 @@ import lark
 import pytest
 from lark import Token
 from lark.tree import Tree
-from ucumvert.parser import UnitsTransformer, parse_and_transform
 
 datadir = Path(__file__).resolve().parents[1] / "src" / "ucumvert" / "vendor"
 
@@ -30,18 +29,18 @@ ucum_examples_valid.update(
 
 
 @pytest.mark.parametrize(
-    "ucum_unit", ucum_examples_valid.values(), ids=ucum_examples_valid.keys()
+    "ucum_code", ucum_examples_valid.values(), ids=ucum_examples_valid.keys()
 )
-def test_ucum_parser_official_examples(ucum_parse_fcn, ucum_unit):
-    if ucum_unit == "Torr":
+def test_ucum_parser_official_examples(ucum_parser, ucum_code):
+    if ucum_code == "Torr":
         # Torr is missing in ucum-essence.xml but included in the official examples.
         # https://github.com/ucum-org/ucum/issues/289
         pytest.skip("Torr is not defined in official ucum-essence.xml")
-    ucum_parse_fcn(ucum_unit)
+    ucum_parser.parse(ucum_code)
 
 
 @pytest.mark.parametrize(
-    "ucum_unit",
+    "ucum_code",
     [
         "bars",  # invalid unit
         "2mg",  # missing operator
@@ -55,35 +54,16 @@ def test_ucum_parser_official_examples(ucum_parse_fcn, ucum_unit):
         "da",  # invalid prefix-unit combo (a is not metric)
     ],
 )
-def test_ucum_parser_invalid_ucum_codes(ucum_parse_fcn, ucum_unit):
+def test_ucum_parser_invalid_ucum_codes(ucum_parser, ucum_code):
     with pytest.raises(lark.exceptions.UnexpectedInput):
-        ucum_parse_fcn(ucum_unit)
+        ucum_parser.parse(ucum_code)
 
 
-def test_ucum_parser_metric(ucum_parse_fcn):
-    # Note: ucum_parse_fcn = ucum_parser().parse
-    tree = ucum_parse_fcn("m")
+def test_ucum_parser_metric(ucum_parser):
+    # Note: ucum_parser.parse = ucum_parser().parse
+    tree = ucum_parser.parse("m")
     expected = Tree(
         Token("RULE", "main_term"),
         [Tree(Token("RULE", "simple_unit"), [Token("METRIC", "m")])],
     )
     assert tree == expected
-
-
-@pytest.mark.skip("TODO: implement")
-def test_parse_and_transform_metric():
-    tree = parse_and_transform(UnitsTransformer, "m")
-    expected = [{"type": "metric", "unit": "m"}]
-    assert tree == expected
-
-
-@pytest.mark.skip("TODO: implement")
-@pytest.mark.parametrize(
-    "ucum_unit", ucum_examples_valid.values(), ids=ucum_examples_valid.keys()
-)
-def test_parse_and_transform_official_examples(ucum_unit):
-    if ucum_unit == "Torr":
-        # Torr is missing in ucum-essence.xml but included in the official examples.
-        # see https://github.com/ucum-org/ucum/issues/289
-        pytest.skip("Torr is not defined in official ucum-essence.xml")
-    parse_and_transform(UnitsTransformer, ucum_unit)

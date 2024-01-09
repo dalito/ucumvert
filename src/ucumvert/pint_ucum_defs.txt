@@ -49,5 +49,6 @@
 
 #### Additional aliases ####
 
+@alias are = ar
 @alias degree_Celsius = Cel
 @alias millimeter_Hg = mm[Hg]

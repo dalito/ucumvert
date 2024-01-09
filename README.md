@@ -1,11 +1,9 @@
 # Easier access to UCUM from Python
 
-> **This is work in progress.** The lark grammar to parse UCUM codes is done.
-The transformer is work in progress.
-Conversion to pint is broken at the moment.
-The conversion must happen term by term during parse tree traversal.
-The unit mappings ucum-to-pint must be extended.
-For units missing in pint we may need to extend the registry with new aliases or new units.
+> **This is work is almost done. Feedback welcome!**
+The lark grammar to parse UCUM codes and the transformer that converts UCUM units to pint are implemented.
+We are interested in hearing from you how you would like to interface the code.
+Helping with adding more unit aliases or UCUM units missing in pint´s default units would be very welcome.
 
 [UCUM](https://ucum.org/) (Unified Code for Units of Measure) is a code system intended to cover all units of measures.
 It provides a formalism to express units in an unambiguous way suitable for electronic communication.
@@ -13,10 +11,11 @@ Note that UCUM does non provide a canonical representation, e.g. `m/s` and `m.s-
 
 **ucumvert** is a pip-installable Python package. Features:
 
+- Parser for UCUM unit strings that implements the full grammar
 - Converter for creating [pint](https://pypi.org/project/pint/) units from UCUM unit strings
-- Parser for UCUM unit strings
+- A pint unit definition file [pint_ucum_defs.txt](https://github.com/dalito/ucumvert/blob/main/src/ucumvert/pint_ucum_defs.txt) that extends pint´s default units with UCUM units
 
-**ucumvert** generates the UCUM grammar by filling a template with unit codes, prefixes etc. from the official [ucum-essence.xml](https://github.com/ucum-org/ucum/blob/main/ucum-essence.xml) file (a copy is included in this repo). 
+**ucumvert** generates the UCUM grammar by filling a template with unit codes, prefixes etc. from the official [ucum-essence.xml](https://github.com/ucum-org/ucum/blob/main/ucum-essence.xml) file (a copy is included in this repo).
 So updating the parser for new UCUM releases is straight forward.
 The parser is built with the great [lark](https://pypi.org/project/lark/) parser toolkit.
 The generated lark grammar file is included in the repository, see [ucum_grammar.lark](https://github.com/dalito/ucumvert/blob/main/src/ucumvert/ucum_grammar.lark).
@@ -45,14 +44,13 @@ pip install -e .[dev]
 
 ## Demo
 
-This is just a demo to show that the code does something...
+This is just a demo command line interface to show that the code does something...
 
 ```cmd
 (.venv) $ ucumvert
-Enter UCUM units to parse, or 'q' to quit.
+Enter UCUM unit code to parse, or 'q' to quit.
 > m/s2.kg
 Created visualization of parse tree (parse_tree.png).
-Tree of parsed ucum unit "m/s2.kg":
 main_term
   term
     term
@@ -65,14 +63,26 @@ main_term
     simple_unit
       k
       g
+--> Pint <Quantity(1.0, 'kilogram * meter / second ** 2')>
 > q
 ```
 
-So the result is a tree:
+So the intermediate result is a tree which is then traversed to convert the elements to pint:
 
 ![parse tree](parse_tree.png)
 
-Conversion to [pint](https://pint.readthedocs.io/) units must happen term by term as part of the tree traversal. (WIP)
+You may use the package in your code for converting UCUM codes to pint like this:
+
+```python
+>>> from ucumvert import get_ucum_parser, UcumToPintTransformer
+>>> ucum_parser = get_ucum_parser()
+>>> data = "m/s2.kg"
+>>> parsed_data = ucum_parser.parse(data)
+>>> pint_quantity = UcumToPintTransformer().transform(parsed_data)
+>>> pint_quantity
+<Quantity(1.0, 'kilogram * meter / second ** 2')>
+>>>
+```
 
 ## Tests
 
@@ -98,6 +108,6 @@ $ python src/src/ucumvert/vendor/get_ucum_example_as_tsv.py
 
 ## License
 
-The code in this repository is distributed under MIT license with the exception of the `ucum-*.*` files in the directory `src/ucumvert/vendor` 
+The code in this repository is distributed under MIT license with the exception of the `ucum-*.*` files in the directory `src/ucumvert/vendor`
 that fall under the [UCUM Copyright Notice and License](https://github.com/ucum-org/ucum/blob/main/LICENSE.md) (Version 1.0).
 We consider **ucumvert** according to §1.3 not as "Derivative Works" of UCUM because **ucumvert** only *"interoperates with an unmodified instance of the Work"*.

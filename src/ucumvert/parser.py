@@ -1,5 +1,6 @@
-from pathlib import Path
 import textwrap
+from pathlib import Path
+
 from lark import Lark, Transformer, tree
 
 from ucumvert.xml_util import (
@@ -30,10 +31,10 @@ from ucumvert.xml_util import (
 # <main-term> : "/"<term>
 #             | <term>
 # <annotation>    : "{"<ANNOTATION-STRING>"}"
-
+#
 # The following commented-out lark grammar closely follows the specification
 #    above but fails for "100/{cells}" and "g/(8.h){shift}". Both are valid
-#    UCUM strings from the official examples.
+#    UCUM strings from the official examples. The BNF is not 100% correct.
 # UCUM_GRAMMAR_almost_correct = """
 #     simple_unit: METRIC
 #             | PREFIX? METRIC
@@ -114,77 +115,6 @@ class UnitsTransformer(Transformer):
     pass
 
 
-class xUnitsTransformer(Transformer):
-    def term(self, args):
-        # print("DBGt>", repr(args), len(args))
-        if len(args) == 1:
-            return args[0]
-        if len(args) == 3:
-            if isinstance(args[0], dict):
-                if "factor" in args[0] and len(args[0]) == 1:
-                    return {**args[0], **args[1], **args[2]}
-                return [args[0], {**args[1], **args[2]}]
-            return args[0] + [{**args[1], **args[2]}]
-        return None
-
-    def component(self, args):
-        if len(args) == 1:
-            return args[0]
-        if len(args) == 2:
-            return {**args[0], **args[1]}
-        return None
-
-    def simple_unit(self, args):
-        if len(args) == 1:
-            return args[0]
-        if len(args) == 2:
-            return {**args[0], **args[1]}
-        return None
-
-    def annotatable(self, args):
-        if len(args) == 1:
-            return args[0]
-        if len(args) == 2:
-            return {**args[0], **args[1]}
-        return None
-
-    def ANNOTATION(self, args):
-        return {
-            "annotation": str(args),
-        }
-
-    def OPERATOR(self, args):
-        return {
-            "operator": args[0],
-        }
-
-    def DIVIDE(self, args):
-        return {
-            "operator": args[0],
-        }
-
-    def PREFIX(self, args):
-        if args == "da":
-            return {
-                "prefix": args[0:2],
-            }
-        return {
-            "prefix": args[0],
-        }
-
-    def METRIC(self, args):
-        return {
-            "type": "metric",
-            "unit": args[:],
-        }
-
-    def NON_METRIC(self, args):
-        return {
-            "type": "non_metric",
-            "unit": args[:],
-        }
-
-
 def update_lark_ucum_grammar_file(ucum_grammar_template=UCUM_GRAMMAR):
     """
     Update the lark grammar file with UCUM units and prefixes from ucum-essence.xml
@@ -221,7 +151,7 @@ def update_lark_ucum_grammar_file(ucum_grammar_template=UCUM_GRAMMAR):
         f.write("\n")  # newline at end of file
 
 
-def ucum_parser(grammar_file=None):
+def get_ucum_parser(grammar_file=None):
     if grammar_file is None:
         grammar_file = Path(__file__).resolve().parent / "ucum_grammar.lark"
     with grammar_file.open("r", encoding="utf8") as f:
@@ -229,15 +159,9 @@ def ucum_parser(grammar_file=None):
     return Lark(ucum_grammar, start="main_term", strict=True)
 
 
-def parse_and_transform(transformer_cls, data):
-    print(f'Tree of parsed ucum unit "{data}":')
-    parsed_data = ucum_parser().parse(data)
-    print(parsed_data.pretty())
-    result = transformer_cls().transform(parsed_data)
-    # print("Result:", result)
-    return result
-
-
-def make_parse_tree_png(data, filename="parse_tree_unit.png"):
-    parsed_data = ucum_parser().parse(data)
+def make_parse_tree_png(data, filename="parse_tree_unit.png", parser=None):
+    if parser is None:
+        parser = get_ucum_parser()
+    parsed_data = parser.parse(data)
     tree.pydot__tree_to_png(parsed_data, filename)
+    return parsed_data
