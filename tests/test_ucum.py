@@ -10,7 +10,8 @@ def get_units_2casings():
     cased.remove("L")
     ucumvert.xml_util.CODE_ATTRIB = "CODE"
     nocase = get_metric_units() + get_non_metric_units()
-    return zip(cased, nocase, strict=True)
+    assert len(cased) == len(nocase)
+    return zip(cased, nocase)
 
 
 def get_prefixes_2casings():
@@ -18,7 +19,9 @@ def get_prefixes_2casings():
     cased = get_prefixes()
     ucumvert.xml_util.CODE_ATTRIB = "CODE"
     nocase = get_prefixes()
-    return zip(cased, nocase, strict=True)
+    ret = zip(cased, nocase)
+    assert len(cased) == len(nocase)
+    return ret
 
 
 @pytest.mark.parametrize(("cased_code", "nocase_code"), get_units_2casings())
