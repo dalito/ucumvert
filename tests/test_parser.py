@@ -29,7 +29,9 @@ ucum_examples_valid.update(
 
 
 @pytest.mark.parametrize(
-    "ucum_code", ucum_examples_valid.values(), ids=ucum_examples_valid.keys()
+    "ucum_code",
+    ucum_examples_valid.values(),
+    ids=[" ".join(kv) for kv in ucum_examples_valid.items()],
 )
 def test_ucum_parser_official_examples(ucum_parser, ucum_code):
     if ucum_code == "Torr":

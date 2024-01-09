@@ -29,6 +29,8 @@ class UcumToPintTransformer(Transformer):
     def main_term(self, args):
         # print("DBGmt>", repr(args), len(args))
         if len(args) == 2:  # unary DIVIDE  # noqa: PLR2004
+            if getattr(args[1], "type", None):  # no unit, only an ANNOTATION
+                return self.ureg("")  # return <Quantity(1, 'dimensionless')>
             return 1 / args[1]
         return args[0]
 
@@ -39,6 +41,10 @@ class UcumToPintTransformer(Transformer):
                 getattr(args[0], "type", None) == "ANNOTATION"
             ):  # first term is annotation
                 args[0] = 1
+            if (
+                getattr(args[2], "type", None) == "ANNOTATION"
+            ):  # second term is annotation
+                args[2] = 1
             if args[1] == ".":  # multiplication
                 return args[0] * args[2]
             # division
@@ -56,6 +62,11 @@ class UcumToPintTransformer(Transformer):
         # print("DBGsu>", repr(args), len(args))
         if len(args) == 2:  # prefix is present  # noqa: PLR2004
             return self.ureg(args[0] + args[1])
+
+        # Catch UCUM atoms that cannot be defined in pint as units or aliases.
+        if args[0].value in ["10*", "10^"]:
+            return self.ureg("_10")
+
         return self.ureg(args[0])
 
     def annotatable(self, args):
@@ -65,32 +76,14 @@ class UcumToPintTransformer(Transformer):
         return args[0]
 
 
-def test():
+def run_examples():
     test_ucum_units = [
         "Cel",
         "/s2",
         "/s.m.N",
         "/s.m",
-        r"mm[Hg]{sealevel}",
-        "kcal/10",
-        r"kcal/10{cookies}",
-        r"g/kg/(8.h){shift}",
-        r"(/m{innerAnn}){outerAnn}",
         "kg/(s.m2)",
-        "10.L/(min.m2)",
-        "(/s)",
-        r"{}/m",
-        r"/(m{su_ann})",
-        r"(10{ann1}.m{ann2})",
-        r"(10{ann1}.m{ann2}){ann3}",
-        r"/s.(10{ann1}.m{ann2}){ann3}",
-        r"(/s2{sunit_s2}.(10{factor}.m{sunit_m}){term}){mterm}",
-        r"dar{special}",
-        r"/s.dar{special}",
-        r"(m.s){term_ann}",  # OK
-        r"(m{m_ann}.s){term_ann}",  # OK
-        r"(m{m_ann}.s){s_ann}",  # OK
-        r"m.s{s_ann}",  # OK
+        r"m.s{s_ann}",
     ]
     parser = get_ucum_parser()
     for unit in test_ucum_units:
@@ -103,4 +96,4 @@ def test():
 
 if __name__ == "__main__":
     update_lark_ucum_grammar_file()
-    test()
+    run_examples()

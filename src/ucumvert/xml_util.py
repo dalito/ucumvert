@@ -6,8 +6,8 @@ UCUM_ESSENCE_FILE = Path(__file__).parent.absolute() / "vendor" / "ucum-essence.
 tree = ElementTree.parse(UCUM_ESSENCE_FILE)  # noqa: S314
 root = tree.getroot()
 
-CASED_SENSITIVE = True
-CODE_ATTRIB = "Code" if CASED_SENSITIVE else "CODE"
+# set to "Code" for case-sensitive and to "CODE" for case-insensitive units
+CODE_ATTRIB = "Code"
 
 
 def get_prefixes():

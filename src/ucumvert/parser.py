@@ -1,8 +1,11 @@
+from __future__ import annotations
+
 import textwrap
 from pathlib import Path
 
 from lark import Lark, Transformer, tree
 
+import ucumvert
 from ucumvert.xml_util import (
     get_base_units,
     get_metric_units,
@@ -115,10 +118,17 @@ class UnitsTransformer(Transformer):
     pass
 
 
-def update_lark_ucum_grammar_file(ucum_grammar_template=UCUM_GRAMMAR):
+def update_lark_ucum_grammar_file(
+    ucum_grammar_template: str = UCUM_GRAMMAR, grammar_file: Path | None = None
+):
     """
     Update the lark grammar file with UCUM units and prefixes from ucum-essence.xml
     """
+    if grammar_file is None:
+        # case sensitive ucum_grammar.lark is the default
+        ucumvert.xml_util.CODE_ATTRIB = "Code"
+        grammar_file = Path(__file__).resolve().parent / "ucum_grammar.lark"
+
     prefixes = get_prefixes()
     short_prefixes = [i for i in prefixes if len(i) == 1]
     long_prefixes = [i for i in prefixes if len(i) > 1]
@@ -145,7 +155,6 @@ def update_lark_ucum_grammar_file(ucum_grammar_template=UCUM_GRAMMAR):
         )
         wrapped.append(dline)
 
-    grammar_file = Path(__file__).resolve().parent / "ucum_grammar.lark"
     with grammar_file.open("w") as f:
         f.write("\n".join(wrapped))
         f.write("\n")  # newline at end of file
@@ -163,5 +172,8 @@ def make_parse_tree_png(data, filename="parse_tree_unit.png", parser=None):
     if parser is None:
         parser = get_ucum_parser()
     parsed_data = parser.parse(data)
-    tree.pydot__tree_to_png(parsed_data, filename)
+    try:
+        tree.pydot__tree_to_png(parsed_data, filename)
+    except ImportError:
+        print("pydot not installed, skipping png generation")
     return parsed_data

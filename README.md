@@ -18,7 +18,7 @@ Note that UCUM does non provide a canonical representation, e.g. `m/s` and `m.s-
 **ucumvert** generates the UCUM grammar by filling a template with unit codes, prefixes etc. from the official [ucum-essence.xml](https://github.com/ucum-org/ucum/blob/main/ucum-essence.xml) file (a copy is included in this repo).
 So updating the parser for new UCUM releases is straight forward.
 The parser is built with the great [lark](https://pypi.org/project/lark/) parser toolkit.
-The generated lark grammar file is included in the repository, see [ucum_grammar.lark](https://github.com/dalito/ucumvert/blob/main/src/ucumvert/ucum_grammar.lark).
+The generated lark grammar file for case-sensitive UCUM codes is included in the repository, see [ucum_grammar.lark](https://github.com/dalito/ucumvert/blob/main/src/ucumvert/ucum_grammar.lark).
 
 ## Install
 

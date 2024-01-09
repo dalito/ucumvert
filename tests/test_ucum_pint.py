@@ -15,7 +15,9 @@ def test_ucum_to_pint(ucum_parser):
 
 @pytest.mark.skip("TODO: Add missing UCUM units to pint_ucum_defs.txt")
 @pytest.mark.parametrize(
-    "ucum_code", ucum_examples_valid.values(), ids=ucum_examples_valid.keys()
+    "ucum_code",
+    ucum_examples_valid.values(),
+    ids=[" ".join(kv) for kv in ucum_examples_valid.items()],
 )
 def test_ucum_to_pint_official_examples(ucum_parser, transform, ucum_code):
     if ucum_code == "Torr":
