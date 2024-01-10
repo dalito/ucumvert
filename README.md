@@ -20,7 +20,7 @@ The generated lark grammar file for case-sensitive UCUM codes is included in the
 
 ## Install
 
-Installation from git in developer mode including creation of virtual environment:
+Installation from git in developer mode including creation of virtual environment (pip should be newer than 23.1):
 
 Linux
 ```
@@ -39,6 +39,8 @@ py -m venv .venv
 .venv\Scripts\activate.bat
 pip install -e .[dev]
 ```
+
+Optionally you can visualize the parse trees with [Graphviz](https://www.graphviz.org/) as shown below. It requires the additional package [pydot](https://pypi.org/project/pydot/); install by running `pip install pydot`.
 
 ## Demo
 
