@@ -1,9 +1,7 @@
 # Easier access to UCUM from Python
 
-> **This is work is almost done. Feedback welcome!**
+> **This is almost done. Feedback welcome!**
 The lark grammar to parse UCUM codes and the transformer that converts UCUM units to pint are implemented.
-We are interested in hearing from you how you would like to interface the code.
-Helping with adding more unit aliases or UCUM units missing in pint´s default units would be very welcome.
 
 [UCUM](https://ucum.org/) (Unified Code for Units of Measure) is a code system intended to cover all units of measures.
 It provides a formalism to express units in an unambiguous way suitable for electronic communication.
