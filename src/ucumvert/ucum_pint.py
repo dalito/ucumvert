@@ -9,10 +9,49 @@ from ucumvert.parser import (
     update_lark_ucum_grammar_file,
 )
 
-# TODO Handle unit conversions if a mapping to pint default units is not possible
-# e.g. "mm[Hg]" in UCUM is interpreted as prefix "m" and unit "m[Hg]";
-#   but pint directly defines Hg : ?,
-# TODO no corresponding pint default unit exist. is not possenough, we need to define  a function to convert
+# Some UCUM unit atoms are syntactically incompatiple with pint. For these we
+# map to a pint-compatible unit name which we define in pint_ucum_defs.txt
+# as alias or new unit.
+# TODO Define the commented out units in pint_ucum_defs.txt
+
+mappings_ucum_to_pint = {
+    # "UCUM_unit_atom": "pint_unit_name_or_alias"
+    # === metric units ===
+    "cal_[20]": "cal_20",
+    "cal_[15]": "cal_15",
+    # === non-metric units ===
+    "10*": "_10",
+    "10^": "_10",
+    "'": "minute",
+    "''": "second",
+    # "[in_i'H2O]": "in_i_H2O",
+    # "[in_i'Hg]": "in_i_Hg",
+    # "[wood'U]": "wood_U",
+    # "[p'diop]": "p_diop",
+    # "[hnsf'U]": "hnsf_U",
+    # "[hp'_X]": "hp_X",
+    # "[hp'_C]": "hp_C",
+    # "[hp'_M]": "hp_M",
+    # "[hp'_Q]": "hp_Q",
+    "[arb'U]": "arb_U",
+    "[USP'U]": "USP_U",
+    "[GPL'U]": "GPL_U",
+    "[MPL'U]": "MPL_U",
+    "[APL'U]": "APL_U",
+    "[beth'U]": "beth_U",
+    # "[anti'Xa'U]": "anti_Xa_U",
+    "[todd'U]": "todd_U",
+    # "[dye'U]": "dye_U",
+    # "[smgy'U]": "smgy_U",
+    "[bdsk'U]": "bdsk_U",
+    # "[ka'U]": "ka_U",
+    "[knk'U]": "knk_U",
+    "[mclg'U]": "mclg_U",
+    "[tb'U]": "tb_U",
+    # "[Amb'a'1'U]": "Amb_a_1_U",
+    # "[D'ag'U]": "D_ag_U",
+    "[m/s2/Hz^(1/2)]": "meter_per_square_second_per_square_root_of_hertz",
+}
 
 
 class UcumToPintTransformer(Transformer):
@@ -63,11 +102,8 @@ class UcumToPintTransformer(Transformer):
         if len(args) == 2:  # prefix is present  # noqa: PLR2004
             return self.ureg(args[0] + args[1])
 
-        # Catch UCUM atoms that cannot be defined in pint as units or aliases.
-        if args[0].value in ["10*", "10^"]:
-            return self.ureg("_10")
-
-        return self.ureg(args[0])
+        # Substitute UCUM atoms that cannot be defined in pint as units or aliases.
+        return self.ureg(mappings_ucum_to_pint.get(args[0], args[0]))
 
     def annotatable(self, args):
         # print("DBGan>", repr(args), len(args))
@@ -78,12 +114,10 @@ class UcumToPintTransformer(Transformer):
 
 def run_examples():
     test_ucum_units = [
-        "Cel",
-        "/s2",
-        "/s.m.N",
-        "/s.m",
-        "kg/(s.m2)",
-        r"m.s{s_ann}",
+        # "Cel",
+        # "/s2",
+        # r"m.s{s_ann}",
+        "[arb'U]",
     ]
     parser = get_ucum_parser()
     for unit in test_ucum_units:

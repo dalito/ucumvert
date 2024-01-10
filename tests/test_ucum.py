@@ -10,6 +10,7 @@ def get_units_2casings():
     cased.remove("L")
     ucumvert.xml_util.CODE_ATTRIB = "CODE"
     nocase = get_metric_units() + get_non_metric_units()
+    ucumvert.xml_util.CODE_ATTRIB = "Code"
     assert len(cased) == len(nocase)
     return zip(cased, nocase)
 
@@ -19,6 +20,7 @@ def get_prefixes_2casings():
     cased = get_prefixes()
     ucumvert.xml_util.CODE_ATTRIB = "CODE"
     nocase = get_prefixes()
+    ucumvert.xml_util.CODE_ATTRIB = "Code"
     ret = zip(cased, nocase)
     assert len(cased) == len(nocase)
     return ret

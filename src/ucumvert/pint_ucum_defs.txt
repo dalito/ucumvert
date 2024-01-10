@@ -4,11 +4,9 @@
 
 # Pint unit names, aliases and prefixes have to be valid python identifiers.
 # So UCUM units such as "10*", "10^" or "[gal_us]" are invalid unit names in pint.
-# We handle this as follows:
-# - If the unit can be unambiguously mapped we just define an alias dropping the brackets.
-# - Else we define a unit using "_" as prefix. Operators like "*", "^" are dropped.
+# We handle this by a mapping defined in ucum_pint.py
 # Example: [gal_us] -> Alias: "gal_us"
-#          [10*] -> Unit: "_10"
+#          cal[20] -> New unit: "twenty_degC_calorie" with alias "cal_20"
 
 #### Prefixes ####
 # <prefix>- = <amount> [= <symbol>] [= <alias>] [ = <alias> ] [...]
@@ -19,34 +17,103 @@
 # <canonical name> = <relation to another unit or dimension> [= <symbol>] [= <alias>] [ = <alias> ] [...]
 # The canonical name and aliases should be expressed in singular form.
 # If a unit has no symbol, then the symbol should be set to _.
-# Example:
-#     millennium = 1e3 * year = _ = millennia
 
 ppth = 1e-3
 ppb = 1e-9
 pptr = 1e-12
 
+_10 = 10
+
+high_power_field = 1 = HPF
+low_power_field = 1 = LPF
 international_unit = 1 = i.U. = IU = iU
-_10 = 10 = _ = _10*
+colony_forming_unit = 1 = CFU
+arbitary_unit = 1 = arb_U
+US_pharmacopeia_unit = 1 = USP_U
+GPL_unit = 1 = GPL_U
+MPL_unit = 1 = MPL_U
+APL_unit = 1 = APL_U
+Bethesda_unit = 1 = beth_U
+Todd_unit = 1 = todd_U
+Bodansky_unit = 1 = bdsk_U
+Kunkel_unit = 1 = knk_U
+Mac_Lagan_unit = 1 = mclg_U
+tuberculin_unit = 1 = tb_U
+
+charrière = millimeter / 3 = _ = Ch
+inch_us = survey_foot * 3 = _ = in_us
+
+drop = milliliter / 20 = _ = drp
 equivalents = mol = eq
 osmole = mol = osm
+
+diopter = 1 / meter = _ = diop
+
+metabolic_equivalent = 3.5 * milliliter / minute / kilogram = _ = MET
+
+twenty_degC_calorie = 4.18190 * J = cal_20  # conversion factors from UCUM-v2.1
+mean_calorie = 4.19002 * J = cal_m  # conversion factors from UCUM-v2.1
+
+gregorian_month = gregorian_year/12 = mo_g
+
+meter_per_square_second_per_square_root_of_hertz = meter / sec**2 / Hz**(1/2)
 
 #### UNIT GROUPS ####
 
 #### Additional aliases ####
 # @alias <canonical name or previous alias> = <alias> [ = <alias> ] [...]
 
-@alias are = ar = AR
-@alias degree_Celsius = Cel = CEL
+@alias are = ar
+@alias degree_Celsius = Cel
 @alias millimeter_Hg = mm[Hg] = mM[HG]
 
-@alias week = wk = WK
-@alias month = mo = MO
+@alias week = wk
+@alias month = mo = mo_j
+@alias tropical_year = a_t
+@alias year = a_j
+@alias gregorian_year = a_g
+@alias synodic_month = mo_s
 
 @alias ohm = Ohm = OHM
 
-@alias international_feet = ft_i = FT_I
-@alias survey_foot = ft_us = FT_US
+@alias international_inch = in_i
+@alias international_feet = ft_i
+@alias international_yard = yd_i
+@alias international_mile = mi_i
+@alias survey_foot = ft_us
 
-@alias gallon = gal_us = GAL_US
-@alias oil_barrel = bbl_us = BBL_US
+@alias square_inch = sin_i
+@alias square_foot = sft_i
+@alias square_yard = syd_i
+
+@alias cubic_inch = cin_i
+@alias fluid_ounce = foz_us
+@alias tablespoon = tbs_us
+@alias teaspoon = tsp_us
+
+@alias quart = qt_us
+@alias pint = pt_us
+
+@alias stere = st
+@alias gallon = gal_us
+@alias oil_barrel = bbl_us
+
+@alias dram = dr_av
+@alias ounce = oz_av
+@alias pound = lb_av
+
+@alias troy_ounce = oz_tr
+@alias troy_pound = lb_tr
+
+@alias reciprocal_centimeter = Ky
+@alias stilb = sb
+@alias lambert = Lmb
+@alias rads = RAD
+@alias rem = REM
+
+@alias fifteen_degree_calorie = cal_15   # Note: pint-0.23: 4.1855 J vs. UCUM-v2.1: 4.1858 J
+@alias international_calorie = cal_IT
+@alias calorie = cal_th
+@alias byte = By
+
+@alias astronomical_unit = AU
