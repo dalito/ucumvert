@@ -1,7 +1,8 @@
 # Easier access to UCUM from Python
 
 > **This is almost done. Feedback welcome!**
-The lark grammar to parse UCUM codes and the transformer that converts UCUM units to pint are implemented.
+> The lark grammar to parse UCUM codes and the transformer that converts UCUM units to pint are implemented.
+> For some UCUM units we still have to define pint units or aliases and for some also name mappings.
 
 [UCUM](https://ucum.org/) (Unified Code for Units of Measure) is a code system intended to cover all units of measures.
 It provides a formalism to express units in an unambiguous way suitable for electronic communication.
@@ -18,12 +19,16 @@ So updating the parser for new UCUM releases is straight forward.
 The parser is built with the great [lark](https://pypi.org/project/lark/) parser toolkit.
 The generated lark grammar file for case-sensitive UCUM codes is included in the repository, see [ucum_grammar.lark](https://github.com/dalito/ucumvert/blob/main/src/ucumvert/ucum_grammar.lark).
 
+Some of the UCUM unit atoms are invalid unit names in pint, for example `cal_[15]`, `m[H2O]`, `10*`, `[in_i'H2O]`.
+For all of them we define mappings to valid pint unit names in [ucum_pint.py](https://github.com/dalito/ucumvert/blob/main/src/ucumvert/ucum_pint.py), e.g. `{"cal_[15]": "cal_15"}`.
+
 ## Install
 
 Installation from git in developer mode including creation of virtual environment (pip should be newer than 23.1):
 
 Linux
-```
+
+```bash
 git clone https://github.com/dalito/ucumvert.git
 cd ucumvert
 python -m venv .venv
@@ -32,7 +37,8 @@ pip install -e .[dev]
 ```
 
 Windows
-```
+
+```bash
 git clone https://github.com/dalito/ucumvert.git
 cd ucumvert
 py -m venv .venv
@@ -88,17 +94,17 @@ You may use the package in your code for converting UCUM codes to pint like this
 
 The unit tests include a test to parse all common UCUM unit codes from the official repo. To see this run
 
-```cmd
-$ pytest
+```bash
+pytest
 ```
 
 The common UCUM unit codes are available only in binary form (xlsx, docs, pdf).
 Here we keep a copy in tsv-format `ucum_examples.tsv`.
 To (re)generate this tsv-file from the official xlsx-file in the [UCUM repository](https://github.com/ucum-org/ucum/tree/main/common-units) run
 
-```cmd
-$ pip install openpyxl
-$ python src/src/ucumvert/vendor/get_ucum_example_as_tsv.py
+```bash
+pip install openpyxl
+python src/src/ucumvert/vendor/get_ucum_example_as_tsv.py
 ```
 
 ## Useful links

@@ -11,7 +11,14 @@ def ucum_parser():
 
 
 @pytest.fixture(scope="session")
-def transform():
+def ureg_std():
+    import pint
+
+    return pint.UnitRegistry()
+
+
+@pytest.fixture(scope="session")
+def transform(ureg_std):
     from ucumvert import UcumToPintTransformer
 
-    return UcumToPintTransformer().transform
+    return UcumToPintTransformer(ureg_std).transform

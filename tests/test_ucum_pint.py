@@ -2,6 +2,7 @@ import pytest
 from pint import UnitRegistry
 from test_parser import ucum_examples_valid
 from ucumvert import UcumToPintTransformer
+from ucumvert.ucum_pint import find_ucum_codes_that_need_mapping
 from ucumvert.xml_util import get_metric_units, get_non_metric_units
 
 ureg = UnitRegistry()
@@ -12,10 +13,17 @@ def get_unit_atoms():
     return get_metric_units() + get_non_metric_units()
 
 
-def test_ucum_to_pint(ucum_parser):
+def test_find_ucum_codes_that_need_mapping():
+    mappings = find_ucum_codes_that_need_mapping(existing_mappings={})
+    assert len(mappings["prefixes"]) == 0
+    assert len(mappings["metric"]) == 12  # noqa: PLR2004
+    assert len(mappings["non-metric"]) == 33  # noqa: PLR2004
+
+
+def test_ucum_to_pint(ucum_parser, ureg_std):
     expected_quantity = ureg("millimeter")
     parsed_data = ucum_parser.parse("mm")
-    result = UcumToPintTransformer().transform(parsed_data)
+    result = UcumToPintTransformer(ureg=ureg_std).transform(parsed_data)
     assert result == expected_quantity
 
 
