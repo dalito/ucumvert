@@ -24,25 +24,41 @@ pptr = 1e-12
 
 _10 = 10
 
-high_power_field = 1 = HPF
-low_power_field = 1 = LPF
-international_unit = 1 = i.U. = IU = iU
-colony_forming_unit = 1 = CFU
-arbitary_unit = 1 = arb_U
-US_pharmacopeia_unit = 1 = USP_U
-GPL_unit = 1 = GPL_U
-MPL_unit = 1 = MPL_U
-APL_unit = 1 = APL_U
-Bethesda_unit = 1 = beth_U
-Todd_unit = 1 = todd_U
-Bodansky_unit = 1 = bdsk_U
-King_Armstrong_unit = 1 = ka_U
-Kunkel_unit = 1 = knk_U
-Mac_Lagan_unit = 1 = mclg_U
-tuberculin_unit = 1 = tb_U
+carat_of_gold_alloys = 1 / 24 = _ = car_AU
+Hounsfield_unit = 1 = _ = hnsf_U
+
+homeopathic_potency_of_decimal_series_retired = 1 = _ = hp_X
+homeopathic_potency_of_centesimal_series_retired = 1 = _ = hp_C
+homeopathic_potency_of_millesimal_series_retired = 1 = _ = hp_M
+homeopathic_potency_of_quintamillesimal_series_retired = 1 = _ = hp_Q
+
+high_power_field = 1 = _ = HPF
+low_power_field = 1 = _ = LPF
+international_unit = 1 = _ = i.U. = IU = iU
+colony_forming_unit = 1 = _ = CFU
+arbitary_unit = 1 = _ = arb_U
+US_pharmacopeia_unit = 1 = _ = USP_U
+GPL_unit = 1 = _ = GPL_U
+MPL_unit = 1 = _ = MPL_U
+APL_unit = 1 = _ = APL_U
+Bethesda_unit = 1 = _ = beth_U
+anti_factor_Xa_unit = 1 = _ = anti_Xa_U
+Todd_unit = 1 = _ = todd_U
+Dye_unit = 1 = _ = dye_U
+Somogyi_unit = 1 = _ = smgy_U
+Bodansky_unit = 1 = _ = bdsk_U
+King_Armstrong_unit = 1 = _ = ka_U
+Kunkel_unit = 1 = _ = knk_U
+Mac_Lagan_unit = 1 = _ = mclg_U
+tuberculin_unit = 1 = _ = tb_U
+
+allergen_unit_for_Ambrosia_artemisiifolia = 1 = _ = Amb_a_1_U
+D_antigen_unit = 1 = _ = D_ag_U
 
 charrière = millimeter / 3 = _ = Ch
-inch_us = survey_foot * 3 = _ = in_us
+inch_us = survey_foot / 12 = _ = in_us
+
+smoot = inch * 67
 
 drop = milliliter / 20 = _ = drp
 equivalents = mol = eq
@@ -50,7 +66,18 @@ osmole = mol = osm
 
 diopter = 1 / meter = _ = diop
 
+slope = tan(1 rad)
+prism_diopter = 100 * tan(1 rad) = _ = p_diop
+
+mil_i = inch / 1000
+cml_i = π/4 * mil_i**2
+hd_i = 4 * inch
+
+mil_us = inch_us / 1000
+
 metabolic_equivalent = 3.5 * milliliter / minute / kilogram = _ = MET
+
+Wood_unit = millimeter_Hg * minute / liter = _ =wood_U
 
 twenty_degC_calorie = 4.18190 * J = cal_20  # conversion factors from UCUM-v2.1
 mean_calorie = 4.19002 * J = cal_m  # conversion factors from UCUM-v2.1
@@ -58,6 +85,27 @@ mean_calorie = 4.19002 * J = cal_m  # conversion factors from UCUM-v2.1
 gregorian_month = gregorian_year/12 = mo_g
 
 meter_per_square_second_per_square_root_of_hertz = meter / sec**2 / Hz**(1/2)
+
+cord = 4 * 4 * 8 * foot**3 = _ = cr_i
+
+survey_yard = 3 * survey_foot = _ = yd_us
+Ramdens_chain = 100 * survey_foot = _ = rch_us
+link_for_Ramdens_chain = Ramdens_chain / 100 = _ = rlk_us
+township = survey_mile**2 * 36 = _ = twp
+
+# old imperial units that should not be used but are defined in UCUM
+inch_imperial = 25.4000508 * millimeter = _ = in_br
+foot_imperial = 12 * inch_imperial = _ = ft_br
+rod_imperial = 16.5 * inch_imperial = _ = rd_br
+chain_imperial = 4 * rod_imperial = _ = ch_br
+link_imperial = chain_imperial / 100 = _ = lk_br
+fathom_imperial = 6 * foot_imperial = _ = fth_br
+pace_imperial = 2.5 * foot_imperial = _ = pc_br
+yard_imperial = 3 * foot_imperial = _ = yd_br
+mile_imperial = 5280* foot_imperial = _ = mi_br
+nautical_mile_imperial = 6080 * foot_imperial = _ = nmi_br
+knot_imperial = nautical_mile_imperial / hour = _ = kn_br
+acre_imperial = 4840 * yard_imperial**2 = _ = acr_br
 
 #### UNIT GROUPS ####
 
@@ -80,17 +128,34 @@ meter_per_square_second_per_square_root_of_hertz = meter / sec**2 / Hz**(1/2)
 @alias international_inch = in_i
 @alias international_feet = ft_i
 @alias international_yard = yd_i
+@alias international_foot = fth_i
 @alias international_mile = mi_i
+
+@alias knot = kn_i
+@alias board_foot = bf_i
+
+@alias rod = rd_us
+@alias chain = ch_us
+@alias link = lk_us
 @alias survey_foot = ft_us
+@alias fathom = fth_us
+@alias furlong = fur_us
+@alias survey_mile = mi_us
 
 @alias square_inch = sin_i
 @alias square_foot = sft_i
 @alias square_yard = syd_i
+@alias square_survey_mile = smi_us = sct
+
+@alias acre = acr_us
+@alias square_rod = srd_us
 
 @alias cubic_inch = cin_i
 @alias fluid_ounce = foz_us
 @alias tablespoon = tbs_us
 @alias teaspoon = tsp_us
+
+@alias force_pound = lbf_av
 
 @alias quart = qt_us
 @alias pint = pt_us
@@ -113,6 +178,7 @@ meter_per_square_second_per_square_root_of_hertz = meter / sec**2 / Hz**(1/2)
 @alias rem = REM
 
 @alias inch_H2O_60F = in_i_H2O   # UCUM v2.1 does not give a temperature in the definition
+@alias inch_Hg_60F = in_i_Hg   # UCUM v2.1 does not give a temperature in the definition
 
 @alias fifteen_degree_calorie = cal_15   # Note: pint-0.23: 4.1855 J vs. UCUM-v2.1: 4.1858 J
 @alias international_calorie = cal_IT
