@@ -67,7 +67,7 @@ docs/_build/
 __pypackages__/
 
 # Environments
-.venv
+.venv*
 env/
 venv/
 ENV/

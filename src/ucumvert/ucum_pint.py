@@ -23,16 +23,16 @@ MAPPINGS_UCUM_TO_PINT = {
     # === metric units ===
     "cal_[20]": "cal_20",
     "cal_[15]": "cal_15",
-    # m[H2O]
-    # m[Hg]
+    "m[H2O]": "m_H2O",
+    "m[Hg]": "m_Hg",
     "g%": "g%",  # invalid as unit name but correctly parsed as <Unit('gram * percent')>
-    # B[SPL]
-    # B[V]
-    # B[mV]
-    # B[uV]
-    # B[10.nV]
-    # B[W]
-    # B[kW]
+    "B[SPL]": "B_SPL",
+    "B[V]": "B_V",
+    "B[mV]": "B_mV",
+    "B[uV]": "B_uV",
+    "B[10.nV]": "B_10nV",
+    "B[W]": "B_W",
+    "B[kW]": "B_kW",
     # === non-metric units ===
     "10*": "_10",
     "10^": "_10",
@@ -236,7 +236,7 @@ def find_matching_pint_definitions(ureg=None):
     for section, get_fcn in sections.items():
         print(f"\n=== {section} ===")
         for ucum_code in get_fcn():
-            lookup_str = f"{ucum_code} m" if section == "prefixes" else ucum_code
+            lookup_str = f"{ucum_code}m" if section == "prefixes" else ucum_code
             try:
                 parsed_data = ucum_parser.parse(lookup_str)
             except VisitError as exc:
@@ -283,8 +283,9 @@ def get_pint_registry(ureg=None):
 if __name__ == "__main__":
     update_lark_ucum_grammar_file()
     # run_examples()
+
     # find_ucum_codes_that_need_mapping()
-    # find_matching_pint_definitions()
+    find_matching_pint_definitions()
 
     # ureg = get_pint_registry()
     # print(ureg("Cel"))
