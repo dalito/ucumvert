@@ -94,20 +94,24 @@ UCUM_GRAMMAR = """
             | "(" main_term ")"
             | "(" term ")"
             | "(" component ")"
-    simple_unit: METRIC
-            | SHORT_PREFIX METRIC
-            | LONG_PREFIX METRIC
-            | NON_METRIC
+    simple_unit: UNIT_METRIC
+            | PREFIX_SHORT UNIT_METRIC
+            | PREFIX_LONG UNIT_METRIC
+            | UNIT_NON_METRIC
             | FACTOR
 
     ANNOTATION: "{{" STRING "}}"
     STRING: /[!-z|~]*/  # ASCII chars 33-126 without curly braces
+
     OPERATOR: "." | DIVIDE
     DIVIDE: "/"
-    SHORT_PREFIX: {short_prefix_atoms}
-    LONG_PREFIX: {long_prefix_atoms}
-    METRIC: {metric_atoms}
-    NON_METRIC: {non_metric_atoms}
+
+    PREFIX_SHORT: {short_prefix_atoms}
+    PREFIX_LONG: {long_prefix_atoms}
+
+    UNIT_METRIC: {metric_atoms}
+    UNIT_NON_METRIC: {non_metric_atoms}
+
     EXPONENT : ["+"|"-"] NON_ZERO_DIGITS
     FACTOR: NON_ZERO_DIGITS
     NON_ZERO_DIGITS : /[1-9][0-9]*/  # positive integers > 0
