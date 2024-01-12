@@ -66,6 +66,6 @@ def test_ucum_parser_metric(ucum_parser):
     tree = ucum_parser.parse("m")
     expected = Tree(
         Token("RULE", "main_term"),
-        [Tree(Token("RULE", "simple_unit"), [Token("METRIC", "m")])],
+        [Tree(Token("RULE", "simple_unit"), [Token("UNIT_METRIC", "m")])],
     )
     assert tree == expected
