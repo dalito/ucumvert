@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pathlib import Path
 
 import pint
@@ -9,12 +11,20 @@ from ucumvert.parser import (
     make_parse_tree_png,
     update_lark_ucum_grammar_file,
 )
-from ucumvert.xml_util import get_metric_units, get_non_metric_units, get_prefixes
+from ucumvert.xml_util import (
+    get_metric_units,
+    get_non_metric_units,
+    get_prefixes,
+    get_units_with_full_definition,
+)
 
 # Some UCUM unit atoms are syntactically incompatiple with pint. For these we
 # map to a pint-compatible unit name which we define in pint_ucum_defs.txt
 # as alias or new unit. To determine what needs a mapping, use the function
 # "find_ucum_codes_that_need_mapping()" below.
+# In addition, we also map UCUM units that are by interpreted as another unit
+# with pint's default unit files. Since pint ignores surrounding square braces
+# it reduces "[pH]", to "pH" first which is the interpreted as pico-Henry.
 
 MAPPINGS_UCUM_TO_PINT = {
     # "UCUM_unit_atom": "pint_unit_name_or_alias"
@@ -43,7 +53,7 @@ MAPPINGS_UCUM_TO_PINT = {
     "[in_i'Hg]": "in_i_Hg",
     "[wood'U]": "wood_U",
     "[p'diop]": "p_diop",
-    "%[slope]": "% slope",
+    "%[slope]": r"% slope",
     "[hnsf'U]": "hnsf_U",
     "[hp'_X]": "hp_X",
     "[hp'_C]": "hp_C",
@@ -67,6 +77,24 @@ MAPPINGS_UCUM_TO_PINT = {
     "[Amb'a'1'U]": "Amb_a_1_U",
     "[D'ag'U]": "D_ag_U",
     "[m/s2/Hz^(1/2)]": "meter_per_square_second_per_square_root_of_hertz",
+    # === ucum codes with incorrect default interpretation in pint ===
+    "B": "bel",
+    "[crd_us]": "cord",
+    "[dqt_us]": "US_dry_quart",
+    "[dpt_us]": "US_dry_pint",
+    "[min_us]": "minim",
+    "[min_br]": "imperial_minim",
+    "[mi_i]": "international_mile",  # We cannot define mi_i as alias because nmi_i would be misinterpreted.
+    "[nmi_i]": "nautical_mile",
+    "[pH]": "pH_value",
+    "[S]": "svedberg",
+    "[AU]": "allergen_unit",
+    "[EU]": "Ehrlich_unit",
+    "R": "roentgen",
+    "ph": "phot",
+    "[g]": "standard_gravity",
+    "[G]": "gravitational_constant",
+    "[h]": "planck_constant",
 }
 
 
@@ -74,12 +102,12 @@ class UcumToPintTransformer(Transformer):
     def __init__(self, ureg=None):
         if ureg is None:
             self.ureg = pint.UnitRegistry(on_redefinition="raise")
+            # Append the local definitions for ucum units to the default registry
+            self.ureg.load_definitions(
+                Path(__file__).resolve().parent / "pint_ucum_defs.txt"
+            )
         else:
             self.ureg = ureg
-        # Append the local definitions for ucum units to the default registry
-        self.ureg.load_definitions(
-            Path(__file__).resolve().parent / "pint_ucum_defs.txt"
-        )
 
     def main_term(self, args):
         # print("DBGmt>", repr(args), len(args))
@@ -186,10 +214,7 @@ def ucum_preprocessor(unit_input):
     """
     ucum_parser = get_ucum_parser()
     transformer = UcumToPintStrTransformer()
-    # print("DBGpp in >", repr(unit_input))
     parsed_data = ucum_parser.parse(unit_input)
-    # pintified_str = str(transformer.transform(parsed_data))
-    # print(f"DBGpp out> {pintified_str}")
     return str(transformer.transform(parsed_data))
 
 
@@ -222,19 +247,49 @@ def find_ucum_codes_that_need_mapping(existing_mappings=MAPPINGS_UCUM_TO_PINT):
     return need_mappings
 
 
-def find_matching_pint_definitions(ureg=None):
+def format_unit_as_pint_definition(u):
+    """Format a UCUM unit as a pint definition."""
+    op = "" if u.defining_unit.startswith("/") else " * "
+    ucum_code_dcls = f"{u.code_cs} = {u.conversion_factor}{op}{u.defining_unit}  #"
+    utype = "METRIC" if u.is_metric else "NON_METRIC"
+    ucum_code_dcls += f" {utype}, {u.name}, {u.property_} ({u.class_})"
+    return ucum_code_dcls
+
+
+def is_in_registry(transformer, ucum_code):
+    try:
+        transformer.transform(ucum_code)
+    except (pint.UndefinedUnitError, VisitError):
+        return False
+    return True
+
+
+def find_matching_pint_definitions(report_file: Path | None = None) -> None:
     """Find Pint units that match UCUM units."""
-    if ureg is None:
-        ureg = pint.UnitRegistry()
+    if report_file is None:
+        report_file = (
+            Path(__file__).resolve().parent / "pint_ucum_defs_mapping_report.txt"
+        )
+
+    report = [
+        "# Computed list of mappings between pint, ucumvert and UCUM units for easy review."
+    ]
+
+    ureg_default = pint.UnitRegistry()
+    ureg_ucum = pint.UnitRegistry()
+    ureg_ucum.load_definitions(Path(__file__).resolve().parent / "pint_ucum_defs.txt")
+    ucum_parser = get_ucum_parser()
+    transformer_default = UcumToPintTransformer(ureg=ureg_default)
+    transformer_ucum = UcumToPintTransformer(ureg=ureg_ucum)
+
+    details_by_unit = {u.code_cs: u for u in get_units_with_full_definition()}
     sections = {
         "prefixes": get_prefixes,
         "metric": get_metric_units,
         "non-metric": get_non_metric_units,
     }
-    ucum_parser = get_ucum_parser()
-    transformer = UcumToPintTransformer(ureg=ureg)
     for section, get_fcn in sections.items():
-        print(f"\n=== {section} ===")
+        report.append(f"\n# === {section} ===")
         for ucum_code in get_fcn():
             lookup_str = f"{ucum_code}m" if section == "prefixes" else ucum_code
             try:
@@ -242,17 +297,30 @@ def find_matching_pint_definitions(ureg=None):
             except VisitError as exc:
                 print(f"PARSER ERROR: {exc.args[0]}")
                 raise
-            try:
-                pint_quantity = transformer.transform(parsed_data)
-            except pint.UndefinedUnitError as exc:
-                msg = getattr(exc, "msg", "")
-                print(f"NOT DEFINED: {msg}")
+            lookup_str = MAPPINGS_UCUM_TO_PINT.get(ucum_code, ucum_code)
+            if is_in_registry(transformer_default, parsed_data):
+                if section == "prefixes":
+                    pint_prefix = str(ureg_default(f"{ucum_code}m").units).removesuffix(
+                        "meter"
+                    )
+                    report.append(
+                        f"# {lookup_str:>10} --> {pint_prefix} (default registry)"
+                    )
+                else:
+                    info = format_unit_as_pint_definition(details_by_unit[ucum_code])
+                    pint_unit = f"{ureg_default(lookup_str).units} (default registry)"
+                    report.append(f"# {ucum_code:>10} --> {pint_unit:<42} # {info}")
                 continue
-            except VisitError as exc:
-                msg = exc.args[0].splitlines()[-1]
-                print(f"TRANSFORM ERROR: {msg}")
-                continue
-            print(f"{ucum_code} --> {pint_quantity!r}")
+            if is_in_registry(transformer_ucum, parsed_data):
+                info = format_unit_as_pint_definition(details_by_unit[ucum_code])
+                pint_unit = f"{ureg_ucum(lookup_str).units} (ucumvert registry)"
+                report.append(f"# {ucum_code:>10} --> {pint_unit:<42} # {info}")
+            else:
+                info = format_unit_as_pint_definition(details_by_unit[ucum_code])
+                report.append(f"# {ucum_code:>10} --> {'NOT DEFINED':<42} # {info}")
+
+    with Path(report_file).open("w", encoding="utf8") as fp:
+        fp.write("\n".join(report))
 
 
 def run_examples():

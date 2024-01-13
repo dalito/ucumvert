@@ -37,13 +37,19 @@ def test_ucum_to_pint_official_examples(ucum_parser, transform, ucum_code):
         # Torr is missing in ucum-essence.xml but included in the official examples.
         # see https://github.com/ucum-org/ucum/issues/289
         pytest.skip("Torr is not defined in official ucum-essence.xml")
+    if ucum_code == "[pH]":
+        # TODO create pint issue
+        pytest.skip("[ph] = pH_value is not defined in pint due to an issue.")
     parsed_data = ucum_parser.parse(ucum_code)
     transform(parsed_data)
 
 
 # comment out next line to see what is missing
-@pytest.mark.skip("TODO: Add missing UCUM units to pint_ucum_defs.txt")
+# @pytest.mark.skip("TODO: Add missing UCUM units to pint_ucum_defs.txt")
 @pytest.mark.parametrize("unit_atom", get_unit_atoms())
 def test_ucum_all_unit_atoms(ucum_parser, transform, unit_atom):
     parsed_atom = ucum_parser.parse(unit_atom)
+    if unit_atom == "[pH]":
+        # TODO create pint issue
+        pytest.skip("[ph] = pH_value is not defined in pint due to an issue.")
     transform(parsed_atom)

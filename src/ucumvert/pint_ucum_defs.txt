@@ -18,24 +18,29 @@
 # The canonical name and aliases should be expressed in singular form.
 # If a unit has no symbol, then the symbol should be set to _.
 
+sphere = 4 * π * steradian = _ = sph
+
 ppth = 1e-3
 ppb = 1e-9
 pptr = 1e-12
 
 _10 = 10
 
-carat_of_gold_alloys = 1 / 24 = _ = car_AU
+carat_of_gold_alloys = 1 / 24 = _ = car_Au
 Hounsfield_unit = 1 = _ = hnsf_U
 
 homeopathic_potency_of_decimal_series_retired = 1 = _ = hp_X
 homeopathic_potency_of_centesimal_series_retired = 1 = _ = hp_C
 homeopathic_potency_of_millesimal_series_retired = 1 = _ = hp_M
 homeopathic_potency_of_quintamillesimal_series_retired = 1 = _ = hp_Q
+homeopathic_potency_of_decimal_korsakovian_series = 1 = _ = kp_X
+homeopathic_potency_of_centesimal_korsakovian_series = 1 = _ = kp_C
+homeopathic_potency_of_millesimal_korsakovian_series = 1 = _ = kp_M
+homeopathic_potency_of_quintamillesimal_korsakovian_series = 1 = _ = kp_Q
 
 high_power_field = 1 = _ = HPF
 low_power_field = 1 = _ = LPF
 international_unit = 1 = _ = i.U. = IU = iU
-colony_forming_unit = 1 = _ = CFU
 arbitary_unit = 1 = _ = arb_U
 US_pharmacopeia_unit = 1 = _ = USP_U
 GPL_unit = 1 = _ = GPL_U
@@ -51,14 +56,28 @@ King_Armstrong_unit = 1 = _ = ka_U
 Kunkel_unit = 1 = _ = knk_U
 Mac_Lagan_unit = 1 = _ = mclg_U
 tuberculin_unit = 1 = _ = tb_U
-
+infectious_dose_cell_culture_50 =  1 = _ = CCID_50
+infectious_dose_tissue_culture_50 = 1 = _ = TCID_50
+infectious_dose_embryo_50 = 1 * 1 = EID_50
+plaque_forming_unit = 1 = PFU
+focus_forming_units = 1 = FFU
+colony_forming_unit = 1 = _ = CFU
+allergene_index_of_reactivity = 1 = IR
+bioequivalent_allergen_unit = 1 = BAU
+allergen_unit = 1
 allergen_unit_for_Ambrosia_artemisiifolia = 1 = _ = Amb_a_1_U
+protein_nitrogen_unit = 1 = PNU
+limit_of_flocculation = 1 = Lf
 D_antigen_unit = 1 = _ = D_ag_U
+fibrinogen_equivalent_unit = 1 = FEU
+ELISA_unit = 1 = ELU
+Ehrlich_unit = 1
 
 charrière = millimeter / 3 = _ = Ch
 inch_us = survey_foot / 12 = _ = in_us
-
 smoot = inch * 67
+
+mesh = 1 / inch = _ = mesh_i
 
 drop = milliliter / 20 = _ = drp
 equivalents = mol = eq
@@ -76,7 +95,7 @@ hd_i = 4 * inch
 mil_us = inch_us / 1000
 
 metabolic_equivalent = 3.5 * milliliter / minute / kilogram = _ = MET
-
+peripheral_vascular_resistance_unit = millimeter_Hg * second / milliliter = _ = PRU
 Wood_unit = millimeter_Hg * minute / liter = _ =wood_U
 
 twenty_degC_calorie = 4.18190 * J = cal_20  # conversion factors from UCUM-v2.1
@@ -86,12 +105,19 @@ gregorian_month = gregorian_year/12 = mo_g
 
 meter_per_square_second_per_square_root_of_hertz = meter / sec**2 / Hz**(1/2)
 
-cord = 4 * 4 * 8 * foot**3 = _ = cr_i
+cord = 4 * 4 * 8 * international_foot**3 = _ = cr_i
 
 survey_yard = 3 * survey_foot = _ = yd_us
 Ramdens_chain = 100 * survey_foot = _ = rch_us
 link_for_Ramdens_chain = Ramdens_chain / 100 = _ = rlk_us
 township = survey_mile**2 * 36 = _ = twp
+
+international_fathom = 6 * international_foot = _ = fth_i
+
+printers_line = inch / 12 = _ = lne
+pied = 32.48 * centimeter  # French foot
+pouce = pied / 12  # French inch
+ligne = pouce / 12  # French line
 
 # old imperial units that should not be used but are defined in UCUM
 inch_imperial = 25.4000508 * millimeter = _ = in_br
@@ -107,10 +133,52 @@ nautical_mile_imperial = 6080 * foot_imperial = _ = nmi_br
 knot_imperial = nautical_mile_imperial / hour = _ = kn_br
 acre_imperial = 4840 * yard_imperial**2 = _ = acr_br
 
+winchsester_gallon = bushel / 8 = _ = gal_wi
+
+fluid_ounce_metric = 30 * mL = _ = foz_m
+cup_metric = 240 * mL = _ = cup_m
+teaspoon_metric = 5 * mL = _ = tsp_m
+tablespoon_metric = 15 * mL = _ = tbs_m
+
+metric_ounce = 28 * gram = _ = oz_m
+
+phot = 1e-4 * lux
+
+m_H2O = meter * water * g_0 = _ = m[H2O]
+m_Hg = meter * mercury * g_0 = _ = m[Hg]
+
+british_thermal_unit_39F = 1.05967 * kJ = Btu_39
+british_thermal_unit_59F = 1.05480 * kJ = Btu_59
+british_thermal_unit_60F = 1.05468 * kJ = Btu_60
+british_thermal_unit_mean = 1.05587 * kJ = Btu_m
+
+# Logarithmic Unit Definition
+#  Unit = scale; logbase; logfactor
+#  x_dB = [logfactor] * log( x_lin / [scale] ) / log( [logbase] )
+bel = 1 ; logbase: 10; logfactor:
+
+# pH_value = 1 * mole / liter; logbase: 10; logfactor: -1  # mol/l is reduced to mol - A pint issue?
+
+bel_spl = 1 sound_pressure_level; logbase: 10; logfactor: 10 = B_SPL
+
+bel_volt = 1 volt; logbase: 10; logfactor: 10 = B_V
+bel_millivolt = 1 millivolt; logbase: 10; logfactor: 10 = B_mV
+bel_microvolt = 1 microvolt; logbase: 10; logfactor: 10 = B_uV
+bel_10nanovolt = 10 nanovolt; logbase: 10; logfactor: 10 = B_10nV
+
+bel_watt = 1 watt; logbase: 10; logfactor: 10 = B_W
+bel_kilowatt = 1 kilowatt; logbase: 10; logfactor: 10 = B_kW
+
 #### UNIT GROUPS ####
 
 #### Additional aliases ####
 # @alias <canonical name or previous alias> = <alias> [ = <alias> ] [...]
+
+@alias bit = bit_s
+
+@alias circle = circ
+
+@alias angstrom = Ao
 
 @alias are = ar
 @alias degree_Celsius = Cel
@@ -123,13 +191,13 @@ acre_imperial = 4840 * yard_imperial**2 = _ = acr_br
 @alias gregorian_year = a_g
 @alias synodic_month = mo_s
 
-@alias ohm = Ohm = OHM
+@alias ohm = Ohm
+
+@alias carat = car_m
 
 @alias international_inch = in_i
 @alias international_feet = ft_i
 @alias international_yard = yd_i
-@alias international_foot = fth_i
-@alias international_mile = mi_i
 
 @alias knot = kn_i
 @alias board_foot = bf_i
@@ -157,19 +225,45 @@ acre_imperial = 4840 * yard_imperial**2 = _ = acr_br
 
 @alias force_pound = lbf_av
 
+@alias stere = st
+
 @alias quart = qt_us
 @alias pint = pt_us
-
-@alias stere = st
+@alias gill = gil_us
+@alias fluid_dram = fdr_us
+@alias bushel = bu_us
+@alias peck = pk_us
 @alias gallon = gal_us
 @alias oil_barrel = bbl_us
+
+@alias US_liquid_cup = cup_us
 
 @alias dram = dr_av
 @alias ounce = oz_av
 @alias pound = lb_av
-
+@alias stone = stone_av
+@alias short_hundredweight = scwt_av
+@alias long_hundredweight = lcwt_av
+@alias short_ton = ston_av
+@alias long_ton = lton_av
+@alias pennyweight = pwt_tr
 @alias troy_ounce = oz_tr
 @alias troy_pound = lb_tr
+
+@alias scruple = sc_ap
+@alias apothecary_dram = dr_ap
+@alias apothecary_ounce = oz_ap
+@alias apothecary_pound = lb_ap
+
+@alias imperial_gallon = gal_br
+@alias imperial_peck = pk_br
+@alias imperial_bushel = bu_br
+@alias imperial_quart = qt_br
+@alias imperial_pint = pt_br
+@alias imperial_gill = gil_br
+@alias imperial_fluid_ounce = foz_br
+@alias imperial_fluid_dram = fdr_br
+@alias imperial_minim = minim_br
 
 @alias reciprocal_centimeter = Ky
 @alias stilb = sb
@@ -177,12 +271,20 @@ acre_imperial = 4840 * yard_imperial**2 = _ = acr_br
 @alias rads = RAD
 @alias rem = REM
 
+@alias technical_atmosphere = att
 @alias inch_H2O_60F = in_i_H2O   # UCUM v2.1 does not give a temperature in the definition
 @alias inch_Hg_60F = in_i_Hg   # UCUM v2.1 does not give a temperature in the definition
 
-@alias fifteen_degree_calorie = cal_15   # Note: pint-0.23: 4.1855 J vs. UCUM-v2.1: 4.1858 J
 @alias international_calorie = cal_IT
-@alias calorie = cal_th
+@alias calorie = Cal
 @alias byte = By
 
+@alias international_british_thermal_unit = Btu_IT
+
+@alias horsepower = HP
 @alias astronomical_unit = AU
+
+@alias pica = pca
+@alias point = pnt
+@alias tex_point = pnt_pr
+@alias tex_pica = pca_pr

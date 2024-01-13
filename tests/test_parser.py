@@ -24,6 +24,7 @@ ucum_examples_valid.update(
         "x5": "dar",  # ambiguous prefix-unit combo: deci-are vs. deka-r (unit "r" does not exist)
         "x6": "{}/m",
         "x7": "{}",
+        "x8": "{/ann1/2.g}/m",  # operators in annotation
     }
 )
 
@@ -38,6 +39,8 @@ def test_ucum_parser_official_examples(ucum_parser, ucum_code):
         # Torr is missing in ucum-essence.xml but included in the official examples.
         # https://github.com/ucum-org/ucum/issues/289
         pytest.skip("Torr is not defined in official ucum-essence.xml")
+    if ucum_code == "[pH]":
+        pytest.skip("[ph] = pH_value is not defined in pint due to an issue.")
     ucum_parser.parse(ucum_code)
 
 
