@@ -23,7 +23,7 @@ class UcumUnitDefinition:
     print_symbol: str
     property_: str
     defining_unit: str
-    conversion_factor: float
+    conversion_factor: float = float("Nan")
 
 
 def get_prefixes() -> list:
@@ -66,29 +66,24 @@ def get_units_with_full_definition() -> list:
         el_data["is_arbitrary"] = el_data.pop("isArbitrary", "") == "yes"
         el_data["class_"] = el_data.pop("class", "")
 
-        # iterate over all children
+        # iterate over child elements of unit
         for child in el:
-            name = child.tag.rsplit("}", 1)[-1]
-            if "Unit" in child.attrib:
-                conversion = dict(child.attrib.items())
-                conversion["defining_unit"] = conversion.pop("Unit")
-                conversion.pop("UNIT", "")
-
+            childname = child.tag.rsplit("}", 1)[-1]
+            if "Unit" in child.attrib:  # element "value" with conversion info
+                el_data["defining_unit"] = child.attrib["Unit"]
+                el_data["conversion_factor"] = child.attrib.get("value", float("Nan"))
                 # The attribute "value" is sometimes in an element "function" one level deeper.
-                for attr, value in child.items():
-                    if attr == "value":
-                        conversion[attr] = value
+                for el_fcn in child:
+                    if "value" in el_fcn.attrib:
+                        el_data["conversion_factor"] = el_fcn.attrib.get("value")
+                        break
+            else:  # elements: Name, printSymbol, ...
+                el_data[childname] = child.text
 
-                conversion["conversion_factor"] = conversion.pop("value", float("Nan"))
-                el_data.update(**conversion)
-            else:
-                el_data[name] = child.text
-                el_data["defining_unit"] = child.text
-                el_data["conversion_factor"] = float("Nan")
-        # init dataclass and add to list
         el_data["print_symbol"] = el_data.pop("printSymbol", "")
         el_data["property_"] = el_data.pop("property", "")
         data.append(UcumUnitDefinition(**el_data))
+
     return data
 
 
