@@ -104,11 +104,12 @@ MAPPINGS_UCUM_TO_PINT = {
 class UcumToPintTransformer(Transformer):
     def __init__(self, ureg=None):
         if ureg is None:
-            self.ureg = pint.UnitRegistry(on_redefinition="raise")
-            # Append the local definitions for ucum units to the default registry
-            self.ureg.load_definitions(
-                Path(__file__).resolve().parent / "pint_ucum_defs.txt"
-            )
+            self.ureg = pint.get_application_registry()
+            # Append definitions for ucum units to the registry if not already done.
+            if not hasattr(ureg, "peripheral_vascular_resistance_unit"):
+                self.ureg.load_definitions(
+                    Path(__file__).resolve().parent / "pint_ucum_defs.txt"
+                )
         else:
             self.ureg = ureg
 
@@ -216,7 +217,7 @@ def ucum_preprocessor(unit_input):
 
     Usage:
         >>> import pint
-        >>> ureg = pint.UnitRegistry()
+        >>> ureg = pint.get_application_registry()
         >>> ureg.preprocessors.append(ucum_preprocessor)
     """
     ucum_parser = get_ucum_parser()
@@ -334,9 +335,11 @@ def find_matching_pint_definitions(report_file: Path | None = None) -> None:
 def get_pint_registry(ureg=None):
     """Return a pint registry with the UCUM definitions loaded."""
     if ureg is None:
-        ureg = pint.UnitRegistry(on_redefinition="raise")
-    ureg.preprocessors.append(ucum_preprocessor)
-    ureg.load_definitions(Path(__file__).resolve().parent / "pint_ucum_defs.txt")
+        ureg = pint.get_application_registry()
+    if not hasattr(ureg, "peripheral_vascular_resistance_unit"):  # UCUM already loaded?
+        ureg.load_definitions(Path(__file__).resolve().parent / "pint_ucum_defs.txt")
+    if ucum_preprocessor not in ureg.preprocessors:
+        ureg.preprocessors.append(ucum_preprocessor)
     return ureg
 
 
