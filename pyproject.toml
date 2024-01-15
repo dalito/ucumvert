@@ -245,8 +245,6 @@ max-complexity = 10
 # Allow Pydantic's `@validator` decorator to trigger class method treatment.
 classmethod-decorators = [
   "classmethod",
-  # for pydantic 1.x
-  "pydantic.validator", "pydantic.class_validators.root_validator"
 ]
 
 [tool.ruff.format]
@@ -255,7 +253,7 @@ docstring-code-format = true
 
 [tool.codespell]
 
-skip = "pyproject.toml,src/ucumvert/vendor/ucum-essence.xml,src/ucumvert/vendor/ucum_examples.tsv,src/ucumvert/ucum_grammar.lark"
+skip = "pyproject.toml,src/ucumvert/vendor/ucum-essence.xml,src/ucumvert/vendor/ucum_examples.tsv,src/ucumvert/ucum_grammar.lark,src/ucumvert/pint_ucum_defs_mapping_report.txt"
 
 # Note: words have to be lowercased for the ignore-words-list
 ignore-words-list = "linke,tne,sie,smoot"

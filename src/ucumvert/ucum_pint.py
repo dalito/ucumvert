@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 
 import pint
@@ -9,7 +10,6 @@ from lark.exceptions import VisitError
 from ucumvert.parser import (
     get_ucum_parser,
     make_parse_tree_png,
-    update_lark_ucum_grammar_file,
 )
 from ucumvert.xml_util import (
     get_metric_units,
@@ -18,7 +18,10 @@ from ucumvert.xml_util import (
     get_units_with_full_definition,
 )
 
-# Some UCUM unit atoms are syntactically incompatiple with pint. For these we
+logger = logging.getLogger(__name__)
+
+
+# Some UCUM unit atoms are syntactically incompatible with pint. For these we
 # map to a pint-compatible unit name which we define in pint_ucum_defs.txt
 # as alias or new unit. To determine what needs a mapping, use the function
 # "find_ucum_codes_that_need_mapping()" below.
@@ -192,7 +195,7 @@ class UcumToPintStrTransformer(Transformer):
     def simple_unit(self, args):
         # print("DBGsu>", repr(args), len(args))
         if len(args) == 2:  # prefix is present  # noqa: PLR2004
-            return f"({args[0]} + {args[1]})"
+            return f"({args[0]}{args[1]})"
 
         # Substitute UCUM atoms that cannot be defined in pint as units or aliases.
         ret = MAPPINGS_UCUM_TO_PINT.get(args[0], args[0])
@@ -206,11 +209,15 @@ class UcumToPintStrTransformer(Transformer):
 
 
 def ucum_preprocessor(unit_input):
-    """Preprocess UCUM code before parsing as pint unit.
+    """
+    Preprocessor for pint to convert all input from UCUM to pint units.
+
+    Note: This will make most standard pint unit expressions invalid.
 
     Usage:
-        ureg = pint.UnitRegistry()
-        ureg.preprocessors.append(ucum_preprocessor)
+        >>> import pint
+        >>> ureg = pint.UnitRegistry()
+        >>> ureg.preprocessors.append(ucum_preprocessor)
     """
     ucum_parser = get_ucum_parser()
     transformer = UcumToPintStrTransformer()
@@ -219,8 +226,8 @@ def ucum_preprocessor(unit_input):
 
 
 def find_ucum_codes_that_need_mapping(existing_mappings=MAPPINGS_UCUM_TO_PINT):
-    """Find UCUM atoms that are syntactically incompatiple with pint."""
-    print("The following UCUM atoms must be mapped to valid pint unit names.")
+    """Find UCUM atoms that are syntactically incompatible with pint."""
+    logger.info("The following UCUM atoms must be mapped to valid pint unit names.")
     ureg = pint.UnitRegistry()
     sections = {
         "prefixes": get_prefixes,
@@ -229,7 +236,7 @@ def find_ucum_codes_that_need_mapping(existing_mappings=MAPPINGS_UCUM_TO_PINT):
     }
     need_mappings = {k: [] for k in sections}
     for section, get_fcn in sections.items():
-        print(f"\n=== {section} ===")
+        logger.info(f"\n=== {section} ===")  # noqa: G004
         for ucum_code in get_fcn():
             if ucum_code in existing_mappings:
                 continue
@@ -240,10 +247,10 @@ def find_ucum_codes_that_need_mapping(existing_mappings=MAPPINGS_UCUM_TO_PINT):
                 ureg.define(def_str)
             except pint.DefinitionSyntaxError:
                 need_mappings[section].append(ucum_code)
-                print(f"{ucum_code}")
+                logger.info(f"{ucum_code}")  # noqa: G004
                 continue
         if not need_mappings[section]:
-            print("all good!")
+            logger.info("all good!")
     return need_mappings
 
 
@@ -295,7 +302,7 @@ def find_matching_pint_definitions(report_file: Path | None = None) -> None:
             try:
                 parsed_data = ucum_parser.parse(lookup_str)
             except VisitError as exc:
-                print(f"PARSER ERROR: {exc.args[0]}")
+                logger.exception("PARSER ERROR: %s", {exc.args[0]})
                 raise
             lookup_str = MAPPINGS_UCUM_TO_PINT.get(ucum_code, ucum_code)
             if is_in_registry(transformer_default, parsed_data):
@@ -320,7 +327,17 @@ def find_matching_pint_definitions(report_file: Path | None = None) -> None:
                 report.append(f"# {ucum_code:>10} --> {'NOT DEFINED':<42} # {info}")
 
     with Path(report_file).open("w", encoding="utf8") as fp:
-        fp.write("\n".join(report))
+        fp.write("\n".join(report) + "\n")
+    logger.info("Created mapping report: %s", report_file)
+
+
+def get_pint_registry(ureg=None):
+    """Return a pint registry with the UCUM definitions loaded."""
+    if ureg is None:
+        ureg = pint.UnitRegistry(on_redefinition="raise")
+    ureg.preprocessors.append(ucum_preprocessor)
+    ureg.load_definitions(Path(__file__).resolve().parent / "pint_ucum_defs.txt")
+    return ureg
 
 
 def run_examples():
@@ -339,22 +356,6 @@ def run_examples():
         print(f"Pint {q!r}")
 
 
-def get_pint_registry(ureg=None):
-    """Return a pint registry with the UCUM definitions loaded."""
-    if ureg is None:
-        ureg = pint.UnitRegistry(on_redefinition="raise")
-    ureg.preprocessors.append(ucum_preprocessor)
-    ureg.load_definitions(Path(__file__).resolve().parent / "pint_ucum_defs.txt")
-    return ureg
-
-
 if __name__ == "__main__":
-    update_lark_ucum_grammar_file()
     # run_examples()
-
-    # find_ucum_codes_that_need_mapping()
-    find_matching_pint_definitions()
-
-    # ureg = get_pint_registry()
-    # print(ureg("Cel"))
-    # print(ureg("'"))
+    find_ucum_codes_that_need_mapping()

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import textwrap
 from pathlib import Path
 
@@ -12,6 +13,9 @@ from ucumvert.xml_util import (
     get_non_metric_units,
     get_prefixes,
 )
+
+logger = logging.getLogger(__name__)
+
 
 # UCUM syntax in the Backus-Naur Form, copied from https://ucum.org/ucum#section-Syntax-Rules
 # <sign>  : "+" | "-"
@@ -162,6 +166,7 @@ def update_lark_ucum_grammar_file(
     with grammar_file.open("w") as f:
         f.write("\n".join(wrapped))
         f.write("\n")  # newline at end of file
+    logger.info("Updated grammar written to '%s'.", grammar_file)
 
 
 def get_ucum_parser(grammar_file=None):
@@ -179,5 +184,5 @@ def make_parse_tree_png(data, filename="parse_tree_unit.png", parser=None):
     try:
         tree.pydot__tree_to_png(parsed_data, filename)
     except ImportError:
-        print("pydot not installed, skipping png generation")
+        logger.warning("pydot not installed, skipping png generation")
     return parsed_data

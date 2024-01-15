@@ -37,7 +37,14 @@ def ureg_ucumvert():
 
 
 @pytest.fixture(scope="session")
-def transform(ureg_ucumvert):
+def transform_ucum_pint(ureg_ucumvert):
     from ucumvert import UcumToPintTransformer
 
     return UcumToPintTransformer(ureg_ucumvert).transform
+
+
+@pytest.fixture(scope="session")
+def transform_ucum_str(ureg_ucumvert):
+    from ucumvert import UcumToPintStrTransformer
+
+    return UcumToPintStrTransformer(ureg_ucumvert).transform

@@ -1,8 +1,9 @@
 # Easier access to UCUM from Python
 
-> **This is almost done. Feedback welcome!**
-> The lark grammar to parse UCUM codes and the transformer that converts UCUM units to pint are implemented.
-> For some UCUM units we still have to define pint units or aliases and for some also name mappings.
+> **Feedback welcome!**
+> Currently only the conversion direction from UCM to pint is supported. Supporting pint to UCUM is not of high priority.
+> Please carefully review definitions before you trust them.
+> While we a lot of tests in place and reviewed the mappings carefully, bugs may still be present.
 
 [UCUM](https://ucum.org/) (Unified Code for Units of Measure) is a code system intended to cover all units of measures.
 It provides a formalism to express units in an unambiguous way suitable for electronic communication.
@@ -10,9 +11,9 @@ Note that UCUM does non provide a canonical representation, e.g. `m/s` and `m.s-
 
 **ucumvert** is a pip-installable Python package. Features:
 
-- Parser for UCUM unit strings that implements the full grammar
-- Converter for creating [pint](https://pypi.org/project/pint/) units from UCUM unit strings
-- A pint unit definition file [pint_ucum_defs.txt](https://github.com/dalito/ucumvert/blob/main/src/ucumvert/pint_ucum_defs.txt) that extends pint´s default units with UCUM units
+- Parser for UCUM unit strings that implements the full grammar.
+- Converter for creating [pint](https://pypi.org/project/pint/) units from UCUM unit strings.
+- A pint unit definition file [pint_ucum_defs.txt](https://github.com/dalito/ucumvert/blob/main/src/ucumvert/pint_ucum_defs.txt) that extends pint´s default units with UCUM units. All UCUM units from Version 2.1 of the specification are included.
 
 **ucumvert** generates the UCUM grammar by filling a template with unit codes, prefixes etc. from the official [ucum-essence.xml](https://github.com/ucum-org/ucum/blob/main/ucum-essence.xml) file (a copy is included in this repo).
 So updating the parser for new UCUM releases is straight forward.
@@ -50,10 +51,16 @@ Optionally you can visualize the parse trees with [Graphviz](https://www.graphvi
 
 ## Demo
 
-This is just a demo command line interface to show that the code does something...
+We provide a basic command line interface.
 
 ```cmd
 (.venv) $ ucumvert
+```
+
+It has an interactive mode to test parsing UCUM codes:
+
+```cmd
+(.venv) $ ucumvert -i
 Enter UCUM unit code to parse, or 'q' to quit.
 > m/s2.kg
 Created visualization of parse tree (parse_tree.png).
@@ -73,7 +80,7 @@ main_term
 > q
 ```
 
-So the intermediate result is a tree which is then traversed to convert the elements to pint:
+So the intermediate result is a tree which is then traversed to convert the elements to pint quantities (or pint-compatible strings with another transformer):
 
 ![parse tree](parse_tree.png)
 
@@ -90,9 +97,26 @@ You may use the package in your code for converting UCUM codes to pint like this
 >>>
 ```
 
+We also experimented with creating a UCUM-aware pint UnitRegistry.
+This has been tried by registering a preprocessor that intercepts the entered unit string and converts it from UCUM to pint.
+Due to the way preprocessors work, pint will then no longer accept standard pint unit expressions but only UCUM (see below).
+This is inconvenient! So we suggest to convert UCUM units as shown above, until a less disruptive way is found/possible.
+
+```python
+>>> from ucumvert import get_pint_registry
+>>> ureg = get_pint_registry()
+>>> ureg("m/s2.kg")
+<Quantity(1.0, 'kilogram * meter / second ** 2')>
+>>> ureg("Cel")
+<Quantity(1, 'degree_Celsius')>
+>>> ureg("degC")   # a standard pint unit code
+... (traceback cut out)
+lark.exceptions.UnexpectedCharacters: No terminal matches 'C' in the current parser context
+```
+
 ## Tests
 
-The unit tests include a test to parse all common UCUM unit codes from the official repo. To see this run
+The unit tests include parsing and converting all common UCUM unit codes from the official repo. Run the test suite by:
 
 ```bash
 pytest
