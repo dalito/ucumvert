@@ -3,7 +3,7 @@
 > **Feedback welcome!**
 > Currently only the conversion direction from UCM to pint is supported. Supporting pint to UCUM is not of high priority.
 > Please carefully review definitions before you trust them.
-> While we a lot of tests in place and reviewed the mappings carefully, bugs may still be present.
+> While we have many tests in place and reviewed the mappings carefully, bugs may still be present.
 
 [UCUM](https://ucum.org/) (Unified Code for Units of Measure) is a code system intended to cover all units of measures.
 It provides a formalism to express units in an unambiguous way suitable for electronic communication.
