@@ -313,9 +313,15 @@ def find_matching_pint_definitions(report_file: Path | None = None) -> None:
             lookup_str = MAPPINGS_UCUM_TO_PINT.get(ucum_code, ucum_code)
             if is_in_registry(transformer_default, parsed_data):
                 if section == "prefixes":
-                    pint_prefix = str(ureg_default(f"{ucum_code}m").units).removesuffix(
-                        "meter"
-                    )
+                    # Python 3.9+:
+                    # pint_prefix = str(ureg_default(f"{ucum_code}m").units).removesuffix(
+                    #     "meter"
+                    # )
+                    # TODO replace next 3 lines by code above when 3.8 is no longer supported.
+                    pint_prefix = str(ureg_default(f"{ucum_code}m").units)
+                    if pint_prefix.endswith("meter"):
+                        pint_prefix = pint_prefix[: -len(pint_prefix)]
+
                     report.append(
                         f"# {lookup_str:>10} --> {pint_prefix} (default registry)"
                     )
