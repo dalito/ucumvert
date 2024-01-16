@@ -52,7 +52,7 @@ jobs:
           name: distribution-files
           path: dist
 
-      # pinned version 1.8.10 [2]
+      # version pinned by dependabot of [2]
       - name: Publish package 📦 to Test PyPI
         if: github.event_name == 'push'
         uses: pypa/gh-action-pypi-publish@2f6f737ca5f74c637829c0f5c3acd0e29ea5e8bf
