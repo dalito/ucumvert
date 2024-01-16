@@ -50,6 +50,7 @@ Changelog = "https://github.com/nfdi4cat/ucumvert/blob/main/CHANGELOG.md"
 tests = [
   "pytest",
   "coverage",
+  "pydot",
 ]
 lint = [
   "black",
@@ -58,7 +59,6 @@ dev = [
     "ucumvert[tests,lint]",
     "ruff",
     "openpyxl",
-    "pydot",
 ]
 
 [project.scripts]
