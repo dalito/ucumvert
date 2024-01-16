@@ -10,6 +10,7 @@ from ucumvert.parser import (
     update_lark_ucum_grammar_file,
 )
 from ucumvert.ucum_pint import (
+    PintUcumRegistry,
     UcumToPintStrTransformer,
     UcumToPintTransformer,
     get_pint_registry,
@@ -30,6 +31,7 @@ __all__ = [
     "update_lark_ucum_grammar_file",
     "UcumToPintTransformer",
     "UcumToPintStrTransformer",
+    "PintUcumRegistry",
 ]
 
 # Note that nothing is passed to getLogger to set the "root" logger

@@ -3,9 +3,14 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
-import pint
 from lark import Transformer
 from lark.exceptions import VisitError
+from pint import (
+    DefinitionSyntaxError,
+    UndefinedUnitError,
+    UnitRegistry,
+    get_application_registry,
+)
 
 from ucumvert.parser import (
     get_ucum_parser,
@@ -104,9 +109,9 @@ MAPPINGS_UCUM_TO_PINT = {
 class UcumToPintTransformer(Transformer):
     def __init__(self, ureg=None):
         if ureg is None:
-            self.ureg = pint.get_application_registry()
+            self.ureg = get_application_registry()
             # Append definitions for ucum units to the registry if not already done.
-            if not hasattr(ureg, "peripheral_vascular_resistance_unit"):
+            if "peripheral_vascular_resistance_unit" not in self.ureg:
                 self.ureg.load_definitions(
                     Path(__file__).resolve().parent / "pint_ucum_defs.txt"
                 )
@@ -229,7 +234,7 @@ def ucum_preprocessor(unit_input):
 def find_ucum_codes_that_need_mapping(existing_mappings=MAPPINGS_UCUM_TO_PINT):
     """Find UCUM atoms that are syntactically incompatible with pint."""
     logger.info("The following UCUM atoms must be mapped to valid pint unit names.")
-    ureg = pint.UnitRegistry()
+    ureg = UnitRegistry()
     sections = {
         "prefixes": get_prefixes,
         "metric": get_metric_units,
@@ -246,7 +251,7 @@ def find_ucum_codes_that_need_mapping(existing_mappings=MAPPINGS_UCUM_TO_PINT):
             )
             try:
                 ureg.define(def_str)
-            except pint.DefinitionSyntaxError:
+            except DefinitionSyntaxError:
                 need_mappings[section].append(ucum_code)
                 logger.info(f"{ucum_code}")  # noqa: G004
                 continue
@@ -267,7 +272,7 @@ def format_unit_as_pint_definition(u):
 def is_in_registry(transformer, ucum_code):
     try:
         transformer.transform(ucum_code)
-    except (pint.UndefinedUnitError, VisitError):
+    except (UndefinedUnitError, VisitError):
         return False
     return True
 
@@ -283,8 +288,8 @@ def find_matching_pint_definitions(report_file: Path | None = None) -> None:
         "# Computed list of mappings between pint, ucumvert and UCUM units for easy review."
     ]
 
-    ureg_default = pint.UnitRegistry()
-    ureg_ucum = pint.UnitRegistry()
+    ureg_default = UnitRegistry()
+    ureg_ucum = UnitRegistry()
     ureg_ucum.load_definitions(Path(__file__).resolve().parent / "pint_ucum_defs.txt")
     ucum_parser = get_ucum_parser()
     transformer_default = UcumToPintTransformer(ureg=ureg_default)
@@ -335,12 +340,39 @@ def find_matching_pint_definitions(report_file: Path | None = None) -> None:
 def get_pint_registry(ureg=None):
     """Return a pint registry with the UCUM definitions loaded."""
     if ureg is None:
-        ureg = pint.get_application_registry()
-    if not hasattr(ureg, "peripheral_vascular_resistance_unit"):  # UCUM already loaded?
+        ureg = get_application_registry()
+    if "peripheral_vascular_resistance_unit" not in ureg:  # UCUM already loaded?
         ureg.load_definitions(Path(__file__).resolve().parent / "pint_ucum_defs.txt")
     if ucum_preprocessor not in ureg.preprocessors:
         ureg.preprocessors.append(ucum_preprocessor)
     return ureg
+
+
+class PintUcumRegistry(UnitRegistry):
+    def _after_init(self) -> None:
+        """This is called after all __init__"""
+        super()._after_init()  # load pint's default unit definitions
+
+        # Append definitions for ucum units to the registry.
+        loaded_files = self.load_definitions(
+            Path(__file__).resolve().parent / "pint_ucum_defs.txt"
+        )
+        self._build_cache(loaded_files)
+
+        # Initialise UCUM parser and transformer
+        self._ucum_parser = get_ucum_parser()
+        self._from_ucum_transformer = UcumToPintTransformer().transform
+
+    def from_ucum(self, ucum_code):
+        """Transform an ucum_code to a pint unit.
+
+        Parameters
+        ----------
+        ucum_code :
+            Ucum code as string.
+        """
+        parsed_data = self._ucum_parser.parse(ucum_code)
+        return self._from_ucum_transformer(parsed_data)
 
 
 def run_examples():
@@ -360,5 +392,5 @@ def run_examples():
 
 
 if __name__ == "__main__":
-    # run_examples()
-    find_ucum_codes_that_need_mapping()
+    run_examples()
+    # find_ucum_codes_that_need_mapping()

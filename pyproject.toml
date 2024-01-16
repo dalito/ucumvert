@@ -20,7 +20,7 @@ requires-python = ">=3.8"
 keywords = ["UCUM", "units of measurement", "parser"]
 
 classifiers = [
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 4 - Beta",
   "Programming Language :: Python",
   "Environment :: Console",
   "Intended Audience :: Science/Research",

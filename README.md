@@ -1,7 +1,7 @@
 # Easier access to UCUM from Python
 
 > **Feedback welcome!**
-> Currently only the conversion direction from UCM to pint is supported. Supporting pint to UCUM is not of high priority.
+> Currently only the conversion direction from UCM to pint is supported.
 > Please carefully review definitions before you trust them.
 > While we have many tests in place and reviewed the mappings carefully, bugs may still be present.
 
@@ -25,7 +25,7 @@ For all of them we define mappings to valid pint unit names in [ucum_pint.py](ht
 
 ## Install
 
-Installation from git in developer mode including creation of virtual environment (pip should be newer than 23.1):
+Installation from git in developer mode including creation of a virtual environment (pip should be newer than 23.1):
 
 Linux
 
@@ -80,38 +80,25 @@ main_term
 > q
 ```
 
-So the intermediate result is a tree which is then traversed to convert the elements to pint quantities (or pint-compatible strings with another transformer):
+So the intermediate result is a tree which is then traversed to convert the elements to pint quantities (or pint-compatible strings):
 
 ![parse tree](parse_tree.png)
 
-You may use the package in your code for converting UCUM codes to pint like this:
+The package includes an UCUM-aware pint UnitRegistry which loads all definitions for UCUM units on instantiation.
+It comes with an additional method `from_ucum` to convert UCUM codes to pint.
 
 ```python
->>> from ucumvert import get_ucum_parser, UcumToPintTransformer
->>> ucum_parser = get_ucum_parser()
->>> data = "m/s2.kg"
->>> parsed_data = ucum_parser.parse(data)
->>> pint_quantity = UcumToPintTransformer().transform(parsed_data)
->>> pint_quantity
+>>> from ucumvert import PintUcumRegistry
+>>> ureg = PintUcumRegistry()
+>>> ureg.from_ucum("m/s2.kg")
 <Quantity(1.0, 'kilogram * meter / second ** 2')>
->>>
-```
-
-We also experimented with creating a UCUM-aware pint UnitRegistry.
-This has been tried by registering a preprocessor that intercepts the entered unit string and converts it from UCUM to pint.
-Due to the way preprocessors work, pint will then no longer accept standard pint unit expressions but only UCUM (see below).
-This is inconvenient! So we suggest to convert UCUM units as shown above, until a less disruptive way is found/possible.
-
-```python
->>> from ucumvert import get_pint_registry
->>> ureg = get_pint_registry()
->>> ureg("m/s2.kg")
-<Quantity(1.0, 'kilogram * meter / second ** 2')>
->>> ureg("Cel")
+>>> ureg.from_ucum("m[H2O]{35Cel}")  # UCUM code with annotation
+<Quantity(1, 'm_H2O')>
+>>> _.to("mbar")
+<Quantity(98.0665, 'millibar')>
+>>> ureg("degC")   # a standard pint unit
 <Quantity(1, 'degree_Celsius')>
->>> ureg("degC")   # a standard pint unit code
-... (traceback cut out)
-lark.exceptions.UnexpectedCharacters: No terminal matches 'C' in the current parser context
+>>>
 ```
 
 ## Tests
