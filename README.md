@@ -1,3 +1,6 @@
+[![](https://github.com/dalito/ucumvert/workflows/CI/badge.svg)](https://github.com/dalito/ucumvert/actions)
+[![PyPI - Version](https://img.shields.io/pypi/v/ucumvert)](https://pypi.org/project/ucumvert)
+
 # Easier access to UCUM from Python
 
 > **Feedback welcome!**
@@ -25,7 +28,13 @@ For all of them we define mappings to valid pint unit names in [ucum_pint.py](ht
 
 ## Install
 
-Installation from git in developer mode including creation of a virtual environment (pip should be newer than 23.1):
+ucumvert is available as Python package from [PyPi](https://pypi.org/project/ucumvert) and can be pip-installed in the usual way.
+
+```bash
+pip install ucumvert
+```
+
+To install the most recent code from git in developer mode including creation of a virtual environment (pip should be newer than 23.1) use:
 
 Linux
 
@@ -82,7 +91,7 @@ main_term
 
 So the intermediate result is a tree which is then traversed to convert the elements to pint quantities (or pint-compatible strings):
 
-![parse tree](parse_tree.png)
+![parse tree kg*m*s**-2](https://raw.githubusercontent.com/dalito/ucumvert/main/parse_tree.png)
 
 The package includes an UCUM-aware pint UnitRegistry which loads all definitions for UCUM units on instantiation.
 It comes with an additional method `from_ucum` to convert UCUM codes to pint.
