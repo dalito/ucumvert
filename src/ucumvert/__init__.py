@@ -6,7 +6,6 @@ from pathlib import Path
 
 from ucumvert.parser import (
     get_ucum_parser,
-    make_parse_tree_png,
     update_lark_ucum_grammar_file,
 )
 from ucumvert.ucum_pint import (
@@ -22,7 +21,7 @@ except ImportError:  # pragma: no cover
     __version__ = "0.0.0"
     __version_tuple__ = (0, 0, 0)
 
-try:
+try:  # pragma: no cover
     import pydot  # noqa: F401
 
     HAS_PYDOT = True
@@ -31,7 +30,6 @@ except ImportError:  # pragma: no cover
 
 __all__ = [
     "get_ucum_parser",
-    "make_parse_tree_png",
     "ucum_preprocessor",
     "update_lark_ucum_grammar_file",
     "UcumToPintTransformer",

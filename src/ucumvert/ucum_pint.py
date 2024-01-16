@@ -14,7 +14,6 @@ from pint import (
 
 from ucumvert.parser import (
     get_ucum_parser,
-    make_parse_tree_png,
 )
 from ucumvert.xml_util import (
     get_metric_units,
@@ -380,7 +379,6 @@ def run_examples():  # pragma: no cover
     parser = get_ucum_parser()
     for unit in test_ucum_units:
         print("parsing ucum code:", unit)
-        make_parse_tree_png(unit, filename="parse_tree.png")
         parsed_data = parser.parse(unit)
         q = UcumToPintTransformer().transform(parsed_data)
         print(f"Pint {q!r}")

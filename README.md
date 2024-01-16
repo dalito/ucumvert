@@ -34,7 +34,7 @@ ucumvert is available as Python package from [PyPi](https://pypi.org/project/ucu
 pip install ucumvert
 ```
 
-To install the most recent code from git in developer mode including creation of a virtual environment (pip should be newer than 23.1) use:
+To install the most recent code from git in developer mode including creation of a virtual environment use:
 
 Linux
 
@@ -43,6 +43,7 @@ git clone https://github.com/dalito/ucumvert.git
 cd ucumvert
 python -m venv .venv
 source .venv/bin/activate
+python -m pip install --upgrade pip
 pip install -e .[dev]
 ```
 
@@ -53,6 +54,7 @@ git clone https://github.com/dalito/ucumvert.git
 cd ucumvert
 py -m venv .venv
 .venv\Scripts\activate.bat
+py -m pip install --upgrade pip
 pip install -e .[dev]
 ```
 

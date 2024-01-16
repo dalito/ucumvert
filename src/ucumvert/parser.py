@@ -4,7 +4,7 @@ import logging
 import textwrap
 from pathlib import Path
 
-from lark import Lark, Transformer, tree
+from lark import Lark, Transformer
 
 import ucumvert
 from ucumvert.xml_util import (
@@ -175,9 +175,3 @@ def get_ucum_parser(grammar_file=None):
     with grammar_file.open("r", encoding="utf8") as f:
         ucum_grammar = f.read()
     return Lark(ucum_grammar, start="main_term", strict=True)
-
-
-def make_parse_tree_png(parser, data, filename="parse_tree_unit.png"):
-    parsed_data = parser.parse(data)
-    tree.pydot__tree_to_png(parsed_data, filename)
-    return parsed_data

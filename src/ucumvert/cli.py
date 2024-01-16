@@ -4,12 +4,12 @@ import sys
 import textwrap
 from pathlib import Path
 
+from lark import tree
 from lark.exceptions import LarkError, UnexpectedInput, VisitError
 
 import ucumvert
 from ucumvert.parser import (
     get_ucum_parser,
-    make_parse_tree_png,
     update_lark_ucum_grammar_file,
 )
 from ucumvert.ucum_pint import UcumToPintTransformer, find_matching_pint_definitions
@@ -31,13 +31,9 @@ def interactive():
         if ucum_code and (ucum_code in "qQ"):
             break
         try:
+            parsed_data = ucum_parser.parse(ucum_code)
             if ucumvert.HAS_PYDOT:
-                parsed_data = make_parse_tree_png(
-                    ucum_parser, ucum_code, filename="parse_tree.png"
-                )
-                print("Created visualization of parse tree (parse_tree.png).")
-            else:
-                parsed_data = ucum_parser.parse(ucum_code)
+                tree.pydot__tree_to_png(parsed_data, "parse_tree_unit.png")
             print(parsed_data.pretty())
         except UnexpectedInput as e:
             print(e)
