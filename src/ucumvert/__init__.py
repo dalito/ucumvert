@@ -13,19 +13,24 @@ from ucumvert.ucum_pint import (
     PintUcumRegistry,
     UcumToPintStrTransformer,
     UcumToPintTransformer,
-    get_pint_registry,
     ucum_preprocessor,
 )
 
 try:
     from ucumvert._version import __version__, __version_tuple__
-except ImportError:
+except ImportError:  # pragma: no cover
     __version__ = "0.0.0"
     __version_tuple__ = (0, 0, 0)
 
+try:
+    import pydot  # noqa: F401
+
+    HAS_PYDOT = True
+except ImportError:  # pragma: no cover
+    HAS_PYDOT = False
+
 __all__ = [
     "get_ucum_parser",
-    "get_pint_registry",
     "make_parse_tree_png",
     "ucum_preprocessor",
     "update_lark_ucum_grammar_file",
@@ -54,7 +59,7 @@ def setup_logging(loglevel: int = logging.INFO, logfile: Path | None = None) -> 
     # Setup handler for logging to console
     logging.basicConfig(level=loglevel, format="%(levelname)-8s|%(message)s")
 
-    if logfile is not None:
+    if logfile is not None:  # pragma: no cover
         # Setup handler for logging to file
         fh = logging.handlers.RotatingFileHandler(
             logfile, maxBytes=100000, backupCount=5

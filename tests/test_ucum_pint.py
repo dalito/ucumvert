@@ -1,7 +1,13 @@
 import pytest
+from lark import LarkError
 from pint import UnitRegistry
 from test_parser import ucum_examples_valid
-from ucumvert import UcumToPintStrTransformer, UcumToPintTransformer
+from ucumvert import (
+    PintUcumRegistry,
+    UcumToPintStrTransformer,
+    UcumToPintTransformer,
+    ucum_preprocessor,
+)
 from ucumvert.ucum_pint import find_ucum_codes_that_need_mapping
 from ucumvert.xml_util import get_metric_units, get_non_metric_units
 
@@ -90,3 +96,17 @@ def test_ucum_all_unit_atoms_pint_vs_str(
     expected_quantity = transform_ucum_pint(parsed_atom)
     result_str = transform_ucum_str(parsed_atom)
     assert ureg_ucumvert(result_str) == expected_quantity
+
+
+def test_ucum_preprocessor(ureg_ucumvert):
+    expected = ureg_ucumvert("m*kg")
+    ureg_ucumvert.preprocessors.append(ucum_preprocessor)
+    assert ureg_ucumvert("m.kg") == expected
+    with pytest.raises(LarkError):
+        ureg_ucumvert("degC")
+
+
+def test_ucum_unitregistry():
+    ureg = PintUcumRegistry()
+    assert ureg.from_ucum("m.kg") == ureg("m*kg")
+    assert ureg.from_ucum("Cel") == ureg("degC")

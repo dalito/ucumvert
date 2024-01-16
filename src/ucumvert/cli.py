@@ -6,7 +6,7 @@ from pathlib import Path
 
 from lark.exceptions import LarkError, UnexpectedInput, VisitError
 
-from ucumvert import __version__, setup_logging
+import ucumvert
 from ucumvert.parser import (
     get_ucum_parser,
     make_parse_tree_png,
@@ -14,31 +14,26 @@ from ucumvert.parser import (
 )
 from ucumvert.ucum_pint import UcumToPintTransformer, find_matching_pint_definitions
 
-try:
-    import pydot  # noqa: F401
-
-    has_pydot = True
-except ImportError:
-    has_pydot = False
-
 logger = logging.getLogger(__name__)
 
 
 def interactive():
     print("Enter UCUM unit code to parse, or 'q' to quit.")
-    if not has_pydot:
+    if not ucumvert.HAS_PYDOT:
         print("Package pydot not installed, skipping parse-tree image generation.")
 
     ucum_parser = get_ucum_parser()
+    transformer = UcumToPintTransformer().transform
 
     while True:
         ucum_code = input("> ")
-        if ucum_code in "qQ":
+        print(f"input: {ucum_code!r}")
+        if ucum_code and (ucum_code in "qQ"):
             break
         try:
-            if has_pydot:
+            if ucumvert.HAS_PYDOT:
                 parsed_data = make_parse_tree_png(
-                    ucum_code, filename="parse_tree.png", parser=ucum_parser
+                    ucum_parser, ucum_code, filename="parse_tree.png"
                 )
                 print("Created visualization of parse tree (parse_tree.png).")
             else:
@@ -49,9 +44,9 @@ def interactive():
             continue
         try:
             # parsed_data = ucum_parser.parse(data)  # parse data without visualization
-            pint_quantity = UcumToPintTransformer().transform(parsed_data)
+            pint_quantity = transformer(parsed_data)
             print(f"--> Pint {pint_quantity!r}")
-        except (VisitError, ValueError) as e:
+        except (VisitError, ValueError) as e:  # pragma: no cover
             print(e)
             continue
 
@@ -91,15 +86,14 @@ class DecentFormatter(argparse.HelpFormatter):
 
 
 def root_cmds(args):
-    if args.version:  # pragma: no cover
-        print(f"ucumvert {__version__}")
+    if args.version:
+        print(f"ucumvert {ucumvert.__version__}")
     if args.interactive:
         interactive()
     if args.mapping_report:
         find_matching_pint_definitions(report_file=args.mapping_report)
     if args.grammar_update:
-        grammar_file = Path(__file__).resolve().parent / "ucum_grammar.lark"
-        update_lark_ucum_grammar_file(grammar_file=grammar_file)
+        update_lark_ucum_grammar_file(grammar_file=args.grammar_update)
 
 
 def create_root_parser():
@@ -125,10 +119,13 @@ def create_root_parser():
         "-g",
         "--grammar_update",
         help=(
-            "Recreate grammar file 'ucum_grammar.lark' with UCUM atoms "
-            "extracted from ucum-essence.xml."
+            "Create grammar file with UCUM atoms extracted from ucum-essence.xml. "
+            "Default is to write to 'ucum_grammar.lark' in the current directory."
         ),
-        action="store_true",
+        type=Path,
+        metavar=("FILE"),
+        nargs="?",  # make file an optional argument
+        const=Path("ucum_grammar.lark"),  # default value
     )
     parser.add_argument(
         "-m",
@@ -159,7 +156,7 @@ def main_cli(raw_args=None):
     # Parse the command-line arguments
     #   parse_args will call sys.exit(2) if invalid commands are given.
     args = parser.parse_args(raw_args)
-    setup_logging(loglevel=logging.INFO)
+    ucumvert.setup_logging(loglevel=logging.INFO)
     args.func(args)
 
 
@@ -169,10 +166,10 @@ def run_cli_app(raw_args=None):
         raw_args = sys.argv[1:]
     try:
         main_cli(raw_args)
-    except LarkError:
+    except LarkError:  # pragma: no cover
         logger.exception("Terminating with ucumvert error.")
         sys.exit(1)
-    except Exception:
+    except Exception:  # pragma: no cover
         logger.exception("Unexpected error.")
         sys.exit(3)  # value 2 is used by argparse for invalid args.
 

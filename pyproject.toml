@@ -55,10 +55,10 @@ lint = [
   "black",
 ]
 dev = [
-    # Recursively including the project's own optional dependencies requires pip>=21.2
     "ucumvert[tests,lint]",
     "ruff",
-    "openpyxl"
+    "openpyxl",
+    "pydot",
 ]
 
 [project.scripts]

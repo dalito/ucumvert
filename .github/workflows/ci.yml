@@ -71,11 +71,11 @@ jobs:
         with:
           name: coverage-data
 
-      - name: Combine coverage and fail if less than 100%
+      - name: Combine coverage and fail if less than threshold.
         run: |
           python -m coverage combine
-          python -m coverage html --skip-empty --skip-covered
-          # python -m coverage report --fail-under=100  # enable later
+          python -m coverage html --skip-empty  # --skip-covered
+          python -m coverage report --fail-under=94
 
       - name: Upload HTML report
         if: ${{ failure() }}

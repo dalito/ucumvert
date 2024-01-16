@@ -221,8 +221,8 @@ def ucum_preprocessor(unit_input):
     Note: This will make most standard pint unit expressions invalid.
 
     Usage:
-        >>> import pint
-        >>> ureg = pint.get_application_registry()
+        >>> from ucumvert import PintUcumRegistry, ucum_preprocessor
+        >>> ureg = PintUcumRegistry()
         >>> ureg.preprocessors.append(ucum_preprocessor)
     """
     ucum_parser = get_ucum_parser()
@@ -337,17 +337,6 @@ def find_matching_pint_definitions(report_file: Path | None = None) -> None:
     logger.info("Created mapping report: %s", report_file)
 
 
-def get_pint_registry(ureg=None):
-    """Return a pint registry with the UCUM definitions loaded."""
-    if ureg is None:
-        ureg = get_application_registry()
-    if "peripheral_vascular_resistance_unit" not in ureg:  # UCUM already loaded?
-        ureg.load_definitions(Path(__file__).resolve().parent / "pint_ucum_defs.txt")
-    if ucum_preprocessor not in ureg.preprocessors:
-        ureg.preprocessors.append(ucum_preprocessor)
-    return ureg
-
-
 class PintUcumRegistry(UnitRegistry):
     def _after_init(self) -> None:
         """This is called after all __init__"""
@@ -375,7 +364,7 @@ class PintUcumRegistry(UnitRegistry):
         return self._from_ucum_transformer(parsed_data)
 
 
-def run_examples():
+def run_examples():  # pragma: no cover
     test_ucum_units = [
         # "Cel",
         # "/s2",

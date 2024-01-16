@@ -177,12 +177,7 @@ def get_ucum_parser(grammar_file=None):
     return Lark(ucum_grammar, start="main_term", strict=True)
 
 
-def make_parse_tree_png(data, filename="parse_tree_unit.png", parser=None):
-    if parser is None:
-        parser = get_ucum_parser()
+def make_parse_tree_png(parser, data, filename="parse_tree_unit.png"):
     parsed_data = parser.parse(data)
-    try:
-        tree.pydot__tree_to_png(parsed_data, filename)
-    except ImportError:
-        logger.warning("pydot not installed, skipping png generation")
+    tree.pydot__tree_to_png(parsed_data, filename)
     return parsed_data
