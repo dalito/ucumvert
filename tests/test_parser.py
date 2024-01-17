@@ -22,9 +22,10 @@ ucum_examples_valid.update(
         "x3": "(/s)",  # bracketed unary divide
         "x4": "(/s2{sunit_s2}.(10{factor}.m{sunit_m}){term}){mterm}",  # annotations everywhere
         "x5": "dar",  # ambiguous prefix-unit combo: deci-are vs. deka-r (unit "r" does not exist)
-        "x6": "{}/m",
-        "x7": "{}",
+        "x6": "{}/m",  # operator between annotation and unit
+        "x7": "{}",  # annotation only
         "x8": "{/ann1/2.g}/m",  # operators in annotation
+        "x9": "{ann1}/{ann2}",  # annotations only with operator
     }
 )
 
