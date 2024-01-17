@@ -73,10 +73,14 @@ logger = logging.getLogger(__name__)
 # and fixes some more edge cases not present in the official examples.
 #
 # Changes made:
-# - to fix "100/{cells}" issue, we moved FACTOR from component to the simple_unit rule
-# - to fix "(8.h){shift}" issue, we moved "(" term ")" from component to the annotatable rule
+# - To fix "100/{cells}" issue, we moved FACTOR from component to the simple_unit rule
+# - To fix "(8.h){shift}" issue, we moved "(" term ")" from component to the annotatable rule
 # - Don't allow "0" as EXPONENT or FACTOR, see https://github.com/ucum-org/ucum/issues/121
-
+# - Don't allow curly braces {} inside of annotation STRING (ascii 123 and 125). Without this
+#   or escaping rules the end of annotation STRING is ambiguous.
+# - Move term from component rule to annotatable rule. Add maint_term and component to
+#   annotatable rule. These changes solve various annotation issues with the original
+#   grammar (e.g. "100{pc}", "(/m){ann}", "{ann1}{ann2}").
 # - Distinguish short prefixes (1 char) form long ones to handle parsing of "dar" as deci-are
 #   instead of deca-r which does not exist.
 
