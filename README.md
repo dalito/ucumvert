@@ -1,4 +1,4 @@
-[![](https://github.com/dalito/ucumvert/workflows/CI/badge.svg)](https://github.com/dalito/ucumvert/actions)
+[![CI - main](https://github.com/dalito/ucumvert/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/dalito/ucumvert/actions/workflows/ci.yml)
 [![PyPI - Version](https://img.shields.io/pypi/v/ucumvert)](https://pypi.org/project/ucumvert)
 
 # Easier access to UCUM from Python
