@@ -38,13 +38,12 @@ dependencies = [
   "pint",
 ]
 
-#dynamic = ["version", "readme"]
 dynamic = ["version"]
 
 [project.urls]
-Homepage = "https://github.com/nfdi4cat/ucumvert/"
-Documentation = "https://github.com/nfdi4cat/ucumvert/"
-Changelog = "https://github.com/nfdi4cat/ucumvert/blob/main/CHANGELOG.md"
+Documentation = "https://github.com/dalito/ucumvert"
+GitHub = "https://github.com/dalito/ucumvert"
+Changelog = "https://github.com/dalito/ucumvert/releases"
 
 [project.optional-dependencies]
 tests = [
