@@ -75,8 +75,8 @@ jobs:
         run: |
           python -m coverage combine
           python -m coverage html --skip-empty
-          echo '## Test Coverage Report\n' >> $GITHUB_STEP_SUMMARY
-          poetry run coverage report --format=markdown >> $GITHUB_STEP_SUMMARY
+          echo '## Test Coverage Report' >> $GITHUB_STEP_SUMMARY
+          python -m coverage report --format=markdown >> $GITHUB_STEP_SUMMARY
           python -m coverage report --fail-under=94
 
       - name: Upload HTML report
