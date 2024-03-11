@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
+import pint
 from lark import Transformer
 from lark.exceptions import VisitError
 from pint import (
@@ -342,6 +343,10 @@ def find_matching_pint_definitions(report_file: Path | None = None) -> None:
     logger.info("Created mapping report: %s", report_file)
 
 
+class PintUcumError(Exception):
+    pass
+
+
 class PintUcumRegistry(UnitRegistry):
     def _after_init(self) -> None:
         """This is called after all __init__"""
@@ -357,7 +362,7 @@ class PintUcumRegistry(UnitRegistry):
         self._ucum_parser = get_ucum_parser()
         self._from_ucum_transformer = UcumToPintTransformer().transform
 
-    def from_ucum(self, ucum_code):
+    def from_ucum(self, ucum_code) -> pint.Quantity:
         """Transform an ucum_code to a pint unit.
 
         Parameters
@@ -368,20 +373,52 @@ class PintUcumRegistry(UnitRegistry):
         parsed_data = self._ucum_parser.parse(ucum_code)
         return self._from_ucum_transformer(parsed_data)
 
+    def to_ucum(self, units) -> str:
+        """Return corresponding UCUM code for pint unit container.
+
+        Parameters
+        ----------
+        ucum_code :
+            Ucum code as string.
+        """
+        # TODO: create mapping (at runtime?) from pint to ucum
+        pint_to_ucum_mapping = {"kilogram": "kg", "meter": "m", "second": "s"}
+
+        units_container = units._units  # noqa: SLF001
+        ucum_code = []
+        for unit, exponent in units_container.items():
+            try:
+                ucum_unit_code = pint_to_ucum_mapping[unit]
+            except KeyError:
+                error_message = f"pint unit '{unit}' has no corresponding UCUM code."
+                raise PintUcumError(error_message) from None
+            ucum_code.append(
+                f"{ucum_unit_code}" + (f"{exponent}" if exponent != 1 else "")
+            )
+
+        # breakpoint()
+        ucum_str = ".".join(ucum_code)
+        print(f"{units!r} --> {ucum_str}")
+        return ucum_str
+
 
 def run_examples():  # pragma: no cover
-    test_ucum_units = [
-        # "Cel",
-        # "/s2",
-        # r"m.s{s_ann}",
-        "[arb'U]",
-    ]
-    parser = get_ucum_parser()
-    for unit in test_ucum_units:
-        print("parsing ucum code:", unit)
-        parsed_data = parser.parse(unit)
-        q = UcumToPintTransformer().transform(parsed_data)
-        print(f"Pint {q!r}")
+    # test_ucum_units = [
+    #     # "Cel",
+    #     # "/s2",
+    #     # r"m.s{s_ann}",
+    #     "[arb'U]",
+    # ]
+    # parser = get_ucum_parser()
+    # for unit in test_ucum_units:
+    #     print("parsing ucum code:", unit)
+    #     parsed_data = parser.parse(unit)
+    #     q = UcumToPintTransformer().transform(parsed_data)
+    #     print(f"Pint {q!r}")
+    ureg = PintUcumRegistry()
+    q = 3.5 * ureg.from_ucum("kg/m3")
+    print(f"IN: {q!r}")
+    ureg.to_ucum(q.units)
 
 
 if __name__ == "__main__":
