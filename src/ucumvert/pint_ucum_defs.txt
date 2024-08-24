@@ -41,7 +41,7 @@ homeopathic_potency_of_quintamillesimal_korsakovian_series = 1 = _ = kp_Q
 high_power_field = 1 = _ = HPF
 low_power_field = 1 = _ = LPF
 international_unit = 1 = _ = i.U. = IU = iU
-arbitary_unit = 1 = _ = arb_U
+arbitrary_unit = 1 = _ = arb_U
 US_pharmacopeia_unit = 1 = _ = USP_U
 GPL_unit = 1 = _ = GPL_U
 MPL_unit = 1 = _ = MPL_U
@@ -87,6 +87,9 @@ diopter = 1 / meter = _ = diop
 
 slope = tan(1 rad)
 prism_diopter = 100 * tan(1 rad) = _ = p_diop
+
+nephelometric_turbidity_unit = 1 = _ = NTU
+formazin_nephelometric_unit = 1 = _ = FNU
 
 mil_i = inch / 1000
 cml_i = π/4 * mil_i**2
