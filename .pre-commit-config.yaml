@@ -2,24 +2,23 @@ default_language_version:
   python: python3
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.5.0
+  rev: v4.6.0
   hooks:
   -  id: end-of-file-fixer
   -  id: check-yaml
   -  id: check-toml
   -  id: trailing-whitespace
-- repo: https://github.com/psf/black
-  rev: 23.12.1
-  hooks:
-  -  id: black
-     args: ['--target-version', 'py38']
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.1.13
+  rev: v0.6.2
   hooks:
+  # Run the linter.
   - id: ruff
     args: [--fix, --exit-non-zero-on-fix]
+  # Run the formatter.
+  - id: ruff-format
+
 - repo: https://github.com/codespell-project/codespell
-  rev: v2.2.6
+  rev: v2.3.0
   hooks:
   - id: codespell
     additional_dependencies:

@@ -3,6 +3,7 @@ import os
 from unittest import mock
 
 import pytest
+
 from ucumvert.cli import main_cli, run_cli_app
 
 

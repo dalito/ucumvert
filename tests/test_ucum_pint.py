@@ -2,6 +2,7 @@ import pytest
 from lark import LarkError
 from pint import UnitRegistry
 from test_parser import ucum_examples_valid
+
 from ucumvert import (
     PintUcumRegistry,
     UcumToPintStrTransformer,

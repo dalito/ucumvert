@@ -9,7 +9,7 @@ datadir = Path(__file__).resolve().parents[1] / "src" / "ucumvert" / "vendor"
 
 with Path(datadir / "ucum_examples.tsv").open(encoding="utf8") as f:
     ucum_examples_valid = {}
-    for line in f.readlines():
+    for line in f:
         if line.startswith("Row #"):
             continue
         line_no, unit = line.split("\t")[:2]
