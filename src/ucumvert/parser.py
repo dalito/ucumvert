@@ -85,7 +85,7 @@ logger = logging.getLogger(__name__)
 #   instead of deca-r which does not exist.
 
 UCUM_GRAMMAR = """
-    # Based on UCUM specification (Version 2.1, 2017-11-21)
+    # Based on UCUM specification (Version 2.2, 2024-06-28)
     # Includes ucumvert-specific fixes to handle all common UCUM units
     # and some edge cases not present in the official examples.
     # This file is auto-created by parser.update_lark_ucum_grammar_file

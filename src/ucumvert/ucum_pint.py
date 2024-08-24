@@ -385,5 +385,6 @@ def run_examples():  # pragma: no cover
 
 
 if __name__ == "__main__":
-    run_examples()
-    # find_ucum_codes_that_need_mapping()
+    # run_examples()
+    find_matching_pint_definitions()
+    find_ucum_codes_that_need_mapping()

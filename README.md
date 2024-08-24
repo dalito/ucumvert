@@ -16,7 +16,7 @@ Note that UCUM does non provide a canonical representation, e.g. `m/s` and `m.s-
 
 - Parser for UCUM unit strings that implements the full grammar.
 - Converter for creating [pint](https://pypi.org/project/pint/) units from UCUM unit strings.
-- A pint unit definition file [pint_ucum_defs.txt](https://github.com/dalito/ucumvert/blob/main/src/ucumvert/pint_ucum_defs.txt) that extends pint´s default units with UCUM units. All UCUM units from Version 2.1 of the specification are included.
+- A pint unit definition file [pint_ucum_defs.txt](https://github.com/dalito/ucumvert/blob/main/src/ucumvert/pint_ucum_defs.txt) that extends pint´s default units with UCUM units. All UCUM units from the new version 2.2 of the specification (June 2024) are included.
 
 **ucumvert** generates the UCUM grammar by filling a template with unit codes, prefixes etc. from the official [ucum-essence.xml](https://github.com/ucum-org/ucum/blob/main/ucum-essence.xml) file (a copy is included in this repo).
 So updating the parser for new UCUM releases is straight forward.
@@ -126,7 +126,7 @@ To (re)generate this tsv-file from the official xlsx-file in the [UCUM repositor
 
 ```bash
 pip install openpyxl
-python src/src/ucumvert/vendor/get_ucum_example_as_tsv.py
+python src/ucumvert/vendor/get_ucum_example_as_tsv.py
 ```
 
 ## Useful links

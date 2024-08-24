@@ -280,7 +280,7 @@ Row # (not a code)	UCUM_CODE	Description of the Unit (using UCUM descriptions wh
 279	L/kg	liter per kilogram
 280	L/L	liter per liter
 281	L/min	liter per minute
-282	L/min/m2	liter per minute per sqaure meter
+282	L/min/m2	liter per minute per square meter
 283	L/(min.m2)	liter per minute per square meter
 284	L/s	liter per second
 285	L/s/s2	liter per second per square second

@@ -7,8 +7,6 @@ from ucumvert.xml_util import get_metric_units, get_non_metric_units, get_prefix
 def get_units_2casings():
     ucumvert.xml_util.CODE_ATTRIB = "Code"
     cased = get_metric_units() + get_non_metric_units()
-    # Unit code "L" has no no-case version so we remove it.
-    cased.remove("L")
     ucumvert.xml_util.CODE_ATTRIB = "CODE"
     nocase = get_metric_units() + get_non_metric_units()
     ucumvert.xml_util.CODE_ATTRIB = "Code"

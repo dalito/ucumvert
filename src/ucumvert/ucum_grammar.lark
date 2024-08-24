@@ -1,4 +1,4 @@
-# Based on UCUM specification (Version 2.1, 2017-11-21)
+# Based on UCUM specification (Version 2.2, 2024-06-28)
 # Includes ucumvert-specific fixes to handle all common UCUM units
 # and some edge cases not present in the official examples.
 # This file is auto-created by parser.update_lark_ucum_grammar_file
@@ -74,7 +74,8 @@ UNIT_NON_METRIC: "10*" |"10^" |"[pi]" |"%" |"[ppth]" |"[ppm]" |"[ppb]"
         |"[CCID_50]" |"[TCID_50]" |"[EID_50]" |"[PFU]" |"[FFU]" |"[CFU]"
         |"[IR]" |"[BAU]" |"[AU]" |"[Amb'a'1'U]" |"[PNU]" |"[Lf]" |"[D'ag'U]"
         |"[FEU]" |"[ELU]" |"[EU]" |"Ao" |"b" |"att" |"[psi]" |"circ" |"sph"
-        |"[car_m]" |"[car_Au]" |"[smoot]" |"[m/s2/Hz^(1/2)]" |"bit_s"
+        |"[car_m]" |"[car_Au]" |"[smoot]" |"[m/s2/Hz^(1/2)]" |"[NTU]"
+        |"[FNU]" |"bit_s"
 
 EXPONENT : ["+"|"-"] NON_ZERO_DIGITS
 FACTOR: NON_ZERO_DIGITS
