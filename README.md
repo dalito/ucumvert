@@ -10,7 +10,7 @@
 
 [UCUM](https://ucum.org/) (Unified Code for Units of Measure) is a code system intended to cover all units of measures.
 It provides a formalism to express units in an unambiguous way suitable for electronic communication.
-Note that UCUM does non provide a canonical representation, e.g. `m/s` and `m.s-1` are expressing the same unit in two ways.
+Note that UCUM does not provide a canonical representation, e.g. `m/s` and `m.s-1` are expressing the same unit in two ways.
 
 **ucumvert** is a pip-installable Python package. Features:
 
