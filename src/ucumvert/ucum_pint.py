@@ -152,7 +152,12 @@ class UcumToPintTransformer(Transformer):
     def simple_unit(self, args):
         # print("DBGsu>", repr(args), len(args))
         if len(args) == 2:  # prefix is present  # noqa: PLR2004
-            return self.ureg(args[0] + args[1])
+            # Work around a pint bug: parsing of abbreviated custom unit with prefix
+            #   that could be a unit (k,m,M) does not detect the prefix but 2 units.
+            #   e.g. m[IU] --> <Quantity(1, 'meter * [IU]')> instead of <Quantity(1, 'milli[IU]')>
+            # Therefore, this fails (pint 0.23):
+            #   return self.ureg(args[0] + args[1])
+            return self.ureg(args[0] + str(self.ureg(args[1]).units))
 
         # Substitute UCUM atoms that cannot be defined in pint as units or aliases.
         return self.ureg(MAPPINGS_UCUM_TO_PINT.get(args[0], args[0]))

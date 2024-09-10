@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 from lark import LarkError
 from pint import UnitRegistry
@@ -11,8 +13,6 @@ from ucumvert import (
 )
 from ucumvert.ucum_pint import find_ucum_codes_that_need_mapping
 from ucumvert.xml_util import get_metric_units, get_non_metric_units
-
-ureg = UnitRegistry()
 
 
 def get_unit_atoms():
@@ -28,7 +28,7 @@ def test_find_ucum_codes_that_need_mapping():
 
 
 def test_ucum_to_pint(ucum_parser, ureg_std):
-    expected_quantity = ureg("kilogram")
+    expected_quantity = ureg_std("kilogram")
     parsed_data = ucum_parser.parse("kg")
     result = UcumToPintTransformer(ureg=ureg_std).transform(parsed_data)
     assert result == expected_quantity
@@ -99,7 +99,11 @@ def test_ucum_all_unit_atoms_pint_vs_str(
     assert ureg_ucumvert(result_str) == expected_quantity
 
 
-def test_ucum_preprocessor(ureg_ucumvert):
+def test_ucum_preprocessor():
+    # Don't use ureg_ucumvert from fixture here, because we want to modify it.
+    defdir = Path(__file__).resolve().parents[1] / "src" / "ucumvert"
+    ureg_ucumvert = UnitRegistry()
+    ureg_ucumvert.load_definitions(defdir / "pint_ucum_defs.txt")
     expected = ureg_ucumvert("m*kg")
     ureg_ucumvert.preprocessors.append(ucum_preprocessor)
     assert ureg_ucumvert("m.kg") == expected
@@ -111,3 +115,14 @@ def test_ucum_unitregistry():
     ureg = PintUcumRegistry()
     assert ureg.from_ucum("m.kg") == ureg("m*kg")
     assert ureg.from_ucum("Cel") == ureg("degC")
+
+
+def test_prefix_with_unit_that_is_also_a_prefix_issue24(ucum_parser, ureg_ucumvert):
+    parsed_data = ucum_parser.parse("m[IU]/L")
+
+    expected_quantity = ureg_ucumvert("milliinternational_unit/liter")
+    assert expected_quantity == UcumToPintTransformer().transform(parsed_data)
+    assert expected_quantity == 10**-3 * ureg_ucumvert("[IU]/L")
+
+    result_str = UcumToPintStrTransformer().transform(parsed_data)
+    assert result_str == "(((m[IU]) / (L)))"
