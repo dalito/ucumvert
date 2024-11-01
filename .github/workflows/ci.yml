@@ -47,7 +47,7 @@ jobs:
         python -m coverage run -p -m pytest
 
     - name: Upload coverage data
-      uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874
+      uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
       with:
         include-hidden-files: true
         name: coverage-data-${{ matrix.python-version }}
@@ -83,7 +83,7 @@ jobs:
 
       - name: Upload HTML report
         if: ${{ failure() }}
-        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
         with:
           name: html-report
           path: .htmlcov
