@@ -55,13 +55,13 @@ jobs:
 
       - name: Publish package 📦 to Test PyPI
         if: github.event_name == 'push'
-        uses: pypa/gh-action-pypi-publish@897895f1e160c830e369f9779632ebc134688e1b
+        uses: pypa/gh-action-pypi-publish@fb13cb306901256ace3dab689990e13a5550ffaa
         with:
           repository-url: https://test.pypi.org/legacy/
 
       - name: Publish package 📦 to PyPI
         if: github.event_name == 'release'
-        uses: pypa/gh-action-pypi-publish@897895f1e160c830e369f9779632ebc134688e1b
+        uses: pypa/gh-action-pypi-publish@fb13cb306901256ace3dab689990e13a5550ffaa
 
 # [1] https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
 # Used actions: (updates managed by dependabot)
