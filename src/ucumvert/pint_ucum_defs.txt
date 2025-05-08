@@ -8,6 +8,13 @@
 # Example: [gal_us] -> Alias: "gal_us"
 #          cal[20] -> New unit: "twenty_degC_calorie" with alias "cal_20"
 
+#### CONSTANTS ####
+
+# Calculated using wolfram alpha to precision 50 
+# slope = tan(1 rad), calculated as constant as tan is not defined in pint
+slope = 1.5574077246549022305069748074583601730872507723815
+
+
 #### Prefixes ####
 # <prefix>- = <amount> [= <symbol>] [= <alias>] [ = <alias> ] [...]
 # Example:
@@ -85,8 +92,7 @@ osmole = mol = osm
 
 diopter = 1 / meter = _ = diop
 
-slope = tan(1 rad)
-prism_diopter = 100 * tan(1 rad) = _ = p_diop
+prism_diopter = 100 * slope = _ = p_diop
 
 nephelometric_turbidity_unit = 1 = _ = NTU
 formazin_nephelometric_unit = 1 = _ = FNU
