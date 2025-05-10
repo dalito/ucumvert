@@ -29,12 +29,12 @@ except ImportError:  # pragma: no cover
     HAS_PYDOT = False
 
 __all__ = [
+    "PintUcumRegistry",
+    "UcumToPintStrTransformer",
+    "UcumToPintTransformer",
     "get_ucum_parser",
     "ucum_preprocessor",
     "update_lark_ucum_grammar_file",
-    "UcumToPintTransformer",
-    "UcumToPintStrTransformer",
-    "PintUcumRegistry",
 ]
 
 # Note that nothing is passed to getLogger to set the "root" logger
