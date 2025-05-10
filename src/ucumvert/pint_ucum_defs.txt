@@ -10,10 +10,9 @@
 
 #### CONSTANTS ####
 
-# Calculated using wolfram alpha to precision 50 
-# slope = tan(1 rad), calculated as constant as tan is not defined in pint
+# Calculated using wolfram alpha to precision 50
+# slope = tan(1 rad), calculated as constant as tan()-function cannot be used in definitions
 slope = 1.5574077246549022305069748074583601730872507723815
-
 
 #### Prefixes ####
 # <prefix>- = <amount> [= <symbol>] [= <alias>] [ = <alias> ] [...]
