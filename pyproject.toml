@@ -26,8 +26,6 @@ classifiers = [
   "Environment :: Console",
   "Intended Audience :: Science/Research",
   "Operating System :: OS Independent",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
@@ -35,7 +33,7 @@ classifiers = [
 
 dependencies = [
   "lark",
-  "pint",
+  "pint>=0.25.0",
 ]
 
 dynamic = ["version"]
