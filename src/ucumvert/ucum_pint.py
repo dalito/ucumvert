@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import logging
 from pathlib import Path
 
@@ -29,7 +30,7 @@ logger = logging.getLogger(__name__)
 # map to a pint-compatible unit name which we define in pint_ucum_defs.txt
 # as alias or new unit. To determine what needs a mapping, use the function
 # "find_ucum_codes_that_need_mapping()" below.
-# In addition, we also map UCUM units that are by interpreted as another unit
+# In addition, we also map UCUM units that are interpreted as another unit
 # with pint's default unit files. Since pint ignores surrounding square braces
 # it reduces "[pH]", to "pH" first which is the interpreted as pico-Henry.
 
@@ -40,8 +41,8 @@ MAPPINGS_UCUM_TO_PINT = {
     # === metric units ===
     "cal_[20]": "cal_20",
     "cal_[15]": "cal_15",
-    "m[H2O]": "m_H2O",
-    "m[Hg]": "m_Hg",
+    "m[H2O]": "meter_H2O",
+    "m[Hg]": "meter_Hg",
     "g%": "g%",  # invalid as unit name but correctly parsed as <Unit('gram * percent')>
     "B[SPL]": "B_SPL",
     "B[V]": "B_V",
@@ -86,6 +87,7 @@ MAPPINGS_UCUM_TO_PINT = {
     "[m/s2/Hz^(1/2)]": "meter_per_square_second_per_square_root_of_hertz",
     # === ucum codes with incorrect default interpretation in pint ===
     "B": "bel",
+    "AU": "astronomical_unit",
     "[crd_us]": "cord",
     "[dqt_us]": "US_dry_quart",
     "[dpt_us]": "US_dry_pint",
@@ -157,7 +159,11 @@ class UcumToPintTransformer(Transformer):
             #   e.g. m[IU] --> <Quantity(1, 'meter * [IU]')> instead of <Quantity(1, 'milli[IU]')>
             # Therefore, this fails (pint 0.23):
             #   return self.ureg(args[0] + args[1])
-            return self.ureg(args[0] + str(self.ureg(args[1]).units))
+
+            with contextlib.suppress(UndefinedUnitError):
+                return self.ureg(args[0] + str(self.ureg(args[1]).units))
+
+            return self.ureg(args[0] + MAPPINGS_UCUM_TO_PINT.get(str(args[1]), str(args[1])))
 
         # Substitute UCUM atoms that cannot be defined in pint as units or aliases.
         return self.ureg(MAPPINGS_UCUM_TO_PINT.get(args[0], args[0]))
@@ -261,6 +267,7 @@ def find_ucum_codes_that_need_mapping(existing_mappings=MAPPINGS_UCUM_TO_PINT):
                 continue
         if not need_mappings[section]:
             logger.info("all good!")
+
     return need_mappings
 
 
@@ -317,15 +324,9 @@ def find_matching_pint_definitions(report_file: Path | None = None) -> None:
             lookup_str = MAPPINGS_UCUM_TO_PINT.get(ucum_code, ucum_code)
             if is_in_registry(transformer_default, parsed_data):
                 if section == "prefixes":
-                    # Python 3.9+:
-                    # pint_prefix = str(ureg_default(f"{ucum_code}m").units).removesuffix(
-                    #     "meter"
-                    # )
-                    # TODO replace next 3 lines by code above when 3.8 is no longer supported.
-                    pint_prefix = str(ureg_default(f"{ucum_code}m").units)
-                    if pint_prefix.endswith("meter"):
-                        pint_prefix = pint_prefix[: -len(pint_prefix)]
-
+                    pint_prefix = str(ureg_default(f"{ucum_code}m").units).removesuffix(
+                        "meter"
+                    )
                     report.append(
                         f"# {lookup_str:>10} --> {pint_prefix} (default registry)"
                     )
@@ -390,6 +391,7 @@ def run_examples():  # pragma: no cover
 
 
 if __name__ == "__main__":
+    # logging.basicConfig(level=logging.INFO)
     # run_examples()
     find_matching_pint_definitions()
     find_ucum_codes_that_need_mapping()

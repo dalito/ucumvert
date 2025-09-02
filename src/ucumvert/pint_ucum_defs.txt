@@ -152,9 +152,6 @@ metric_ounce = 28 * gram = _ = oz_m
 
 phot = 1e-4 * lux
 
-m_H2O = meter * water * g_0 = _ = m[H2O]
-m_Hg = meter * mercury * g_0 = _ = m[Hg]
-
 british_thermal_unit_39F = 1.05967 * kJ = Btu_39
 british_thermal_unit_59F = 1.05480 * kJ = Btu_59
 british_thermal_unit_60F = 1.05468 * kJ = Btu_60
@@ -190,7 +187,6 @@ bel_kilowatt = 1 kilowatt; logbase: 10; logfactor: 10 = B_kW
 
 @alias are = ar
 @alias degree_Celsius = Cel
-@alias millimeter_Hg = mm[Hg] = mM[HG]
 
 @alias week = wk
 @alias month = mo = mo_j
@@ -290,7 +286,6 @@ bel_kilowatt = 1 kilowatt; logbase: 10; logfactor: 10 = B_kW
 @alias international_british_thermal_unit = Btu_IT
 
 @alias horsepower = HP
-@alias astronomical_unit = AU
 
 @alias pica = pca
 @alias point = pnt
