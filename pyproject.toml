@@ -16,7 +16,7 @@ maintainers = [
 license = "MIT"
 license-files = ["LICENSE"]
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 
 keywords = ["UCUM", "units of measurement", "parser"]
 
