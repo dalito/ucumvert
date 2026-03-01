@@ -3,9 +3,13 @@
 
 version: 2
 updates:
-- package-ecosystem: github-actions
-  directory: "/"
-  schedule:
-    interval: "monthly"
-  assignees:
-    - "dalito"
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    assignees:
+      - "dalito"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
