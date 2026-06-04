@@ -106,6 +106,22 @@ MAPPINGS_UCUM_TO_PINT = {
     "[h]": "planck_constant",
 }
 
+# UCUM logarithmic ("special", class "levels") units like the bel are
+# non-multiplicative. In pint a prefixed logarithmic unit is a *distinct* unit
+# (decibel is not deci*bel), so prefixed UCUM forms cannot be built by
+# prepending the prefix to the atom. Map the supported decibel forms to pint.
+MAPPINGS_UCUM_PREFIXED_TO_PINT = {
+    # "UCUM_prefix+atom": "pint_unit_name"
+    "dB": "decibel",
+    "dB[SPL]": "decibel_spl",
+    "dB[V]": "decibel_volt",
+    "dB[mV]": "decibel_millivolt",
+    "dB[uV]": "decibel_microvolt",
+    "dB[10.nV]": "decibel_10nanovolt",
+    "dB[W]": "decibelwatt",
+    "dB[kW]": "decibel_kilowatt",
+}
+
 
 class UcumToPintTransformer(Transformer):
     def __init__(self, ureg=None):
@@ -154,6 +170,9 @@ class UcumToPintTransformer(Transformer):
     def simple_unit(self, args):
         # print("DBGsu>", repr(args), len(args))
         if len(args) == 2:  # prefix is present  # noqa: PLR2004
+            prefixed = str(args[0]) + str(args[1])
+            if prefixed in MAPPINGS_UCUM_PREFIXED_TO_PINT:
+                return self.ureg(MAPPINGS_UCUM_PREFIXED_TO_PINT[prefixed])
             # Work around a pint bug: parsing of abbreviated custom unit with prefix
             #   that could be a unit (k,m,M) does not detect the prefix but 2 units.
             #   e.g. m[IU] --> <Quantity(1, 'meter * [IU]')> instead of <Quantity(1, 'milli[IU]')>
@@ -163,7 +182,9 @@ class UcumToPintTransformer(Transformer):
             with contextlib.suppress(UndefinedUnitError):
                 return self.ureg(args[0] + str(self.ureg(args[1]).units))
 
-            return self.ureg(args[0] + MAPPINGS_UCUM_TO_PINT.get(str(args[1]), str(args[1])))
+            return self.ureg(
+                args[0] + MAPPINGS_UCUM_TO_PINT.get(str(args[1]), str(args[1]))
+            )
 
         # Substitute UCUM atoms that cannot be defined in pint as units or aliases.
         return self.ureg(MAPPINGS_UCUM_TO_PINT.get(args[0], args[0]))
@@ -211,6 +232,9 @@ class UcumToPintStrTransformer(Transformer):
     def simple_unit(self, args):
         # print("DBGsu>", repr(args), len(args))
         if len(args) == 2:  # prefix is present  # noqa: PLR2004
+            prefixed = f"{args[0]}{args[1]}"
+            if prefixed in MAPPINGS_UCUM_PREFIXED_TO_PINT:
+                return f"({MAPPINGS_UCUM_PREFIXED_TO_PINT[prefixed]})"
             return f"({args[0]}{args[1]})"
 
         # Substitute UCUM atoms that cannot be defined in pint as units or aliases.
