@@ -5,7 +5,9 @@ import os
 from pathlib import Path
 
 from ucumvert.parser import (
+    InvalidUcumError,
     get_ucum_parser,
+    parse_ucum,
     update_lark_ucum_grammar_file,
 )
 from ucumvert.ucum_pint import (
@@ -29,10 +31,12 @@ except ImportError:  # pragma: no cover
     HAS_PYDOT = False
 
 __all__ = [
+    "InvalidUcumError",
     "PintUcumRegistry",
     "UcumToPintStrTransformer",
     "UcumToPintTransformer",
     "get_ucum_parser",
+    "parse_ucum",
     "ucum_preprocessor",
     "update_lark_ucum_grammar_file",
 ]
