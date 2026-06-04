@@ -11,6 +11,7 @@ from ucumvert import (
     UcumToPintTransformer,
     ucum_preprocessor,
 )
+from ucumvert.parser import InvalidUcumError, parse_ucum
 from ucumvert.ucum_pint import find_ucum_codes_that_need_mapping
 from ucumvert.xml_util import get_metric_units, get_non_metric_units
 
@@ -198,3 +199,41 @@ def test_decibel_milliwatt_is_invalid_ucum_issue62(ucum_parser):
     # (pint's dBm) has no UCUM representation and must not parse.
     with pytest.raises(LarkError):
         ucum_parser.parse("dB[mW]")
+
+
+def test_invalid_ucum_unit_has_clear_message_issue62(ucum_parser):
+    with pytest.raises(InvalidUcumError) as excinfo:
+        parse_ucum("dB[mW]", ucum_parser)
+    msg = str(excinfo.value)
+    assert "dB[mW]" in msg  # echoes the offending input
+    assert "not a valid UCUM unit" in msg  # domain framing, not parser jargon
+    assert "'['" in msg  # names the offending character
+    assert "^" in msg  # keeps the caret pointing at the failure
+    assert "ANNOTATION" not in msg  # drops grammar terminal names
+
+
+def test_invalid_ucum_unit_is_larkerror_issue62(ucum_parser):
+    # Backward compatibility: callers catching LarkError keep working.
+    assert issubclass(InvalidUcumError, LarkError)
+    with pytest.raises(LarkError):
+        parse_ucum("dB[mW]", ucum_parser)
+
+
+def test_invalid_ucum_truncated_input_message_issue62(ucum_parser):
+    with pytest.raises(InvalidUcumError) as excinfo:
+        parse_ucum("m/", ucum_parser)
+    assert "end of input" in str(excinfo.value)
+
+
+def test_from_ucum_raises_clear_message_issue62():
+    reg = PintUcumRegistry()
+    with pytest.raises(InvalidUcumError):
+        reg.from_ucum("dB[mW]")
+
+
+def test_parse_ucum_builds_parser_when_none_given_issue62():
+    # parse_ucum() builds its own parser when none is passed.
+    tree = parse_ucum("kg")
+    # The root rule of the UCUM grammar is "main_term", so a tree rooted there
+    # demonstrates that the self-built parser produced a valid UCUM parse tree.
+    assert tree.data == "main_term"

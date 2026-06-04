@@ -5,6 +5,7 @@ import textwrap
 from pathlib import Path
 
 from lark import Lark, Transformer
+from lark.exceptions import LarkError, UnexpectedInput
 
 import ucumvert
 from ucumvert.xml_util import (
@@ -179,3 +180,31 @@ def get_ucum_parser(grammar_file=None):
     with grammar_file.open("r", encoding="utf8") as f:
         ucum_grammar = f.read()
     return Lark(ucum_grammar, start="main_term", strict=True)
+
+
+class InvalidUcumError(LarkError):
+    """Raised when a string cannot be parsed as a UCUM unit."""
+
+
+def parse_ucum(ucum_code, parser=None):
+    """Parse a UCUM code into a lark tree.
+
+    Wraps lark's low-level parse errors in an InvalidUcumError that names the
+    offending unit and points at the failure, without exposing grammar-internal
+    terminal names that are meaningless to a UCUM user.
+    """
+    if parser is None:
+        parser = get_ucum_parser()
+    try:
+        return parser.parse(ucum_code)
+    except UnexpectedInput as exc:
+        context = exc.get_context(ucum_code).rstrip("\n")
+        if exc.pos_in_stream is not None and 0 <= exc.pos_in_stream < len(ucum_code):
+            detail = (
+                f"unexpected character {ucum_code[exc.pos_in_stream]!r} "
+                f"at column {exc.column}"
+            )
+        else:
+            detail = "unexpected end of input"
+        msg = f"{ucum_code!r} is not a valid UCUM unit: {detail}.\n{context}"
+        raise InvalidUcumError(msg) from exc

@@ -15,6 +15,7 @@ from pint import (
 
 from ucumvert.parser import (
     get_ucum_parser,
+    parse_ucum,
 )
 from ucumvert.xml_util import (
     get_metric_units,
@@ -261,7 +262,7 @@ def ucum_preprocessor(unit_input):
     """
     ucum_parser = get_ucum_parser()
     transformer = UcumToPintStrTransformer()
-    parsed_data = ucum_parser.parse(unit_input)
+    parsed_data = parse_ucum(unit_input, ucum_parser)
     return str(transformer.transform(parsed_data))
 
 
@@ -395,7 +396,7 @@ class PintUcumRegistry(UnitRegistry):
         ucum_code :
             Ucum code as string.
         """
-        parsed_data = self._ucum_parser.parse(ucum_code)
+        parsed_data = parse_ucum(ucum_code, self._ucum_parser)
         return self._from_ucum_transformer(parsed_data)
 
 
