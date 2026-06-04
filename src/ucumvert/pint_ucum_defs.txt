@@ -164,15 +164,32 @@ bel = 1 ; logbase: 10; logfactor:
 
 # pH_value = 1 * mole / liter; logbase: 10; logfactor: -1  # mol/l is reduced to mol - A pint issue?
 
-bel_spl = 1 sound_pressure_level; logbase: 10; logfactor: 10 = B_SPL
+# Field-level bels use UCUM's "2lg" function (value = 2*log10(x/ref)), so
+# logfactor 2; power-level bels use "lg" (value = log10(x/ref)), so logfactor 1
+# (empty). See ucum-essence.xml <function name="lgTimes2"/> vs "lg".
+# TODO: cite UCUM spec section for lg/2lg special-unit functions.
+bel_spl = 1 sound_pressure_level; logbase: 10; logfactor: 2 = B_SPL
 
-bel_volt = 1 volt; logbase: 10; logfactor: 10 = B_V
-bel_millivolt = 1 millivolt; logbase: 10; logfactor: 10 = B_mV
-bel_microvolt = 1 microvolt; logbase: 10; logfactor: 10 = B_uV
-bel_10nanovolt = 10 nanovolt; logbase: 10; logfactor: 10 = B_10nV
+bel_volt = 1 volt; logbase: 10; logfactor: 2 = B_V
+bel_millivolt = 1 millivolt; logbase: 10; logfactor: 2 = B_mV
+bel_microvolt = 1 microvolt; logbase: 10; logfactor: 2 = B_uV
+bel_10nanovolt = 10 nanovolt; logbase: 10; logfactor: 2 = B_10nV
 
-bel_watt = 1 watt; logbase: 10; logfactor: 10 = B_W
-bel_kilowatt = 1 kilowatt; logbase: 10; logfactor: 10 = B_kW
+bel_watt = 1 watt; logbase: 10; logfactor: = B_W
+bel_kilowatt = 1 kilowatt; logbase: 10; logfactor: = B_kW
+
+# Decibel forms of the special "levels" units. In UCUM these are the metric
+# prefix "d" applied to the bel units (e.g. dB[W]); in pint a prefixed
+# logarithmic unit is a distinct unit (decibel is not deci*bel), so they are
+# defined explicitly. The decibel scales the bel by 10, so field-level forms
+# use logfactor 20 ("2lg") and power-level forms use logfactor 10 ("lg").
+# decibel (dB) and decibelwatt (dBW) already exist in pint and are reused.
+decibel_spl = 1 sound_pressure_level; logbase: 10; logfactor: 20
+decibel_volt = 1 volt; logbase: 10; logfactor: 20
+decibel_millivolt = 1 millivolt; logbase: 10; logfactor: 20
+decibel_microvolt = 1 microvolt; logbase: 10; logfactor: 20
+decibel_10nanovolt = 10 nanovolt; logbase: 10; logfactor: 20
+decibel_kilowatt = 1 kilowatt; logbase: 10; logfactor: 10
 
 #### UNIT GROUPS ####
 

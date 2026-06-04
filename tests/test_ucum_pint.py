@@ -126,3 +126,75 @@ def test_prefix_with_unit_that_is_also_a_prefix_issue24(ucum_parser, ureg_ucumve
 
     result_str = UcumToPintStrTransformer().transform(parsed_data)
     assert result_str == "(((m[IU]) / (L)))"
+
+
+def test_decibel_is_not_decibyte_issue62(ucum_parser, transform_ucum_pint):
+    # "dB" is deci + bel (decibel), it must not be parsed as deci + byte.
+    parsed_data = ucum_parser.parse("dB")
+    result = transform_ucum_pint(parsed_data)
+    assert str(result.units) == "decibel"
+
+
+# UCUM decibel atoms (metric prefix "d" + special "levels" unit) with the
+# pint unit they map to and a (reference unit, expected linear value) pair.
+# Power-level units (W, kW) use UCUM's "lg": 1 dB means factor 10**(1/10).
+# Field-level units (V, SPL, ...) use "2lg": 1 dB means factor 10**(1/20).
+decibel_atoms = {
+    "dB[W]": ("decibelwatt", "W", 10 ** (1 / 10)),
+    "dB[kW]": ("decibel_kilowatt", "W", 1000 * 10 ** (1 / 10)),
+    "dB[V]": ("decibel_volt", "V", 10 ** (1 / 20)),
+    "dB[mV]": ("decibel_millivolt", "V", 1e-3 * 10 ** (1 / 20)),
+    "dB[uV]": ("decibel_microvolt", "V", 1e-6 * 10 ** (1 / 20)),
+    "dB[10.nV]": ("decibel_10nanovolt", "V", 10e-9 * 10 ** (1 / 20)),
+    "dB[SPL]": ("decibel_spl", "Pa", 20e-6 * 10 ** (1 / 20)),
+}
+
+
+@pytest.mark.parametrize(
+    ("ucum_code", "expected"),
+    decibel_atoms.items(),
+    ids=list(decibel_atoms),
+)
+def test_decibel_reference_units_issue62(
+    ucum_parser, transform_ucum_pint, ucum_code, expected
+):
+    pint_name, ref_unit, expected_value = expected
+    result = transform_ucum_pint(ucum_parser.parse(ucum_code))
+    assert str(result.units) == pint_name
+    assert result.to(ref_unit).magnitude == pytest.approx(expected_value)
+
+
+@pytest.mark.parametrize(
+    ("ucum_code", "ref_unit", "expected_value"),
+    [
+        # power level "lg": 1 bel means factor 10**1 over the reference
+        ("B[W]", "W", 10),
+        # field level "2lg": 1 bel means factor 10**(1/2) over the reference
+        ("B[V]", "V", 10 ** (1 / 2)),
+    ],
+)
+def test_bel_reference_units_are_true_bels_issue62(
+    ucum_parser, transform_ucum_pint, ucum_code, ref_unit, expected_value
+):
+    # Without prefix these are *bels*, not decibels: a logarithmic value of 1
+    # means factor 10 (power) or 10**(1/2) (field) over the reference, not the
+    # 10**(1/10) / 10**(1/20) of the decibel forms.
+    result = transform_ucum_pint(ucum_parser.parse(ucum_code))
+    assert result.to(ref_unit).magnitude == pytest.approx(expected_value)
+
+
+def test_decibel_str_transformer_matches_pint_issue62(
+    ucum_parser, transform_ucum_pint, transform_ucum_str, ureg_ucumvert
+):
+    for ucum_code in ["dB", *decibel_atoms]:
+        parsed_data = ucum_parser.parse(ucum_code)
+        expected_quantity = transform_ucum_pint(parsed_data)
+        result_str = transform_ucum_str(parsed_data)
+        assert ureg_ucumvert(result_str) == expected_quantity
+
+
+def test_decibel_milliwatt_is_invalid_ucum_issue62(ucum_parser):
+    # UCUM defines B[W] and B[kW] but no milliwatt reference, so "dB[mW]"
+    # (pint's dBm) has no UCUM representation and must not parse.
+    with pytest.raises(LarkError):
+        ucum_parser.parse("dB[mW]")
