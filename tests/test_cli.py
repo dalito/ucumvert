@@ -3,6 +3,7 @@ import os
 from unittest import mock
 
 import pytest
+from pint import get_application_registry
 
 from ucumvert.cli import main_cli, run_cli_app
 
@@ -57,7 +58,8 @@ def test_run_interactive(monkeypatch, capsys, pydot_installed):
     monkeypatch.setattr("builtins.input", lambda _: next(input_generator))
     main_cli(["--interactive"])
     captured = capsys.readouterr()
-    assert "Pint <Quantity(1, 'kilogram')>" in captured.out
+    kilogram = get_application_registry().Quantity(1, "kilogram")
+    assert f"--> Pint {kilogram!r}" in captured.out
 
 
 @mock.patch.dict(os.environ, {"LOGLEVEL": "ERROR"})
