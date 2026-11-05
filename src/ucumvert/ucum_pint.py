@@ -32,8 +32,8 @@ logger = logging.getLogger(__name__)
 # as alias or new unit. To determine what needs a mapping, use the function
 # "find_ucum_codes_that_need_mapping()" below.
 # In addition, we also map UCUM units that are interpreted as another unit
-# with pint's default unit files. Since pint ignores surrounding square braces
-# it reduces "[pH]", to "pH" first which is the interpreted as pico-Henry.
+# with pint's default unit files. Since unmapped atoms lose their surrounding
+# square braces (see to_pint_name), "[pH]" would become pico-Henry "pH".
 
 MAPPINGS_UCUM_TO_PINT = {
     # "UCUM_unit_atom": "pint_unit_name_or_alias"
@@ -124,6 +124,20 @@ MAPPINGS_UCUM_PREFIXED_TO_PINT = {
 }
 
 
+def to_pint_name(ucum_atom):
+    """Return the name under which a UCUM unit atom is known to pint.
+
+    pint_ucum_defs.txt defines atoms like "[in_i]" by their name without
+    brackets, since pint rejects "[" and "]" in unit expressions.
+    """
+    ucum_atom = str(ucum_atom)
+    if ucum_atom in MAPPINGS_UCUM_TO_PINT:
+        return MAPPINGS_UCUM_TO_PINT[ucum_atom]
+    if ucum_atom.startswith("[") and ucum_atom.endswith("]"):
+        return ucum_atom[1:-1]
+    return ucum_atom
+
+
 class UcumToPintTransformer(Transformer):
     def __init__(self, ureg=None):
         if ureg is None:
@@ -181,14 +195,11 @@ class UcumToPintTransformer(Transformer):
             #   return self.ureg(args[0] + args[1])
 
             with contextlib.suppress(UndefinedUnitError):
-                return self.ureg(args[0] + str(self.ureg(args[1]).units))
+                return self.ureg(args[0] + str(self.ureg(to_pint_name(args[1])).units))
 
-            return self.ureg(
-                args[0] + MAPPINGS_UCUM_TO_PINT.get(str(args[1]), str(args[1]))
-            )
+            return self.ureg(args[0] + to_pint_name(args[1]))
 
-        # Substitute UCUM atoms that cannot be defined in pint as units or aliases.
-        return self.ureg(MAPPINGS_UCUM_TO_PINT.get(args[0], args[0]))
+        return self.ureg(to_pint_name(args[0]))
 
     def annotatable(self, args):
         # print("DBGan>", repr(args), len(args))
@@ -236,11 +247,9 @@ class UcumToPintStrTransformer(Transformer):
             prefixed = f"{args[0]}{args[1]}"
             if prefixed in MAPPINGS_UCUM_PREFIXED_TO_PINT:
                 return f"({MAPPINGS_UCUM_PREFIXED_TO_PINT[prefixed]})"
-            return f"({args[0]}{args[1]})"
+            return f"({args[0]}{to_pint_name(args[1])})"
 
-        # Substitute UCUM atoms that cannot be defined in pint as units or aliases.
-        ret = MAPPINGS_UCUM_TO_PINT.get(args[0], args[0])
-        return f"({ret})"
+        return f"({to_pint_name(args[0])})"
 
     def annotatable(self, args):
         # print("DBGan>", repr(args), len(args))
@@ -346,7 +355,7 @@ def find_matching_pint_definitions(report_file: Path | None = None) -> None:
             except VisitError as exc:
                 logger.exception("PARSER ERROR: %s", {exc.args[0]})
                 raise
-            lookup_str = MAPPINGS_UCUM_TO_PINT.get(ucum_code, ucum_code)
+            lookup_str = to_pint_name(ucum_code)
             if is_in_registry(transformer_default, parsed_data):
                 if section == "prefixes":
                     pint_prefix = str(ureg_default(f"{ucum_code}m").units).removesuffix(

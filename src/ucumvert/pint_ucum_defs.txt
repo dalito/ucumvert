@@ -46,7 +46,7 @@ homeopathic_potency_of_quintamillesimal_korsakovian_series = 1 = _ = kp_Q
 
 high_power_field = 1 = _ = HPF
 low_power_field = 1 = _ = LPF
-international_unit = 1 = _ = i.U. = IU = iU
+international_unit = 1 = _ = IU = iU
 arbitrary_unit = 1 = _ = arb_U
 US_pharmacopeia_unit = 1 = _ = USP_U
 GPL_unit = 1 = _ = GPL_U

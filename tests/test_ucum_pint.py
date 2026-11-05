@@ -123,10 +123,22 @@ def test_prefix_with_unit_that_is_also_a_prefix_issue24(ucum_parser, ureg_ucumve
 
     expected_quantity = ureg_ucumvert("milliinternational_unit/liter")
     assert expected_quantity == UcumToPintTransformer().transform(parsed_data)
-    assert expected_quantity == 10**-3 * ureg_ucumvert("[IU]/L")
+    assert expected_quantity == 10**-3 * ureg_ucumvert("IU/L")
 
     result_str = UcumToPintStrTransformer().transform(parsed_data)
-    assert result_str == "(((m[IU]) / (L)))"
+    assert ureg_ucumvert(result_str) == expected_quantity
+
+
+@pytest.mark.parametrize(
+    ("ucum_code", "pint_str"),
+    [("[in_i]", "((in_i))"), ("m[IU]", "((mIU))")],
+)
+def test_bracketed_atom_reaches_pint_without_brackets_issue82(
+    ucum_parser, ucum_code, pint_str
+):
+    # pint >= 0.26.2 rejects "[" and "]" as unknown operators
+    parsed_data = ucum_parser.parse(ucum_code)
+    assert UcumToPintStrTransformer().transform(parsed_data) == pint_str
 
 
 def test_decibel_is_not_decibyte_issue62(ucum_parser, transform_ucum_pint):
