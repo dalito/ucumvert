@@ -150,12 +150,15 @@ class UcumToPintTransformer(Transformer):
         else:
             self.ureg = ureg
 
+    def _one(self):
+        return self.ureg.Quantity(self.ureg.non_int_type(1))
+
     def main_term(self, args):
         # print("DBGmt>", repr(args), len(args))
         if len(args) == 2:  # unary DIVIDE  # noqa: PLR2004
             if getattr(args[1], "type", None):  # no unit, only an ANNOTATION
                 return self.ureg("")  # return <Quantity(1, 'dimensionless')>
-            return 1 / args[1]
+            return self._one() / args[1]
         return args[0]
 
     def term(self, args):
@@ -164,11 +167,11 @@ class UcumToPintTransformer(Transformer):
             if (
                 getattr(args[0], "type", None) == "ANNOTATION"
             ):  # first term is annotation
-                args[0] = 1
+                args[0] = self._one()
             if (
                 getattr(args[2], "type", None) == "ANNOTATION"
             ):  # second term is annotation
-                args[2] = 1
+                args[2] = self._one()
             if args[1] == ".":  # multiplication
                 return args[0] * args[2]
             # division
@@ -395,7 +398,7 @@ class PintUcumRegistry(UnitRegistry):
 
         # Initialise UCUM parser and transformer
         self._ucum_parser = get_ucum_parser()
-        self._from_ucum_transformer = UcumToPintTransformer().transform
+        self._from_ucum_transformer = UcumToPintTransformer(ureg=self).transform
 
     def from_ucum(self, ucum_code):
         """Transform an ucum_code to a pint unit.

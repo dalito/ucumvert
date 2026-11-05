@@ -1,3 +1,4 @@
+from decimal import Decimal
 from pathlib import Path
 
 import pytest
@@ -249,3 +250,23 @@ def test_parse_ucum_builds_parser_when_none_given_issue62():
     # The root rule of the UCUM grammar is "main_term", so a tree rooted there
     # demonstrates that the self-built parser produced a valid UCUM parse tree.
     assert tree.data == "main_term"
+
+
+def test_from_ucum_uses_the_registry_issue79():
+    ureg = PintUcumRegistry(non_int_type=Decimal)
+    # Quantities of different registries can't be added
+    total = ureg.from_ucum("mL") + ureg.Quantity(Decimal(1), "mL")
+    assert total.to_base_units().magnitude == Decimal("0.000002")
+
+
+@pytest.mark.parametrize(
+    ("ucum_code", "magnitude"),
+    [
+        ("mL", Decimal("0.000001")),
+        ("/h", 1 / Decimal(3600)),
+        ("{rbc}/L", Decimal(1000)),
+    ],
+)
+def test_from_ucum_decimal_registry_issue79(ucum_code, magnitude):
+    ureg = PintUcumRegistry(non_int_type=Decimal)
+    assert ureg.from_ucum(ucum_code).to_base_units().magnitude == magnitude
