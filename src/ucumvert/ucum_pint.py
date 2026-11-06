@@ -159,6 +159,8 @@ class UcumToPintTransformer(Transformer):
             if getattr(args[1], "type", None):  # no unit, only an ANNOTATION
                 return self.ureg("")  # return <Quantity(1, 'dimensionless')>
             return self._one() / args[1]
+        if getattr(args[0], "type", None) == "ANNOTATION":  # annotation alone is unity
+            return self._one()
         return args[0]
 
     def term(self, args):
@@ -218,6 +220,8 @@ class UcumToPintStrTransformer(Transformer):
             if getattr(args[1], "type", None):  # no unit, only an ANNOTATION
                 return "1"  # will create <Quantity(1, 'dimensionless')>
             return f"(1 / {args[1]})"
+        if getattr(args[0], "type", None) == "ANNOTATION":  # annotation alone is unity
+            return "1"
         return f"({args[0]})"
 
     def term(self, args):

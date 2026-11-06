@@ -142,6 +142,16 @@ def test_bracketed_atom_reaches_pint_without_brackets_issue82(
     assert UcumToPintStrTransformer().transform(parsed_data) == pint_str
 
 
+@pytest.mark.parametrize("ucum_code", ["{rbc}", "({rbc})"])
+def test_annotation_alone_is_unity_issue85(
+    ucum_parser, transform_ucum_pint, transform_ucum_str, ureg_ucumvert, ucum_code
+):
+    parsed_data = ucum_parser.parse(ucum_code)
+    unity = ureg_ucumvert.Quantity(1)
+    assert transform_ucum_pint(parsed_data) == unity
+    assert ureg_ucumvert(transform_ucum_str(parsed_data)) == unity
+
+
 def test_decibel_is_not_decibyte_issue62(ucum_parser, transform_ucum_pint):
     # "dB" is deci + bel (decibel), it must not be parsed as deci + byte.
     parsed_data = ucum_parser.parse("dB")
