@@ -26,7 +26,11 @@ def interactive():
     transformer = UcumToPintTransformer().transform
 
     while True:
-        ucum_code = input("> ")
+        try:
+            ucum_code = input("> ")
+        except (EOFError, KeyboardInterrupt):
+            print()
+            break
         print(f"input: {ucum_code!r}")
         if ucum_code and (ucum_code in "qQ"):
             break

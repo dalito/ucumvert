@@ -35,6 +35,17 @@ def test_main_version(capsys):
     assert captured.out.startswith("ucumvert")
 
 
+def test_run_interactive_eof_exits_cleanly(monkeypatch, capsys):
+    def fake_input(_prompt=""):
+        raise EOFError
+
+    monkeypatch.setattr("builtins.input", fake_input)
+    main_cli(["--interactive"])
+    captured = capsys.readouterr()
+    assert "Traceback" not in captured.out
+    assert "Traceback" not in captured.err
+
+
 def test_run_mapping_report_generation(tmp_path):
     dst = tmp_path / "mapping.txt"
     main_cli(["--mapping_report", str(dst)])
